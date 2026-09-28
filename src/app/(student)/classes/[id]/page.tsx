@@ -46,8 +46,8 @@ export default async function StudentSessionDetailPage({
         markedAt: record.markedAt,
       };
     }
-  } catch (err) {
-    console.warn("DB attendance lookup fallback", err);
+  } catch {
+    // Fail silently — no existing attendance record is the correct safe fallback
   }
 
   const isPast = new Date(session.endsAt) < new Date();

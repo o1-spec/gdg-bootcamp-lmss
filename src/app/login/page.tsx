@@ -172,17 +172,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Development Notice */}
-          <div className="mt-5 rounded-lg border border-zinc-100 bg-zinc-50 p-2.5 text-[11px] text-zinc-500 dark:border-zinc-900 dark:bg-zinc-900/60 dark:text-zinc-400">
-            <p className="font-semibold text-zinc-700 dark:text-zinc-300">
-              Demo Seed Accounts (Password: Password123!)
-            </p>
-            <div className="mt-1 space-y-0.5">
-              <p>• Student: student@example.com</p>
-              <p>• Instructor: instructor@example.com</p>
-              <p>• Admin: admin@example.com</p>
-            </div>
-          </div>
+          {/* Contact your administrator if you need access credentials */}
         </div>
       </div>
     </div>

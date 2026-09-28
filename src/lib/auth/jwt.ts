@@ -5,21 +5,33 @@ const ACCESS_TOKEN_EXPIRATION = "15m";
 const REFRESH_TOKEN_EXPIRATION = "7d";
 
 // Access & Refresh secret encoders
-function getSecretKey(secret: string | undefined, defaultSecret: string): Uint8Array {
-  const secretString = secret || defaultSecret;
-  return new TextEncoder().encode(secretString);
+function getSecretKey(secret: string | undefined, name: string): Uint8Array {
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        `[JWT] Missing required environment variable: ${name}. ` +
+          "Set it in your deployment environment before starting the server."
+      );
+    }
+    // Development-only fallback — never present in production
+    return new TextEncoder().encode(
+      `dev_fallback_${name.toLowerCase()}_minimum_32_chars_long`
+    );
+  }
+  return new TextEncoder().encode(secret);
 }
 
 const accessSecret = () =>
   getSecretKey(
     process.env.JWT_ACCESS_SECRET || process.env.AUTH_SECRET,
-    "development_fallback_jwt_access_secret_key_minimum_32_chars"
+    "JWT_ACCESS_SECRET"
   );
 
 const refreshSecret = () =>
   getSecretKey(
-    process.env.JWT_REFRESH_SECRET || (process.env.AUTH_SECRET ? `${process.env.AUTH_SECRET}_refresh` : undefined),
-    "development_fallback_jwt_refresh_secret_key_minimum_32_chars"
+    process.env.JWT_REFRESH_SECRET ||
+      (process.env.AUTH_SECRET ? `${process.env.AUTH_SECRET}_refresh` : undefined),
+    "JWT_REFRESH_SECRET"
   );
 
 export interface AccessTokenPayload extends JWTPayload {
