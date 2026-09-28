@@ -163,11 +163,10 @@ export function ChatWindow({
 
                   <div className="relative">
                     <div
-                      className={`rounded-2xl px-3 py-2 text-xs leading-relaxed break-words ${
-                        isOwn
+                      className={`rounded-2xl px-3 py-2 text-xs leading-relaxed wrap-break-word ${isOwn
                           ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-tr-sm"
                           : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 rounded-tl-sm"
-                      }`}
+                        }`}
                     >
                       {msg.body}
                     </div>
