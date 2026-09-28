@@ -1,6 +1,7 @@
 import crypto from "crypto";
-import { Role, AttendanceStatus, AttendanceMethod } from "@prisma/client";
+import { Role, AttendanceStatus, AttendanceMethod, ExcuseStatus } from "@prisma/client";
 import { db } from "@/lib/db";
+import { audit } from "@/lib/audit/logger";
 
 export interface StudentAttendanceRecord {
   sessionId: string;
@@ -12,15 +13,21 @@ export interface StudentAttendanceRecord {
   status: AttendanceStatus | "UNMARKED";
   method: AttendanceMethod | null;
   markedAt: Date | null;
+  excuseId?: string | null;
+  excuseStatus?: ExcuseStatus | null;
+  excuseReason?: string | null;
+  excuseReviewNote?: string | null;
 }
 
 export interface AttendanceSummary {
-  attendanceRate: number; // (PRESENT + LATE) / totalCompletedEligible * 100
+  attendanceRate: number | null; // (PRESENT + LATE) / totalCompletedEligible * 100, null if 0 eligible
   presentCount: number;
   lateCount: number;
   absentCount: number;
   unmarkedCount: number;
-  totalCompletedEligible: number;
+  approvedExcusedCount: number;
+  totalCompletedSessions: number;
+  totalCompletedEligible: number; // completed sessions minus approved excused absences
   totalScheduled: number;
 }
 
@@ -233,11 +240,13 @@ export async function getStudentAttendance(userId: string): Promise<{
     return {
       records: [],
       summary: {
-        attendanceRate: 100,
+        attendanceRate: null,
         presentCount: 0,
         lateCount: 0,
         absentCount: 0,
         unmarkedCount: 0,
+        approvedExcusedCount: 0,
+        totalCompletedSessions: 0,
         totalCompletedEligible: 0,
         totalScheduled: 0,
       },
@@ -259,25 +268,38 @@ export async function getStudentAttendance(userId: string): Promise<{
     orderBy: { startsAt: "desc" },
   });
 
-  // 3. Find student's attendance records
-  const attendances = await db.attendance.findMany({
-    where: {
-      userId,
-      sessionId: { in: sessions.map((s) => s.id) },
-    },
-  });
+  const sessionIds = sessions.map((s) => s.id);
+
+  // 3. Find student's attendance records and submitted excuses
+  const [attendances, excuses] = await Promise.all([
+    db.attendance.findMany({
+      where: {
+        userId,
+        sessionId: { in: sessionIds },
+      },
+    }),
+    db.attendanceExcuse.findMany({
+      where: {
+        userId,
+        sessionId: { in: sessionIds },
+      },
+    }),
+  ]);
 
   const attendanceMap = new Map(attendances.map((a) => [a.sessionId, a]));
+  const excuseMap = new Map(excuses.map((e) => [e.sessionId, e]));
 
   let presentCount = 0;
   let lateCount = 0;
   let absentCount = 0;
   let unmarkedCount = 0;
-  let totalCompletedEligible = 0;
+  let totalCompletedSessions = 0;
+  let approvedExcusedCount = 0;
 
   const records: StudentAttendanceRecord[] = sessions.map((sess) => {
     const isCompleted = new Date(sess.endsAt) < now;
     const att = attendanceMap.get(sess.id);
+    const excuse = excuseMap.get(sess.id);
 
     let status: AttendanceStatus | "UNMARKED" = "UNMARKED";
     let method: AttendanceMethod | null = null;
@@ -290,7 +312,11 @@ export async function getStudentAttendance(userId: string): Promise<{
     }
 
     if (isCompleted) {
-      totalCompletedEligible++;
+      totalCompletedSessions++;
+      if (excuse?.status === "APPROVED") {
+        approvedExcusedCount++;
+      }
+
       if (status === AttendanceStatus.PRESENT) presentCount++;
       else if (status === AttendanceStatus.LATE) lateCount++;
       else if (status === AttendanceStatus.ABSENT) absentCount++;
@@ -307,13 +333,24 @@ export async function getStudentAttendance(userId: string): Promise<{
       status,
       method,
       markedAt,
+      excuseId: excuse?.id ?? null,
+      excuseStatus: excuse?.status ?? null,
+      excuseReason: excuse?.reason ?? null,
+      excuseReviewNote: excuse?.reviewNote ?? null,
     };
   });
 
+  /**
+   * ATTENDANCE CALCULATION POLICY:
+   * eligible completed sessions = completed sessions minus approved excused absences
+   * attendance rate = (PRESENT + LATE) / eligible completed sessions * 100
+   * If there are zero eligible sessions, attendanceRate is null (no percentage shown).
+   */
+  const totalCompletedEligible = Math.max(0, totalCompletedSessions - approvedExcusedCount);
   const attendanceRate =
     totalCompletedEligible > 0
       ? Math.round(((presentCount + lateCount) / totalCompletedEligible) * 100)
-      : 100;
+      : null;
 
   return {
     records,
@@ -323,6 +360,8 @@ export async function getStudentAttendance(userId: string): Promise<{
       lateCount,
       absentCount,
       unmarkedCount,
+      approvedExcusedCount,
+      totalCompletedSessions,
       totalCompletedEligible,
       totalScheduled: sessions.length,
     },
@@ -543,6 +582,12 @@ export async function markAttendance(
       markedById: markerId,
       markedAt: now,
     },
+  });
+
+  audit(markerId, "ATTENDANCE_MARKED", "Session", sessionId, {
+    targetUserId,
+    status,
+    method: "MANUAL",
   });
 }
 

@@ -21,6 +21,13 @@ enum AttendanceStatus {
 enum AttendanceMethod {
   CHECK_IN
   MANUAL
+  IMPORT
+}
+
+enum ExcuseStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model User {
@@ -55,6 +62,19 @@ model User {
   // Notification relations
   notifications Notification[]
 
+  // Excuse relations
+  submittedExcuses AttendanceExcuse[] @relation("ExcuseSubmitter")
+  reviewedExcuses  AttendanceExcuse[] @relation("ExcuseReviewer")
+
+  // Certificate relation
+  certificates Certificate[]
+
+  // Audit log relation
+  auditLogs AuditLog[]
+
+  // Import relation
+  attendanceImports AttendanceImport[] @relation("ImportedBy")
+
   @@index([email])
 }
 
@@ -72,6 +92,7 @@ model Cohort {
   announcements Announcement[]
   channels      Channel[]
   chatMutes     ChatMute[]
+  certificates  Certificate[]
 }
 
 model Track {
@@ -89,6 +110,7 @@ model Track {
   assignments   Assignment[]
   announcements Announcement[]
   channels      Channel[]
+  certificates  Certificate[]
 
   @@index([cohortId])
 }
@@ -135,10 +157,12 @@ model Session {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  cohort      Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
-  track       Track?       @relation(fields: [trackId], references: [id], onDelete: Restrict)
-  createdBy   User         @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  cohort      Cohort             @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  track       Track?             @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  createdBy   User               @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
   attendances Attendance[]
+  excuses     AttendanceExcuse[]
+  imports     AttendanceImport[]
 
   @@index([cohortId])
   @@index([trackId])
@@ -159,6 +183,7 @@ model Attendance {
   session  Session @relation(fields: [sessionId], references: [id], onDelete: Restrict)
   user     User    @relation("StudentAttendance", fields: [userId], references: [id], onDelete: Restrict)
   markedBy User?   @relation("AttendanceMarker", fields: [markedById], references: [id], onDelete: SetNull)
+  excuses  AttendanceExcuse[]
 
   @@unique([sessionId, userId])
   @@index([sessionId])
@@ -347,4 +372,88 @@ model RubricScore {
 
   @@unique([submissionId, criterionId])
   @@index([submissionId])
+}
+
+// ── Attendance Excuses ────────────────────────────────────────────────────────
+
+model AttendanceExcuse {
+  id           String       @id @default(cuid())
+  attendanceId String?      // null if attendance record doesn't exist yet
+  sessionId    String
+  userId       String
+  reason       String
+  status       ExcuseStatus @default(PENDING)
+  reviewedById String?
+  reviewedAt   DateTime?
+  reviewNote   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  attendance  Attendance? @relation(fields: [attendanceId], references: [id], onDelete: SetNull)
+  session     Session     @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  user        User        @relation("ExcuseSubmitter", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy  User?       @relation("ExcuseReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([status])
+}
+
+// ── Attendance Import ─────────────────────────────────────────────────────────
+
+model AttendanceImport {
+  id        String   @id @default(cuid())
+  sessionId String
+  importedById String
+  rowCount  Int
+  matchedCount Int
+  status    String   @default("PENDING_REVIEW") // PENDING_REVIEW | APPLIED | DISCARDED
+  rawRows   Json     // parsed CSV rows stored temporarily for review step
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  session    Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  importedBy User    @relation("ImportedBy", fields: [importedById], references: [id], onDelete: Restrict)
+
+  @@index([sessionId])
+  @@index([importedById])
+}
+
+// ── Certificates ──────────────────────────────────────────────────────────────
+
+model Certificate {
+  id              String   @id @default(cuid())
+  userId          String
+  cohortId        String
+  trackId         String
+  certificateCode String   @unique
+  issuedAt        DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  cohort Cohort @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  track  Track  @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, trackId])
+  @@index([userId])
+  @@index([cohortId])
+}
+
+// ── Audit Log ─────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  action     String
+  targetType String
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([targetType])
+  @@index([createdAt])
 }

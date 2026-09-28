@@ -15,6 +15,7 @@ import {
   notifyAssignmentCreated,
   notifyGradeReleased,
 } from "@/lib/notifications/queries";
+import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
 export async function createAssignmentAction(formData: FormData) {
@@ -222,6 +223,11 @@ export async function gradeSubmissionAction(
       user.role
     );
 
+    audit(user.id, "GRADE_SAVED", "Submission", submissionId, {
+      score,
+      shouldRelease,
+    });
+
     revalidatePath(`/instructor/grading/${submissionId}`);
     revalidatePath(`/admin/grading/${submissionId}`);
     revalidatePath("/instructor/grading");
@@ -251,6 +257,11 @@ export async function releaseGradeAction(
       sub.userId,
       sub.assignment?.title ?? "assignment"
     ).catch(() => {});
+
+    audit(user.id, "GRADE_RELEASED", "Submission", submissionId, {
+      studentId: sub.userId,
+      assignmentTitle: sub.assignment?.title,
+    });
 
     revalidatePath(`/instructor/grading/${submissionId}`);
     revalidatePath(`/admin/grading/${submissionId}`);
@@ -321,6 +332,11 @@ export async function bulkReleaseGradesAction(
   for (const s of allowed) {
     notifyGradeReleased(s.id, s.userId, s.assignment.title).catch(() => {});
   }
+
+  audit(user.id, "BULK_GRADES_RELEASED", "Submission", allowed[0]?.id ?? "", {
+    count: allowed.length,
+    submissionIds: allowed.map((s) => s.id),
+  });
 
   revalidatePath("/instructor/grading");
   revalidatePath("/admin/grading");

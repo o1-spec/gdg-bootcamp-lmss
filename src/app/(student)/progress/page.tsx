@@ -4,6 +4,10 @@ import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentProgress } from "@/lib/progress/queries";
+import { getStudentCompletion } from "@/lib/completion/queries";
+import { getCertificate } from "@/lib/certificates/queries";
+import { ClaimCertificateButton } from "@/components/certificates/claim-certificate-button";
+import { db } from "@/lib/db";
 
 export const metadata = {
   title: "My Progress | Bootcamp LMS",
@@ -11,7 +15,21 @@ export const metadata = {
 
 export default async function StudentProgressPage() {
   const student = await requireStudent();
-  const progress = await getStudentProgress(student.id);
+  const [progress, enrollment] = await Promise.all([
+    getStudentProgress(student.id),
+    db.enrollment.findFirst({
+      where: { userId: student.id },
+      select: { trackId: true },
+    }),
+  ]);
+
+  const completion = enrollment
+    ? await getStudentCompletion(student.id, enrollment.trackId)
+    : null;
+
+  const existingCert = enrollment
+    ? await getCertificate(student.id, enrollment.trackId)
+    : null;
 
   return (
     <div className="space-y-6">
@@ -19,6 +37,87 @@ export default async function StudentProgressPage() {
         title="Personal Progress & Performance"
         description={`${progress.studentName} • ${progress.trackName} Track • ${progress.cohortName}`}
       />
+
+      {/* Completion Status & Certificate Eligibility */}
+      {completion && (
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-zinc-100 dark:border-zinc-900">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                  Bootcamp Completion Status
+                </h2>
+                <span
+                  className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    completion.status === "COMPLETED"
+                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                      : completion.status === "IN_PROGRESS"
+                      ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                      : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                  }`}
+                >
+                  {completion.status === "COMPLETED"
+                    ? "Completed"
+                    : completion.status === "IN_PROGRESS"
+                    ? "In Progress"
+                    : "Requirements Not Met"}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                Official graduation and certificate eligibility criteria
+              </p>
+            </div>
+
+            {completion.status === "COMPLETED" && enrollment && (
+              <ClaimCertificateButton
+                trackId={enrollment.trackId}
+                existingCertificateCode={existingCert?.certificateCode}
+              />
+            )}
+          </div>
+
+          {/* Requirements Overview */}
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-xl bg-zinc-50 p-4 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-1">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">Attendance Threshold</span>
+                <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {completion.attendanceRate !== null ? `${completion.attendanceRate}%` : "—"} (Min. 75%)
+                </span>
+              </div>
+              <p className="text-2xs text-zinc-500 dark:text-zinc-400">
+                {completion.presentCount} attended / {completion.eligibleSessions} eligible completed sessions
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-zinc-50 p-4 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-1">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">Assignments Requirement</span>
+                <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {completion.assignmentsSubmitted} / {completion.assignmentsTotal} submitted
+                </span>
+              </div>
+              <p className="text-2xs text-zinc-500 dark:text-zinc-400">
+                All curriculum assignments must be submitted
+              </p>
+            </div>
+          </div>
+
+          {/* Unmet requirements list if any */}
+          {completion.unmetRequirements.length > 0 && (
+            <div className="mt-4 rounded-xl bg-amber-50/60 p-4 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60">
+              <h4 className="text-xs font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                Remaining Requirements
+              </h4>
+              <ul className="list-disc list-inside space-y-0.5 text-xs text-amber-800 dark:text-amber-300">
+                {completion.unmetRequirements.map((req, i) => (
+                  <li key={i}>{req}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Primary Stat Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

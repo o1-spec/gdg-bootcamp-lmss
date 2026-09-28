@@ -2,8 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
+import { Badge } from "@/components/ui/badge";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorProgress } from "@/lib/progress/queries";
+import { getTrackCompletion } from "@/lib/completion/queries";
 
 export const metadata = {
   title: "Track Progress | Instructor Portal",
@@ -41,6 +43,14 @@ export default async function InstructorProgressPage({
   }
 
   const { trackProgress } = data;
+  const completionMap = trackProgress && data.selectedTrackId
+    ? new Map(
+        (await getTrackCompletion(data.selectedTrackId)).map((c) => [
+          c.userId,
+          c.completion,
+        ])
+      )
+    : new Map();
 
   return (
     <div className="space-y-6">
@@ -146,66 +156,92 @@ export default async function InstructorProgressPage({
                       <th className="px-4 py-3">Attendance</th>
                       <th className="px-4 py-3">Submissions</th>
                       <th className="px-4 py-3">Missing</th>
+                      <th className="px-4 py-3">Completion Status</th>
                       <th className="px-4 py-3">Released Average</th>
                       <th className="px-5 py-3 sm:px-6">Last Activity</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900">
-                    {trackProgress.students.map((student) => (
-                      <tr
-                        key={student.userId}
-                        className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
-                      >
-                        <td className="px-5 py-3.5 sm:px-6">
-                          <div>
-                            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                              {student.name}
+                    {trackProgress.students.map((student) => {
+                      const comp = completionMap.get(student.userId);
+                      return (
+                        <tr
+                          key={student.userId}
+                          className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
+                        >
+                          <td className="px-5 py-3.5 sm:px-6">
+                            <div>
+                              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                                {student.name}
+                              </span>
+                              <p className="text-[11px] text-zinc-400">{student.email}</p>
+                            </div>
+                          </td>
+
+                          <td className="px-4 py-3.5">
+                            <span
+                              className={`font-medium ${
+                                student.attendanceRate >= 80
+                                  ? "text-emerald-700 dark:text-emerald-400"
+                                  : "text-amber-700 dark:text-amber-400"
+                              }`}
+                            >
+                              {student.attendanceRate}%
                             </span>
-                            <p className="text-[11px] text-zinc-400">{student.email}</p>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td className="px-4 py-3.5">
-                          <span
-                            className={`font-medium ${
-                              student.attendanceRate >= 80
-                                ? "text-emerald-700 dark:text-emerald-400"
-                                : "text-amber-700 dark:text-amber-400"
-                            }`}
-                          >
-                            {student.attendanceRate}%
-                          </span>
-                        </td>
+                          <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-100">
+                            {student.assignmentsSubmitted}
+                          </td>
 
-                        <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-100">
-                          {student.assignmentsSubmitted}
-                        </td>
+                          <td className="px-4 py-3.5">
+                            {student.assignmentsMissing > 0 ? (
+                              <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 dark:bg-red-950/60 dark:text-red-300">
+                                {student.assignmentsMissing} missing
+                              </span>
+                            ) : (
+                              <span className="text-zinc-400">0</span>
+                            )}
+                          </td>
 
-                        <td className="px-4 py-3.5">
-                          {student.assignmentsMissing > 0 ? (
-                            <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 dark:bg-red-950/60 dark:text-red-300">
-                              {student.assignmentsMissing} missing
-                            </span>
-                          ) : (
-                            <span className="text-zinc-400">0</span>
-                          )}
-                        </td>
+                          <td className="px-4 py-3.5">
+                            {comp ? (
+                              <Badge
+                                variant={
+                                  comp.status === "COMPLETED"
+                                    ? "success"
+                                    : comp.status === "IN_PROGRESS"
+                                    ? "warning"
+                                    : "danger"
+                                }
+                              >
+                                {comp.status === "COMPLETED"
+                                  ? "Completed"
+                                  : comp.status === "IN_PROGRESS"
+                                  ? "In Progress"
+                                  : "Not Met"}
+                              </Badge>
+                            ) : (
+                              <span className="text-zinc-400 text-2xs">—</span>
+                            )}
+                          </td>
 
-                        <td className="px-4 py-3.5">
-                          {student.releasedGradeAverage !== null ? (
-                            <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                              {student.releasedGradeAverage}%
-                            </span>
-                          ) : (
-                            <span className="text-zinc-400">None released</span>
-                          )}
-                        </td>
+                          <td className="px-4 py-3.5">
+                            {student.releasedGradeAverage !== null ? (
+                              <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                                {student.releasedGradeAverage}%
+                              </span>
+                            ) : (
+                              <span className="text-zinc-400">None released</span>
+                            )}
+                          </td>
 
-                        <td className="px-5 py-3.5 sm:px-6 text-zinc-500 dark:text-zinc-400">
-                          {student.lastActivity || "—"}
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="px-5 py-3.5 sm:px-6 text-zinc-500 dark:text-zinc-400">
+                            {student.lastActivity || "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

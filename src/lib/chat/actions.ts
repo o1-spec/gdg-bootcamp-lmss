@@ -10,6 +10,7 @@ import {
   muteUser,
   unmuteUser,
 } from "./queries";
+import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
 // ── Send message ──────────────────────────────────────────────────────────────
@@ -63,6 +64,14 @@ export async function deleteMessageAction(
   }
 
   await softDeleteMessage(messageId);
+
+  if (user.role !== "STUDENT" || msg.senderId !== user.id) {
+    audit(user.id, "MESSAGE_DELETED", "Message", messageId, {
+      senderId: msg.senderId,
+      channelId: msg.channelId,
+    });
+  }
+
   revalidatePath(`/chat/${msg.channelId}`);
   revalidatePath(`/instructor/chat/${msg.channelId}`);
   revalidatePath(`/admin/chat/${msg.channelId}`);
@@ -89,6 +98,13 @@ export async function muteUserAction(
     reason,
     expiresAt ? new Date(expiresAt) : undefined
   );
+
+  audit(moderator.id, "MUTE_ISSUED", "User", userId, {
+    cohortId,
+    trackId,
+    reason,
+  });
+
   revalidatePath("/admin/chat");
   revalidatePath("/instructor/chat");
   return { success: true };
@@ -104,6 +120,9 @@ export async function unmuteUserAction(
   if (moderator.role === "STUDENT") return { success: false, error: "Access denied." };
 
   await unmuteUser(userId, cohortId);
+
+  audit(moderator.id, "MUTE_REMOVED", "User", userId, { cohortId });
+
   revalidatePath("/admin/chat");
   revalidatePath("/instructor/chat");
   return { success: true };
