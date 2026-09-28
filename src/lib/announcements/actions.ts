@@ -7,6 +7,7 @@ import {
   updateAnnouncement,
   deleteAnnouncement,
 } from "./queries";
+import { notifyAnnouncement } from "@/lib/notifications/queries";
 
 export interface AnnouncementActionState {
   success: boolean;
@@ -50,6 +51,9 @@ export async function createAnnouncementAction(
       user.id,
       user.role
     );
+
+    // Notify enrolled students (fire-and-forget)
+    notifyAnnouncement(cohortId.trim(), trackId, title.trim()).catch(() => {});
 
     revalidatePath("/announcements");
     revalidatePath("/instructor/announcements");

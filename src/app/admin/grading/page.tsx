@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { getInstructorGradingQueue } from "@/lib/assignments/queries";
 import { GradingQueueTable } from "@/components/grading/grading-queue-table";
+import { BulkReleasePanel } from "@/components/grading/bulk-release-panel";
 
 export const metadata = {
   title: "Grading Queue | Admin Console",
@@ -137,6 +138,28 @@ export default async function AdminGradingPage({
         submissions={submissions}
         basePath="/admin/grading"
       />
+
+      {/* Bulk Release Panel */}
+      {submissions.filter((s) => s.score !== null && !s.released).length > 0 && (
+        <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6 space-y-3">
+          <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            Bulk Grade Release
+          </h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Select multiple graded submissions to release at once.
+          </p>
+          <BulkReleasePanel
+            submissions={submissions.map((s) => ({
+              id: s.id,
+              userId: s.studentId,
+              score: s.score,
+              released: s.released,
+              user: { name: s.studentName, email: s.studentEmail },
+              assignment: { title: s.assignmentTitle },
+            }))}
+          />
+        </div>
+      )}
     </div>
   );
 }

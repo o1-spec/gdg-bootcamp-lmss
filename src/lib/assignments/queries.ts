@@ -858,7 +858,7 @@ export async function releaseGrade(
   submissionId: string,
   graderId: string,
   role: Role
-): Promise<void> {
+): Promise<{ userId: string; assignment: { title: string } }> {
   const existing = await getSubmissionForGrading(submissionId, graderId, role);
   if (!existing) {
     throw new Error("Submission not found or unauthorized.");
@@ -868,10 +868,13 @@ export async function releaseGrade(
     throw new Error("Cannot release an ungraded submission. Please score first.");
   }
 
-  await db.submission.update({
+  const updated = await db.submission.update({
     where: { id: submissionId },
     data: { released: true },
+    include: { assignment: { select: { title: true } } },
   });
+
+  return { userId: updated.userId, assignment: { title: updated.assignment.title } };
 }
 
 /**

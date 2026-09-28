@@ -11,6 +11,11 @@ import {
   gradeSubmission,
   releaseGrade,
 } from "./queries";
+import {
+  notifyAssignmentCreated,
+  notifyGradeReleased,
+} from "@/lib/notifications/queries";
+import { db } from "@/lib/db";
 
 export async function createAssignmentAction(formData: FormData) {
   const user = await requireUser();
@@ -51,7 +56,7 @@ export async function createAssignmentAction(formData: FormData) {
     throw new Error("Invalid due date or time entered.");
   }
 
-  await createAssignment(
+  const assignment = await createAssignment(
     {
       cohortId,
       trackId,
@@ -64,6 +69,9 @@ export async function createAssignmentAction(formData: FormData) {
     user.id,
     user.role
   );
+
+  // Notify enrolled students (fire-and-forget — do not block redirect)
+  notifyAssignmentCreated(assignment.id, cohortId, trackId, title).catch(() => {});
 
   revalidatePath("/assignments");
   revalidatePath("/instructor/assignments");
@@ -235,7 +243,14 @@ export async function releaseGradeAction(
   const user = await requireUser();
 
   try {
-    await releaseGrade(submissionId, user.id, user.role);
+    const sub = await releaseGrade(submissionId, user.id, user.role);
+
+    // Notify the student
+    notifyGradeReleased(
+      submissionId,
+      sub.userId,
+      sub.assignment?.title ?? "assignment"
+    ).catch(() => {});
 
     revalidatePath(`/instructor/grading/${submissionId}`);
     revalidatePath(`/admin/grading/${submissionId}`);
@@ -250,4 +265,66 @@ export async function releaseGradeAction(
     }
     return { success: false, message: "Failed to release grade." };
   }
+}
+
+// ── Bulk grade release ────────────────────────────────────────────────────────
+
+export async function bulkReleaseGradesAction(
+  submissionIds: string[]
+): Promise<{ success: boolean; released: number; skipped: number; error?: string }> {
+  const user = await requireUser();
+  if (user.role === "STUDENT") {
+    return { success: false, released: 0, skipped: 0, error: "Access denied." };
+  }
+
+  if (!submissionIds.length) {
+    return { success: false, released: 0, skipped: 0, error: "No submissions selected." };
+  }
+
+  // Fetch submissions and verify access
+  const submissions = await db.submission.findMany({
+    where: { id: { in: submissionIds }, score: { not: null } },
+    include: {
+      assignment: { select: { title: true, trackId: true, cohortId: true } },
+    },
+  });
+
+  // Instructors: only release submissions in their assigned tracks
+  let allowed = submissions;
+  if (user.role === "INSTRUCTOR") {
+    const trackAssignments = await db.trackInstructor.findMany({
+      where: { userId: user.id },
+      select: { trackId: true },
+    });
+    const allowedTrackIds = new Set(trackAssignments.map((t) => t.trackId));
+    allowed = submissions.filter(
+      (s) => s.assignment.trackId === null || allowedTrackIds.has(s.assignment.trackId ?? "")
+    );
+  }
+
+  const skipped = submissionIds.length - allowed.length;
+  if (!allowed.length) {
+    return { success: false, released: 0, skipped, error: "No authorized submissions to release." };
+  }
+
+  // Bulk update in a transaction
+  await db.$transaction(
+    allowed.map((s) =>
+      db.submission.update({
+        where: { id: s.id },
+        data: { released: true },
+      })
+    )
+  );
+
+  // Fire-and-forget notifications
+  for (const s of allowed) {
+    notifyGradeReleased(s.id, s.userId, s.assignment.title).catch(() => {});
+  }
+
+  revalidatePath("/instructor/grading");
+  revalidatePath("/admin/grading");
+  revalidatePath("/assignments");
+
+  return { success: true, released: allowed.length, skipped };
 }

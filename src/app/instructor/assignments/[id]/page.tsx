@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { requireInstructor } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { DeleteAssignmentButton } from "@/components/assignments/delete-assignment-button";
+import { getRubricByAssignment } from "@/lib/rubrics/queries";
+import { RubricBuilder, RubricDeleteButton } from "@/components/rubrics/rubric-components";
 
 interface InstructorAssignmentDetailsProps {
   params: Promise<{ id: string }>;
@@ -30,6 +32,7 @@ export default async function InstructorAssignmentDetailsPage({
   }
 
   const { assignment } = data;
+  const rubric = await getRubricByAssignment(id);
 
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
@@ -133,7 +136,45 @@ export default async function InstructorAssignmentDetailsPage({
             {assignment.description}
           </div>
         </div>
+
+        {/* Rubric Section */}
+        <div className="space-y-3 border-t border-zinc-100 dark:border-zinc-800/80 pt-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              Grading Rubric
+            </h2>
+            {rubric && <RubricDeleteButton assignmentId={id} />}
+          </div>
+          {rubric ? (
+            <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden">
+              {rubric.criteria.map((c) => (
+                <div key={c.id} className="flex items-center justify-between px-4 py-3">
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">{c.title}</p>
+                    {c.description && <p className="text-xs text-zinc-500">{c.description}</p>}
+                  </div>
+                  <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">{c.maxScore} pts</span>
+                </div>
+              ))}
+              <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3">
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Total</span>
+                <span className="text-xs font-bold">{rubric.criteria.reduce((s, c) => s + c.maxScore, 0)} / {assignment.maxScore} pts</span>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 p-4">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+                No rubric yet. Add one to enable per-criterion grading.
+              </p>
+              <RubricBuilder
+                assignmentId={id}
+                assignmentMaxScore={assignment.maxScore}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
