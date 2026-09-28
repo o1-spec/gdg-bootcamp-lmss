@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AttendanceStatus } from "@prisma/client";
+import type { AttendanceStatus } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { SessionRosterStudent } from "@/lib/attendance/queries";
 import { markAttendanceAction } from "@/lib/attendance/actions";
@@ -161,7 +161,7 @@ export function SessionRosterTable({
                       <button
                         type="button"
                         disabled={isUpdating}
-                        onClick={() => handleMark(student.userId, AttendanceStatus.PRESENT)}
+                        onClick={() => handleMark(student.userId, "PRESENT")}
                         className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
                           student.status === "PRESENT"
                             ? "bg-emerald-600 text-white font-semibold"
@@ -174,7 +174,7 @@ export function SessionRosterTable({
                       <button
                         type="button"
                         disabled={isUpdating}
-                        onClick={() => handleMark(student.userId, AttendanceStatus.LATE)}
+                        onClick={() => handleMark(student.userId, "LATE")}
                         className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
                           student.status === "LATE"
                             ? "bg-amber-600 text-white font-semibold"
@@ -187,7 +187,7 @@ export function SessionRosterTable({
                       <button
                         type="button"
                         disabled={isUpdating}
-                        onClick={() => handleMark(student.userId, AttendanceStatus.ABSENT)}
+                        onClick={() => handleMark(student.userId, "ABSENT")}
                         className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
                           student.status === "ABSENT"
                             ? "bg-rose-600 text-white font-semibold"
@@ -242,7 +242,7 @@ export function SessionRosterTable({
                   <button
                     type="button"
                     disabled={isUpdating}
-                    onClick={() => handleMark(student.userId, AttendanceStatus.PRESENT)}
+                    onClick={() => handleMark(student.userId, "PRESENT")}
                     className={`rounded px-2 py-1 text-[11px] font-medium ${
                       student.status === "PRESENT"
                         ? "bg-emerald-600 text-white font-semibold"
@@ -254,7 +254,7 @@ export function SessionRosterTable({
                   <button
                     type="button"
                     disabled={isUpdating}
-                    onClick={() => handleMark(student.userId, AttendanceStatus.LATE)}
+                    onClick={() => handleMark(student.userId, "LATE")}
                     className={`rounded px-2 py-1 text-[11px] font-medium ${
                       student.status === "LATE"
                         ? "bg-amber-600 text-white font-semibold"
@@ -266,7 +266,7 @@ export function SessionRosterTable({
                   <button
                     type="button"
                     disabled={isUpdating}
-                    onClick={() => handleMark(student.userId, AttendanceStatus.ABSENT)}
+                    onClick={() => handleMark(student.userId, "ABSENT")}
                     className={`rounded px-2 py-1 text-[11px] font-medium ${
                       student.status === "ABSENT"
                         ? "bg-rose-600 text-white font-semibold"

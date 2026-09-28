@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { AttendanceStatus } from "@prisma/client";
+import type { AttendanceStatus } from "@/types";
 import { checkInAction } from "@/lib/attendance/actions";
 
 interface StudentCheckinCardProps {
@@ -63,7 +63,7 @@ export function StudentCheckinCard({
     setIsSubmitting(false);
 
     if (result.success) {
-      setCheckedInStatus(result.status || AttendanceStatus.PRESENT);
+      setCheckedInStatus(result.status || "PRESENT");
       setSuccessMessage(result.message);
       setCode("");
     } else {

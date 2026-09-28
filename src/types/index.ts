@@ -145,3 +145,8 @@ export interface DashboardSummary {
   pendingReviewAssignments: number;
   averageScore: number;
 }
+
+export type AttendanceStatus = "PRESENT" | "ABSENT" | "LATE";
+export type AttendanceMethod = "CHECK_IN" | "MANUAL" | "IMPORT";
+export type ExcuseStatus = "PENDING" | "APPROVED" | "REJECTED";
+
