@@ -1,0 +1,220 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum AttendanceMethod {
+  CHECK_IN
+  MANUAL
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Student relations
+  enrollments  Enrollment[]
+  attendances  Attendance[] @relation("StudentAttendance")
+  submissions  Submission[] @relation("StudentSubmission")
+
+  // Instructor relations
+  trackAssignments TrackInstructor[]
+
+  // Author / Staff relations
+  createdSessions       Session[]      @relation("SessionCreator")
+  createdAssignments    Assignment[]   @relation("AssignmentCreator")
+  authoredAnnouncements Announcement[] @relation("AnnouncementAuthor")
+  markedAttendances     Attendance[]   @relation("AttendanceMarker")
+  gradedSubmissions     Submission[]   @relation("SubmissionGrader")
+
+  @@index([email])
+}
+
+model Cohort {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tracks        Track[]
+  sessions      Session[]
+  assignments   Assignment[]
+  announcements Announcement[]
+}
+
+model Track {
+  id          String   @id @default(cuid())
+  cohortId    String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cohort        Cohort            @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  enrollments   Enrollment[]
+  instructors   TrackInstructor[]
+  sessions      Session[]
+  assignments   Assignment[]
+  announcements Announcement[]
+
+  @@index([cohortId])
+}
+
+model Enrollment {
+  id        String    @id @default(cuid())
+  userId    String
+  trackId   String
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  track Track @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([trackId])
+}
+
+model TrackInstructor {
+  trackId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([trackId, userId])
+}
+
+model Session {
+  id           String    @id @default(cuid())
+  cohortId     String
+  trackId      String?   // null means shared across the entire cohort
+  title        String
+  description  String?
+  startsAt     DateTime
+  endsAt       DateTime
+  meetingUrl   String?
+  recordingUrl String?
+  notes        String?
+  checkinCode  String?
+  createdById  String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  cohort      Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  track       Track?       @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  createdBy   User         @relation("SessionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  attendances Attendance[]
+
+  @@index([cohortId])
+  @@index([trackId])
+  @@index([startsAt])
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  sessionId  String
+  userId     String
+  status     AttendanceStatus
+  method     AttendanceMethod
+  markedById String?
+  markedAt   DateTime         @default(now())
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  session  Session @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  user     User    @relation("StudentAttendance", fields: [userId], references: [id], onDelete: Restrict)
+  markedBy User?   @relation("AttendanceMarker", fields: [markedById], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@index([userId])
+}
+
+model Assignment {
+  id                  String   @id @default(cuid())
+  cohortId            String
+  trackId             String?  // null means shared across the cohort
+  title               String
+  description         String
+  dueAt               DateTime
+  maxScore            Int      @default(100)
+  allowLateSubmission Boolean  @default(true)
+  createdById         String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  cohort      Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  track       Track?       @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  createdBy   User         @relation("AssignmentCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  submissions Submission[]
+
+  @@index([cohortId])
+  @@index([trackId])
+  @@index([dueAt])
+}
+
+model Submission {
+  id            String    @id @default(cuid())
+  assignmentId  String
+  userId        String
+  submissionUrl String?
+  fileUrl       String?
+  submittedAt   DateTime  @default(now())
+  score         Int?
+  feedback      String?
+  gradedById    String?
+  gradedAt      DateTime?
+  released      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  user       User       @relation("StudentSubmission", fields: [userId], references: [id], onDelete: Restrict)
+  gradedBy   User?      @relation("SubmissionGrader", fields: [gradedById], references: [id], onDelete: SetNull)
+
+  @@unique([assignmentId, userId])
+  @@index([assignmentId])
+  @@index([userId])
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  cohortId  String
+  trackId   String?  // null means shared across the cohort
+  authorId  String
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cohort Cohort @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  track  Track? @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  author User   @relation("AnnouncementAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([cohortId])
+  @@index([trackId])
+}
