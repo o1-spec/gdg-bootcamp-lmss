@@ -2,6 +2,8 @@ import React from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { requireAdmin } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Admin Console | Bootcamp LMS",
   description: "Platform management, cohort oversight, and bootcamp enrollment controls",

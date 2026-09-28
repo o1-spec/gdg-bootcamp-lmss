@@ -1,8 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
+import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { mockCohorts, mockTracks } from "@/lib/mock-data";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionForm } from "@/components/sessions/session-form";
 import { PageHeader } from "@/components/ui/page-header";
@@ -22,7 +21,7 @@ export default async function InstructorEditClassPage({
   params,
 }: InstructorEditClassPageProps) {
   const { id } = await params;
-  const user = await requireUser();
+  const user = await requireInstructor();
 
   const session = await getSessionById(id, user.id, user.role);
 
@@ -33,39 +32,26 @@ export default async function InstructorEditClassPage({
   let cohorts: { id: string; name: string }[] = [];
   let tracks: { id: string; name: string }[] = [];
 
-  try {
-    const assignments = await db.trackInstructor.findMany({
-      where: { userId: user.id },
-      include: {
-        track: {
-          include: { cohort: true },
-        },
+  const assignments = await db.trackInstructor.findMany({
+    where: { userId: user.id },
+    include: {
+      track: {
+        include: { cohort: true },
       },
-    });
+    },
+  });
 
-    if (assignments.length > 0) {
-      tracks = assignments.map((a) => ({
-        id: a.track.id,
-        name: a.track.name,
-      }));
+  if (assignments.length > 0) {
+    tracks = assignments.map((a) => ({
+      id: a.track.id,
+      name: a.track.name,
+    }));
 
-      const cohortMap = new Map<string, string>();
-      for (const a of assignments) {
-        cohortMap.set(a.track.cohortId, a.track.cohort.name);
-      }
-      cohorts = Array.from(cohortMap.entries()).map(([cid, name]) => ({ id: cid, name }));
+    const cohortMap = new Map<string, string>();
+    for (const a of assignments) {
+      cohortMap.set(a.track.cohortId, a.track.cohort.name);
     }
-  } catch (err) {
-    console.warn("DB query in InstructorEditClassPage failed; using mock fallback", err);
-  }
-
-  if (cohorts.length === 0) {
-    cohorts = mockCohorts.map((c) => ({ id: c.id, name: c.name }));
-  }
-  if (tracks.length === 0) {
-    tracks = mockTracks
-      .filter((t) => t.id === "trk-intermediate")
-      .map((t) => ({ id: t.id, name: t.name }));
+    cohorts = Array.from(cohortMap.entries()).map(([cid, name]) => ({ id: cid, name }));
   }
 
   return (

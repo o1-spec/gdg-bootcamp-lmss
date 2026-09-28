@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
-import { requireUser } from "@/lib/auth/session";
+import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
 
@@ -18,7 +18,7 @@ export default async function InstructorClassesPage({
   searchParams,
 }: InstructorClassesPageProps) {
   const { track: trackFilter } = await searchParams;
-  const user = await requireUser();
+  const user = await requireInstructor();
 
   const { upcoming, past, assignedTracks } = await getInstructorSessions(
     user.id,

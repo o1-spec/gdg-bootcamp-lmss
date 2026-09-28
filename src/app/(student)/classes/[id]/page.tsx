@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
+import { requireStudent } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionDetails } from "@/components/sessions/session-details";
@@ -21,7 +21,7 @@ export default async function StudentSessionDetailPage({
   params,
 }: StudentSessionPageProps) {
   const { id } = await params;
-  const user = await requireUser();
+  const user = await requireStudent();
 
   const session = await getSessionById(id, user.id, user.role);
 

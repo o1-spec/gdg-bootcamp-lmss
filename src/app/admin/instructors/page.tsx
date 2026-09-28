@@ -1,101 +1,101 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { DataTable, Column } from "@/components/ui/data-table";
-import { mockInstructors } from "@/lib/mock-data";
+import { requireAdmin } from "@/lib/auth/session";
+import { db } from "@/lib/db";
+import { Role } from "@prisma/client";
 import { Instructor } from "@/types";
+import { AdminInstructorsTable } from "@/components/admin/directory-tables";
 
 export const metadata = {
   title: "Instructors | Admin Console",
 };
 
-export default function AdminInstructorsPage() {
-  const columns: Column<Instructor>[] = [
-    {
-      header: "Instructor",
-      accessorKey: "name",
-      cell: (item) => (
-        <div>
-          <p className="font-semibold text-zinc-900 dark:text-zinc-100">
-            {item.name}
-          </p>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            {item.email}
-          </p>
-        </div>
-      ),
+export default async function AdminInstructorsPage() {
+  await requireAdmin();
+
+  const instructorUsers = await db.user.findMany({
+    where: { role: Role.INSTRUCTOR },
+    include: {
+      trackAssignments: {
+        include: {
+          track: {
+            include: {
+              enrollments: true,
+              sessions: true,
+            },
+          },
+        },
+      },
     },
-    {
-      header: "Role Title",
-      accessorKey: "roleTitle",
-      cell: (item) => (
-        <span className="text-zinc-700 dark:text-zinc-300">
-          {item.roleTitle}
-        </span>
-      ),
-    },
-    {
-      header: "Assigned Tracks",
-      cell: (item) => (
-        <span className="font-medium text-zinc-900 dark:text-zinc-100">
-          {item.assignedTracks.join(", ")}
-        </span>
-      ),
-    },
-    {
-      header: "Students",
-      cell: (item) => <span>{item.totalStudents} enrolled</span>,
-    },
-    {
-      header: "Active Sessions",
-      cell: (item) => <span>{item.activeSessions} scheduled</span>,
-    },
-    {
-      header: "Actions",
-      cell: (item) => (
-        <button
-          type="button"
-          onClick={() => alert(`Managing instructor assignments: ${item.name}`)}
-          className="rounded-md border border-zinc-200 px-2.5 py-1 text-[11px] font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
-        >
-          Assign Tracks
-        </button>
-      ),
-    },
-  ];
+    orderBy: { name: "asc" },
+  });
+
+  const totalTracks = await db.track.count();
+
+  const instructors: Instructor[] = instructorUsers.map((u) => {
+    const assignedTrackNames = u.trackAssignments.map((ti) => ti.track.name);
+    const studentIds = new Set<string>();
+    let totalSessions = 0;
+
+    for (const ti of u.trackAssignments) {
+      for (const e of ti.track.enrollments) {
+        studentIds.add(e.userId);
+      }
+      totalSessions += ti.track.sessions.length;
+    }
+
+    const initials = u.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+
+    return {
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      initials,
+      assignedTracks: assignedTrackNames,
+      totalStudents: studentIds.size,
+      activeSessions: totalSessions,
+      roleTitle: "Instructor",
+    };
+  });
+
+  const assignedTracksCount = new Set(
+    instructorUsers.flatMap((u) => u.trackAssignments.map((ti) => ti.trackId))
+  ).size;
+
+  const totalWeeklySessions = instructors.reduce(
+    (acc, inst) => acc + inst.activeSessions,
+    0
+  );
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Instructor Directory & Staffing"
         description="Assign lead instructors to bootcamp tracks, monitor teaching workloads, and manage permissions"
-        action={
-          <button
-            type="button"
-            onClick={() => alert("Invite instructor dialog triggered")}
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-3.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            + Invite Instructor
-          </button>
-        }
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Active Instructors"
-          value={mockInstructors.length}
-          subtitle="Full staffing coverage"
+          value={instructors.length}
+          subtitle="Registered instructional staff"
           badge={{ text: "Active", variant: "success" }}
         />
         <StatCard
           title="Tracks Assigned"
-          value="3 / 3"
-          subtitle="100% of tracks covered"
+          value={`${assignedTracksCount} / ${totalTracks}`}
+          subtitle={`${totalTracks > 0 ? Math.round((assignedTracksCount / totalTracks) * 100) : 0}% of tracks covered`}
           badge={{ text: "Staffed", variant: "info" }}
         />
         <StatCard
-          title="Weekly Live Sessions"
-          value="16"
+          title="Total Scheduled Sessions"
+          value={totalWeeklySessions}
           subtitle="Workshops & lectures"
           badge={{ text: "Optimal", variant: "neutral" }}
         />
@@ -103,13 +103,9 @@ export default function AdminInstructorsPage() {
 
       <div className="space-y-3">
         <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-          Instructor Roster
+          Instructor Roster ({instructors.length} staff)
         </h3>
-        <DataTable
-          columns={columns}
-          data={mockInstructors}
-          keyExtractor={(item) => item.id}
-        />
+        <AdminInstructorsTable instructors={instructors} />
       </div>
     </div>
   );

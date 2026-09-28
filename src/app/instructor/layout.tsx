@@ -2,6 +2,8 @@ import React from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { requireInstructor } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Instructor Portal | Bootcamp LMS",
   description: "Manage classes, track attendance, and grade student assignments",

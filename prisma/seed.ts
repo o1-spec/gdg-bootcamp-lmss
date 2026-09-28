@@ -2,10 +2,9 @@
 // Seed script for Bootcamp LMS database initialization
 // NOTE: Development passwords used here ("Password123!") are for local testing ONLY.
 
-import { PrismaClient, Role, AttendanceStatus, AttendanceMethod } from "@prisma/client";
+import { Role, AttendanceStatus, AttendanceMethod } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import { db as prisma } from "../src/lib/db";
 
 const DEV_SEED_PASSWORD = "Password123!";
 

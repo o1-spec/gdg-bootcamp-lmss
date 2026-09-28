@@ -3,17 +3,114 @@ import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
-import { mockStudents } from "@/lib/mock-data";
+import { requireInstructor } from "@/lib/auth/session";
+import { db } from "@/lib/db";
 import { Student } from "@/types";
+import { Role } from "@prisma/client";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Track Students | Instructor Portal",
 };
 
-export default function InstructorStudentsPage() {
-  const intermediateStudents = mockStudents.filter(
-    (s) => s.trackName === "Intermediate"
-  );
+export default async function InstructorStudentsPage() {
+  const user = await requireInstructor();
+
+  const assignments = await db.trackInstructor.findMany({
+    where: { userId: user.id },
+    include: {
+      track: {
+        include: {
+          cohort: true,
+          enrollments: {
+            where: { user: { role: Role.STUDENT } },
+            include: { user: true },
+          },
+          sessions: true,
+          assignments: {
+            include: { submissions: true },
+          },
+        },
+      },
+    },
+  });
+
+  const students: Student[] = [];
+  let totalAttendanceSum = 0;
+  let totalStudentsCount = 0;
+  const now = new Date();
+
+  for (const asg of assignments) {
+    const track = asg.track;
+    const completedSessions = track.sessions.filter((s) => new Date(s.endsAt) <= now);
+    const totalTrackAssignments = track.assignments.length;
+
+    for (const enr of track.enrollments) {
+      const studentUser = enr.user;
+
+      let assignmentsCompleted = 0;
+      let scoreSum = 0;
+      let scoredCount = 0;
+
+      for (const a of track.assignments) {
+        const sub = a.submissions.find((s) => s.userId === studentUser.id);
+        if (sub) {
+          assignmentsCompleted++;
+          if (sub.score !== null) {
+            scoreSum += (sub.score / a.maxScore) * 100;
+            scoredCount++;
+          }
+        }
+      }
+
+      let attendanceRate = 100;
+      if (completedSessions.length > 0) {
+        const studentAttendances = await db.attendance.count({
+          where: {
+            userId: studentUser.id,
+            sessionId: { in: completedSessions.map((s) => s.id) },
+            status: { in: ["PRESENT", "LATE"] },
+          },
+        });
+        attendanceRate = Math.round((studentAttendances / completedSessions.length) * 100);
+      }
+
+      const avgScore = scoredCount > 0 ? Math.round(scoreSum / scoredCount) : 0;
+      const status: Student["status"] =
+        attendanceRate < 80 || (totalTrackAssignments > 0 && assignmentsCompleted / totalTrackAssignments < 0.5)
+          ? "At Risk"
+          : "Active";
+
+      const initials = studentUser.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+
+      students.push({
+        id: studentUser.id,
+        name: studentUser.name,
+        email: studentUser.email,
+        initials,
+        trackId: track.id,
+        trackName: track.name,
+        cohortName: track.cohort.name,
+        attendanceRate,
+        assignmentsCompleted,
+        totalAssignments: totalTrackAssignments,
+        averageScore: avgScore,
+        status,
+      });
+
+      totalAttendanceSum += attendanceRate;
+      totalStudentsCount++;
+    }
+  }
+
+  const avgAttendance = totalStudentsCount > 0 ? Math.round(totalAttendanceSum / totalStudentsCount) : 100;
+  const goodStandingCount = students.filter((s) => s.status === "Active").length;
 
   const columns: Column<Student>[] = [
     {
@@ -28,6 +125,15 @@ export default function InstructorStudentsPage() {
             {item.email}
           </p>
         </div>
+      ),
+    },
+    {
+      header: "Track",
+      accessorKey: "trackName",
+      cell: (item) => (
+        <span className="font-medium text-zinc-700 dark:text-zinc-300">
+          {item.trackName}
+        </span>
       ),
     },
     {
@@ -75,28 +181,34 @@ export default function InstructorStudentsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Assigned Students (Intermediate Track)"
-        description="Monitor student engagement, attendance compliance, and academic benchmarks"
+        title="Assigned Students"
+        description="Monitor student engagement, attendance compliance, and academic benchmarks for your assigned tracks"
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Enrolled in Track"
-          value={intermediateStudents.length}
-          subtitle="Cohort 2026 Active"
-          badge={{ text: "Intermediate", variant: "info" }}
+          value={totalStudentsCount}
+          subtitle="Active track students"
+          badge={{ text: `${assignments.length} Track(s)`, variant: "info" }}
         />
         <StatCard
           title="Average Attendance"
-          value="93%"
-          subtitle="Above 85% requirement"
-          badge={{ text: "Good", variant: "success" }}
+          value={`${avgAttendance}%`}
+          subtitle="Across assigned tracks"
+          badge={{
+            text: avgAttendance >= 80 ? "Good" : "At Risk",
+            variant: avgAttendance >= 80 ? "success" : "warning",
+          }}
         />
         <StatCard
           title="Students in Good Standing"
-          value={intermediateStudents.length}
-          subtitle="0 students currently at risk"
-          badge={{ text: "100%", variant: "success" }}
+          value={goodStandingCount}
+          subtitle={`${totalStudentsCount - goodStandingCount} student(s) currently at risk`}
+          badge={{
+            text: totalStudentsCount > 0 ? `${Math.round((goodStandingCount / totalStudentsCount) * 100)}%` : "100%",
+            variant: "success",
+          }}
         />
       </div>
 
@@ -106,7 +218,7 @@ export default function InstructorStudentsPage() {
         </h3>
         <DataTable
           columns={columns}
-          data={intermediateStudents}
+          data={students}
           keyExtractor={(item) => item.id}
         />
       </div>

@@ -1,111 +1,104 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { DataTable, Column } from "@/components/ui/data-table";
-import { Badge } from "@/components/ui/badge";
-import { mockCohorts } from "@/lib/mock-data";
+import { requireAdmin } from "@/lib/auth/session";
+import { db } from "@/lib/db";
 import { Cohort } from "@/types";
+import { AdminCohortsTable } from "@/components/admin/directory-tables";
+import { Role } from "@prisma/client";
 
 export const metadata = {
   title: "Cohorts | Admin Console",
 };
 
-export default function AdminCohortsPage() {
-  const columns: Column<Cohort>[] = [
-    {
-      header: "Cohort Name",
-      accessorKey: "name",
-      cell: (item) => (
-        <div>
-          <p className="font-semibold text-zinc-900 dark:text-zinc-100">
-            {item.name}
-          </p>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            {item.startDate} – {item.endDate}
-          </p>
-        </div>
-      ),
+export default async function AdminCohortsPage() {
+  await requireAdmin();
+
+  const now = new Date();
+
+  const dbCohorts = await db.cohort.findMany({
+    include: {
+      tracks: {
+        include: {
+          enrollments: {
+            where: { user: { role: Role.STUDENT } },
+          },
+        },
+      },
     },
-    {
-      header: "Tracks",
-      cell: (item) => <span>{item.tracksCount} Tracks</span>,
-    },
-    {
-      header: "Students Enrolled",
-      cell: (item) => (
-        <span className="font-medium text-zinc-900 dark:text-zinc-100">
-          {item.totalStudents} Students
-        </span>
-      ),
-    },
-    {
-      header: "Status",
-      cell: (item) => (
-        <Badge variant={item.status === "Active" ? "success" : "neutral"}>
-          {item.status}
-        </Badge>
-      ),
-    },
-    {
-      header: "Actions",
-      cell: (item) => (
-        <button
-          type="button"
-          onClick={() => alert(`Configuring cohort: ${item.name}`)}
-          className="rounded-md border border-zinc-200 px-2.5 py-1 text-[11px] font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
-        >
-          Manage
-        </button>
-      ),
-    },
-  ];
+    orderBy: { startDate: "desc" },
+  });
+
+  const cohorts: Cohort[] = dbCohorts.map((c) => {
+    let status: Cohort["status"] = "Active";
+    if (now < new Date(c.startDate)) {
+      status = "Upcoming";
+    } else if (now > new Date(c.endDate)) {
+      status = "Completed";
+    }
+
+    const totalStudents = c.tracks.reduce(
+      (sum, t) => sum + t.enrollments.length,
+      0
+    );
+
+    const startFmt = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      year: "numeric",
+    }).format(new Date(c.startDate));
+    const endFmt = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      year: "numeric",
+    }).format(new Date(c.endDate));
+
+    return {
+      id: c.id,
+      name: c.name,
+      status,
+      startDate: startFmt,
+      endDate: endFmt,
+      totalStudents,
+      tracksCount: c.tracks.length,
+    };
+  });
+
+  const activeCohortsCount = cohorts.filter((c) => c.status === "Active").length;
+  const totalStudents = cohorts.reduce((sum, c) => sum + c.totalStudents, 0);
+  const completedCohortsCount = cohorts.filter((c) => c.status === "Completed").length;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Cohort Management"
         description="Oversee active bootcamp programs, enrollment windows, and graduation schedules"
-        action={
-          <button
-            type="button"
-            onClick={() => alert("Create cohort dialog triggered")}
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-3.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            + Create Cohort
-          </button>
-        }
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Active Cohorts"
-          value="1"
-          subtitle="DSA Bootcamp 2026"
+          value={activeCohortsCount}
+          subtitle="Currently running programs"
           badge={{ text: "Active", variant: "success" }}
         />
         <StatCard
           title="Total Students in Programs"
-          value="84"
+          value={totalStudents}
           subtitle="Across active tracks"
-          badge={{ text: "Spring 2026", variant: "info" }}
+          badge={{ text: "Enrolled", variant: "info" }}
         />
         <StatCard
           title="Historical Cohorts"
-          value="1"
-          subtitle="Full Stack Winter 2025"
+          value={completedCohortsCount}
+          subtitle="Completed programs"
           badge={{ text: "Completed", variant: "neutral" }}
         />
       </div>
 
       <div className="space-y-3">
         <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-          All Cohorts
+          All Cohorts ({cohorts.length})
         </h3>
-        <DataTable
-          columns={columns}
-          data={mockCohorts}
-          keyExtractor={(item) => item.id}
-        />
+        <AdminCohortsTable cohorts={cohorts} />
       </div>
     </div>
   );

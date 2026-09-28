@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAnnouncements } from "@/lib/announcements/queries";
 import { AnnouncementFeed } from "@/components/announcements/announcement-feed";
-import { mockTracks } from "@/lib/mock-data";
+import { db } from "@/lib/db";
 
 export const metadata = {
   title: "Announcements | Admin Console",
@@ -11,7 +11,11 @@ export const metadata = {
 
 export default async function AdminAnnouncementsPage() {
   const admin = await requireAdmin();
-  const announcements = await getAnnouncements(admin.id, admin.role);
+  const [announcements, tracks, cohort] = await Promise.all([
+    getAnnouncements(admin.id, admin.role),
+    db.track.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    db.cohort.findFirst({ select: { id: true }, orderBy: { startDate: "desc" } }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -24,8 +28,8 @@ export default async function AdminAnnouncementsPage() {
         announcements={announcements}
         canCreate={true}
         createButtonText="+ Broadcast Announcement"
-        tracks={mockTracks.map((t) => ({ id: t.id, name: t.name }))}
-        cohortId="coh-2026-1"
+        tracks={tracks}
+        cohortId={cohort?.id || ""}
       />
     </div>
   );
