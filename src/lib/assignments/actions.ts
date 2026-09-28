@@ -166,26 +166,56 @@ export async function deleteAssignmentAction(assignmentId: string) {
   redirect(target);
 }
 
+import { uploadToCloudinary } from "@/lib/storage/cloudinary";
+
 export async function submitAssignmentAction(
   assignmentId: string,
   formData: FormData
-): Promise<{ success: boolean; message: string }> {
+): Promise<{ success: boolean; message: string; fileUrl?: string | null; submissionUrl?: string | null }> {
   const user = await requireUser();
-  const submissionUrl = formData.get("submissionUrl")?.toString().trim();
+  const submissionUrl = formData.get("submissionUrl")?.toString().trim() || null;
+  const file = formData.get("file") as File | null;
 
-  if (!submissionUrl) {
-    return { success: false, message: "Please provide a submission link." };
-  }
+  let fileUrl: string | null = null;
 
   try {
-    const result = await submitAssignment(assignmentId, submissionUrl, user.id);
+    if (file && file.size > 0) {
+      const MAX_SIZE = 25 * 1024 * 1024; // 25 MB
+      if (file.size > MAX_SIZE) {
+        return {
+          success: false,
+          message: "Uploaded file exceeds the maximum size limit of 25MB.",
+        };
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      fileUrl = await uploadToCloudinary(buffer, file.name, file.type);
+    }
+
+    if (!submissionUrl && !fileUrl) {
+      return {
+        success: false,
+        message: "Please provide either a submission link or upload a file.",
+      };
+    }
+
+    const result = await submitAssignment(
+      assignmentId,
+      { submissionUrl, fileUrl },
+      user.id
+    );
 
     revalidatePath("/assignments");
     revalidatePath(`/assignments/${assignmentId}`);
     revalidatePath("/instructor/grading");
     revalidatePath("/admin/grading");
 
-    return result;
+    return {
+      ...result,
+      fileUrl,
+      submissionUrl,
+    };
   } catch (err: unknown) {
     if (err instanceof Error) {
       return { success: false, message: err.message };

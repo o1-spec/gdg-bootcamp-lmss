@@ -496,23 +496,33 @@ export async function deleteAssignment(
 }
 
 /**
- * Submits or resubmits student work via web link.
+ * Submits or resubmits student work via web link, file upload URL, or both.
  */
 export async function submitAssignment(
   assignmentId: string,
-  submissionUrl: string,
+  payload: string | { submissionUrl?: string | null; fileUrl?: string | null },
   userId: string
 ): Promise<{ success: boolean; message: string }> {
   const now = new Date();
-  const cleanUrl = submissionUrl.trim();
+  const submissionUrl = typeof payload === "string" ? payload : payload.submissionUrl;
+  const fileUrl = typeof payload === "string" ? null : payload.fileUrl;
 
-  try {
-    const parsed = new URL(cleanUrl);
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-      throw new Error("Please enter a valid HTTP or HTTPS submission URL.");
+  const cleanUrl = submissionUrl?.trim() || null;
+  const cleanFileUrl = fileUrl?.trim() || null;
+
+  if (!cleanUrl && !cleanFileUrl) {
+    throw new Error("Please provide a submission link or upload a file.");
+  }
+
+  if (cleanUrl) {
+    try {
+      const parsed = new URL(cleanUrl);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        throw new Error("Please enter a valid HTTP or HTTPS submission URL.");
+      }
+    } catch {
+      throw new Error("Invalid URL format. Please provide a valid web link.");
     }
-  } catch {
-    throw new Error("Invalid URL format. Please provide a valid web link.");
   }
 
   const assignment = await db.assignment.findUnique({
@@ -577,10 +587,12 @@ export async function submitAssignment(
       assignmentId,
       userId,
       submissionUrl: cleanUrl,
+      fileUrl: cleanFileUrl,
       submittedAt: now,
     },
     update: {
-      submissionUrl: cleanUrl,
+      ...(cleanUrl ? { submissionUrl: cleanUrl } : {}),
+      ...(cleanFileUrl ? { fileUrl: cleanFileUrl } : {}),
       submittedAt: now,
     },
   });

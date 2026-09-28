@@ -1,11 +1,10 @@
 import { db } from "../src/lib/db";
-import { submitExcuse, reviewExcuse, getStudentExcuses, getInstructorExcuses, getAllExcuses } from "../src/lib/excuses/queries";
-import { getStudentAttendance, markAttendance } from "../src/lib/attendance/queries";
+import { submitExcuse, reviewExcuse } from "../src/lib/excuses/queries";
+import { getStudentAttendance } from "../src/lib/attendance/queries";
 import { parseAttendanceImport, applyAttendanceImport } from "../src/lib/attendance/import-actions";
 import { getStudentCompletion, getTrackCompletion } from "../src/lib/completion/queries";
 import { issueCertificate, getCertificateByCode } from "../src/lib/certificates/queries";
 import { getAuditLogs } from "../src/lib/audit/queries";
-import { audit } from "../src/lib/audit/logger";
 
 let passed = 0;
 let failed = 0;
@@ -103,7 +102,7 @@ async function run() {
   let alterThrew = false;
   try {
     await submitExcuse(student.id, session.id, "Trying to edit after approval");
-  } catch (e: any) {
+  } catch {
     alterThrew = true;
   }
   assert(alterThrew, "Student cannot alter an approved/reviewed excuse");

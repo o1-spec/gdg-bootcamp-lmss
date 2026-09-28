@@ -166,6 +166,23 @@ export function GradingForm({ submissionData, backHref }: GradingFormProps) {
             ) : (
               <p className="text-zinc-400 italic mt-1">No URL provided</p>
             )}
+
+            {submission.fileUrl && (
+              <div className="mt-2 pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40">
+                <span className="text-zinc-400 font-medium">Attached File:</span>
+                <a
+                  href={submission.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 flex items-center gap-1.5 font-semibold text-emerald-600 hover:underline dark:text-emerald-400 truncate"
+                >
+                  <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                  </svg>
+                  <span>Download / View File</span>
+                </a>
+              </div>
+            )}
           </div>
 
           <div>
