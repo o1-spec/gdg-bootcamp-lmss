@@ -8,7 +8,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="animate-page flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl">
           {title}
@@ -19,7 +19,7 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
           </p>
         )}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="shrink-0 animate-reveal" style={{ "--stagger": "80ms" } as React.CSSProperties}>{action}</div>}
     </div>
   );
 }

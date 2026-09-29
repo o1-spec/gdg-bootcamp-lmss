@@ -1,11 +1,16 @@
+"use client";
+
 import React from "react";
 import { DashboardSummary } from "@/types";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 interface SummaryCardsProps {
   summary: DashboardSummary;
 }
 
 export function SummaryCards({ summary }: SummaryCardsProps) {
+  const gridRef = useScrollReveal<HTMLDivElement>({ threshold: 0.08 });
+
   const cards = [
     {
       title: "Attendance",
@@ -89,11 +94,14 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div
+      ref={gridRef}
+      className="reveal-stagger grid grid-cols-1 gap-4 sm:grid-cols-3"
+    >
       {cards.map((card) => (
         <div
           key={card.title}
-          className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs"
+          className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] active:scale-[0.99] active:translate-y-0"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -103,13 +111,13 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
               </span>
             </div>
 
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7F4ED] border border-[#E7E3DA]">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7F4ED] border border-[#E7E3DA] transition-transform duration-200 hover:scale-110">
               {card.icon}
             </div>
           </div>
 
           <div className="mt-3 flex items-baseline justify-between">
-            <span className="text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl">
+            <span className="stat-value text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl">
               {card.value}
             </span>
             <span className={`text-[11px] font-medium ${card.statusColor}`}>

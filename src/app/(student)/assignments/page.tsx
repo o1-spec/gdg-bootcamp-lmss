@@ -1,6 +1,7 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentAssignments } from "@/lib/assignments/queries";
 import { AssignmentCard } from "@/components/assignments/assignment-card";
@@ -36,7 +37,7 @@ export default async function StudentAssignmentsPage() {
       />
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Assignments Completed"
           value={`${submitted.length} / ${totalAssigned}`}
@@ -71,7 +72,7 @@ export default async function StudentAssignmentsPage() {
             variant: pastDue.length === 0 ? "success" : "danger",
           }}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Due Soon / Upcoming Section */}
       <section className="space-y-4">
@@ -85,7 +86,7 @@ export default async function StudentAssignmentsPage() {
         </div>
 
         {upcoming.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
+          <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
             {upcoming.map((asg) => (
               <AssignmentCard
                 key={asg.id}
@@ -93,7 +94,7 @@ export default async function StudentAssignmentsPage() {
                 basePath="/assignments"
               />
             ))}
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center shadow-2xs">
             <p className="text-xs text-[#737373]">
@@ -115,7 +116,7 @@ export default async function StudentAssignmentsPage() {
         </div>
 
         {submitted.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
+          <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
             {submitted.map((asg) => (
               <AssignmentCard
                 key={asg.id}
@@ -123,7 +124,7 @@ export default async function StudentAssignmentsPage() {
                 basePath="/assignments"
               />
             ))}
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center shadow-2xs">
             <p className="text-xs text-[#737373]">

@@ -79,7 +79,7 @@ export function ConfirmDialog({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px] animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -88,7 +88,7 @@ export function ConfirmDialog({
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="relative w-full max-w-md rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xl focus:outline-none"
+        className="relative w-full max-w-md rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xl focus:outline-none animate-scale-in"
         style={{ boxShadow: "0 20px 60px -10px rgba(0,0,0,0.18)" }}
       >
         {/* Optional icon */}

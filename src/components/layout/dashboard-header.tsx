@@ -34,14 +34,14 @@ export function DashboardHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#E7E3DA] bg-[#F7F4ED]/90 px-4 backdrop-blur-xs sm:px-6 lg:px-10">
+    <header className="animate-fade-down sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#E7E3DA] bg-[#F7F4ED]/90 px-4 backdrop-blur-xs sm:px-6 lg:px-10">
       {/* Left: Mobile Toggle & Page Title */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onOpenMobileNav}
           aria-label="Open navigation menu"
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E7E3DA] bg-white text-[#171717] hover:bg-[#EFECE4] transition-colors lg:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E7E3DA] bg-white text-[#171717] hover:bg-[#EFECE4] transition-all duration-150 active:scale-90 lg:hidden"
         >
           <svg
             className="h-5 w-5"

@@ -44,3 +44,237 @@ body {
   outline: 2px solid #171717;
   outline-offset: 2px;
 }
+
+/* =========================================================
+   KEYFRAME ANIMATIONS
+   ========================================================= */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-in-bounce {
+  0%   { opacity: 0; transform: scale(0.88); }
+  70%  { transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   ANIMATION UTILITY CLASSES
+   ========================================================= */
+
+/* Page-level entrance — apply to wrapping divs */
+.animate-page {
+  animation: fade-in-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Instant fade for overlays / modals */
+.animate-fade-in {
+  animation: fade-in 0.2s ease both;
+}
+
+/* Dialog / modal pop-in */
+.animate-scale-in {
+  animation: scale-in-bounce 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Cards and list items — stagger with CSS custom property */
+.animate-reveal {
+  animation: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+/* Sidebar nav items */
+.animate-slide-left {
+  animation: slide-in-left 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+/* Header entrance */
+.animate-fade-down {
+  animation: fade-in-down 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =========================================================
+   SCROLL REVEAL — triggered by JS adding .is-visible
+   ========================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* staggered reveal children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-stagger.is-visible > *:nth-child(1)  { opacity: 1; transform: none; transition-delay: 0ms; }
+.reveal-stagger.is-visible > *:nth-child(2)  { opacity: 1; transform: none; transition-delay: 60ms; }
+.reveal-stagger.is-visible > *:nth-child(3)  { opacity: 1; transform: none; transition-delay: 120ms; }
+.reveal-stagger.is-visible > *:nth-child(4)  { opacity: 1; transform: none; transition-delay: 180ms; }
+.reveal-stagger.is-visible > *:nth-child(5)  { opacity: 1; transform: none; transition-delay: 240ms; }
+.reveal-stagger.is-visible > *:nth-child(6)  { opacity: 1; transform: none; transition-delay: 300ms; }
+.reveal-stagger.is-visible > *:nth-child(7)  { opacity: 1; transform: none; transition-delay: 360ms; }
+.reveal-stagger.is-visible > *:nth-child(8)  { opacity: 1; transform: none; transition-delay: 420ms; }
+.reveal-stagger.is-visible > *:nth-child(n+9) { opacity: 1; transform: none; transition-delay: 480ms; }
+
+/* =========================================================
+   INTERACTIVE ELEMENT MICRO-ANIMATIONS
+   ========================================================= */
+
+/* Lift cards on hover — add .card-interactive to any card div */
+.card-interactive {
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.18s ease;
+  cursor: pointer;
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -4px rgba(0,0,0,0.10);
+}
+.card-interactive:active {
+  transform: translateY(0px) scale(0.99);
+}
+
+/* Press-down effect for buttons without Tailwind active:scale */
+.btn-press {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Nav link active indicator */
+.nav-link {
+  position: relative;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Sidebar icon wiggle on nav hover */
+.nav-link:hover .nav-icon {
+  transform: translateX(2px);
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-link .nav-icon {
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Shimmer skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #ede9e0 25%, #f5f2eb 50%, #ede9e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+/* Smooth height collapse/expand */
+.collapsible {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+}
+
+/* Stat number count-up visual cue */
+.stat-value {
+  animation: count-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+/* Badge pop-in */
+.badge-pop {
+  animation: scale-in-bounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

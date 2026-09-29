@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] disabled:pointer-events-none disabled:opacity-50";
+    "inline-flex items-center justify-center font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] select-none";
 
   const sizeStyles = {
     sm: "h-8 px-3 text-xs rounded-xl gap-1.5",
@@ -24,7 +24,7 @@ export function Button({
 
   const variantStyles = {
     primary:
-      "bg-[#171717] text-white hover:bg-[#262626] shadow-2xs",
+      "bg-[#171717] text-white hover:bg-[#262626] shadow-2xs hover:shadow-sm",
     secondary:
       "bg-white border border-[#E7E3DA] text-[#171717] hover:bg-[#F7F4ED] shadow-2xs",
     outline:

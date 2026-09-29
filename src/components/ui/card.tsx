@@ -3,12 +3,18 @@ import React from "react";
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
+  /** Add hover lift + press animation */
+  interactive?: boolean;
 }
 
-export function Card({ children, className = "", ...props }: CardProps) {
+export function Card({ children, className = "", interactive = false, ...props }: CardProps) {
   return (
     <div
-      className={`rounded-2xl border border-[#E7E3DA] bg-white p-6 text-[#171717] shadow-2xs ${className}`}
+      className={`rounded-2xl border border-[#E7E3DA] bg-white p-6 text-[#171717] shadow-2xs ${
+        interactive
+          ? "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] active:scale-[0.99] active:translate-y-0 cursor-pointer"
+          : ""
+      } ${className}`}
       {...props}
     >
       {children}

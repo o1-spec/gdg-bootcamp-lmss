@@ -200,7 +200,7 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
           Navigation
         </p>
 
-        {navItems.map((item) => {
+        {navItems.map((item, index) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" &&
@@ -216,7 +216,8 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
               key={item.name}
               href={item.href}
               onClick={onClose}
-              className={`group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-colors ${
+              style={{ "--stagger": `${index * 45}ms` } as React.CSSProperties}
+              className={`nav-link animate-slide-left group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all duration-150 active:scale-[0.97] ${
                 isActive
                   ? "bg-[#262626] font-semibold text-white shadow-2xs"
                   : "text-zinc-400 hover:bg-[#262626]/50 hover:text-zinc-200"
@@ -224,7 +225,7 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
             >
               <div className="flex items-center gap-3">
                 <item.icon
-                  className={`h-4 w-4 shrink-0 transition-colors ${
+                  className={`nav-icon h-4 w-4 shrink-0 transition-all duration-150 ${
                     isActive
                       ? "text-white"
                       : "text-zinc-500 group-hover:text-zinc-300"
@@ -234,7 +235,7 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
               </div>
 
               {showBadge && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EA4335] px-1.5 text-[10px] font-bold text-white">
+                <span className="badge-pop flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EA4335] px-1.5 text-[10px] font-bold text-white">
                   {unreadNotifications > 99 ? "99+" : unreadNotifications}
                 </span>
               )}

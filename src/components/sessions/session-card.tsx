@@ -34,7 +34,7 @@ export function SessionCard({ session, basePath = "/classes" }: SessionCardProps
   const formattedEndTime = timeFormatter.format(endsAt);
 
   return (
-    <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs sm:p-6">
+    <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         {/* Main Details */}
         <div className="space-y-2.5 min-w-0">
