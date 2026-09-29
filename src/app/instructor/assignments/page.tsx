@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getManagementAssignments } from "@/lib/assignments/queries";
 
@@ -113,11 +114,11 @@ export default async function InstructorAssignmentsPage({
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4">
+              <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
                 {assignments.map((asg) => (
                   <div
                     key={asg.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs hover:border-[#171717]/30 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]"
                   >
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
@@ -173,7 +174,7 @@ export default async function InstructorAssignmentsPage({
                     </div>
                   </div>
                 ))}
-              </div>
+              </ScrollReveal>
             )}
           </section>
         </>

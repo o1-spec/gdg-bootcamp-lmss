@@ -7,6 +7,7 @@ import { getStudentProgress } from "@/lib/progress/queries";
 import { getStudentCompletion } from "@/lib/completion/queries";
 import { getCertificate } from "@/lib/certificates/queries";
 import { ClaimCertificateButton } from "@/components/certificates/claim-certificate-button";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { db } from "@/lib/db";
 
 export const metadata = {
@@ -39,7 +40,7 @@ export default async function StudentProgressPage() {
       />
 
       {/* Top 4 Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Attendance Rate"
           value={`${progress.attendanceRate}%`}
@@ -103,11 +104,12 @@ export default async function StudentProgressPage() {
             variant: completion?.status === "COMPLETED" ? "success" : "info",
           }}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Completion Status & Certificate Eligibility Card */}
       {completion && (
-        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 sm:p-6 shadow-xs">
+        <ScrollReveal>
+          <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 sm:p-6 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-[#E7E3DA]">
             <div>
               <div className="flex items-center gap-2.5">
@@ -215,10 +217,11 @@ export default async function StudentProgressPage() {
             </div>
           )}
         </div>
+        </ScrollReveal>
       )}
 
       {/* Attendance Record & Released Grades Detail */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <ScrollReveal innerClassName="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Attendance Breakdown Card */}
         <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 sm:p-6 shadow-xs lg:col-span-1">
           <h3 className="text-sm font-semibold tracking-tight text-[#171717] pb-3 border-b border-[#E7E3DA]">
@@ -348,7 +351,7 @@ export default async function StudentProgressPage() {
             </div>
           )}
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 }

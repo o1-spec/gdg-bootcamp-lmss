@@ -2,6 +2,7 @@ import { requireStudent } from "@/lib/auth/session";
 import { getStudentChannels } from "@/lib/chat/queries";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export default async function StudentChatPage() {
   const user = await requireStudent();
@@ -27,12 +28,12 @@ export default async function StudentChatPage() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-3.5 sm:grid-cols-2">
+        <ScrollReveal mode="stagger" innerClassName="grid gap-3.5 sm:grid-cols-2">
           {channels.map((ch) => (
             <Link
               key={ch.id}
               href={`/chat/${ch.id}`}
-              className="group flex items-center gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-4.5 shadow-xs transition-all hover:border-[#171717]/40 hover:bg-[#F7F4ED]/40"
+              className="group flex items-center gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-4.5 shadow-xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] active:scale-[0.98]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F7F4ED] border border-[#E7E3DA] text-[#171717] font-bold text-sm">
                 #
@@ -61,7 +62,7 @@ export default async function StudentChatPage() {
               </svg>
             </Link>
           ))}
-        </div>
+        </ScrollReveal>
       )}
     </div>
   );

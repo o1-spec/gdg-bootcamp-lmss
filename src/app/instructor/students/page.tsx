@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { Student } from "@/types";
@@ -185,7 +186,7 @@ export default async function InstructorStudentsPage() {
         description="Monitor student engagement, attendance compliance, and academic benchmarks for your assigned tracks"
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Enrolled in Track"
           value={totalStudentsCount}
@@ -210,12 +211,13 @@ export default async function InstructorStudentsPage() {
             variant: "success",
           }}
         />
-      </div>
+      </ScrollReveal>
 
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
-          Student Roster ({students.length})
-        </h3>
+      <ScrollReveal>
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
+            Student Roster ({students.length})
+          </h3>
 
         {/* Desktop Table View */}
         <div className="hidden sm:block">
@@ -266,6 +268,7 @@ export default async function InstructorStudentsPage() {
           )}
         </div>
       </div>
+      </ScrollReveal>
     </div>
   );
 }

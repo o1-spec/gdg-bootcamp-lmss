@@ -5,6 +5,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { NextClassCard } from "@/components/dashboard/next-class-card";
 import { LatestAnnouncement } from "@/components/dashboard/latest-announcement";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorDashboardData } from "@/lib/progress/queries";
 
@@ -71,7 +72,7 @@ export default async function InstructorDashboardPage() {
       />
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Students"
           value={data.totalStudents}
@@ -105,37 +106,39 @@ export default async function InstructorDashboardPage() {
             variant: data.awaitingGradingCount > 0 ? "warning" : "success",
           }}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Next Class */}
-      {nextSession ? (
-        <NextClassCard session={nextSession} />
-      ) : (
-        <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-6 sm:p-8 text-center">
-          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#737373] mb-3">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-            </svg>
+      <ScrollReveal>
+        {nextSession ? (
+          <NextClassCard session={nextSession} />
+        ) : (
+          <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-6 sm:p-8 text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#737373] mb-3">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-semibold text-[#171717]">
+              No Upcoming Sessions Scheduled
+            </h3>
+            <p className="mt-1 text-xs text-[#737373]">
+              You do not have any live classes scheduled in your assigned tracks right now.
+            </p>
+            <div className="mt-4">
+              <Link
+                href="/instructor/classes/new"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#171717] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition-colors"
+              >
+                + Schedule Class
+              </Link>
+            </div>
           </div>
-          <h3 className="text-sm font-semibold text-[#171717]">
-            No Upcoming Sessions Scheduled
-          </h3>
-          <p className="mt-1 text-xs text-[#737373]">
-            You do not have any live classes scheduled in your assigned tracks right now.
-          </p>
-          <div className="mt-4">
-            <Link
-              href="/instructor/classes/new"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#171717] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition-colors"
-            >
-              + Schedule Class
-            </Link>
-          </div>
-        </div>
-      )}
+        )}
+      </ScrollReveal>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <ScrollReveal innerClassName="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left Column: Recent Submissions */}
         <div className="space-y-6 lg:col-span-2">
           <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 sm:p-6 shadow-xs">
@@ -275,7 +278,7 @@ export default async function InstructorDashboardPage() {
             </ul>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 }

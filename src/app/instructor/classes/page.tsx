@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export const metadata = {
   title: "Class Sessions | Instructor Portal",
@@ -106,7 +107,7 @@ export default async function InstructorClassesPage({
             </div>
 
             {upcoming.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4">
+              <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
                 {upcoming.map((session) => (
                   <SessionCard
                     key={session.id}
@@ -114,7 +115,7 @@ export default async function InstructorClassesPage({
                     basePath="/instructor/classes"
                   />
                 ))}
-              </div>
+              </ScrollReveal>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center">
                 <p className="text-xs text-[#737373]">
@@ -136,7 +137,7 @@ export default async function InstructorClassesPage({
             </div>
 
             {past.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4">
+              <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
                 {past.map((session) => (
                   <SessionCard
                     key={session.id}
@@ -144,7 +145,7 @@ export default async function InstructorClassesPage({
                     basePath="/instructor/classes"
                   />
                 ))}
-              </div>
+              </ScrollReveal>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center">
                 <p className="text-xs text-[#737373]">

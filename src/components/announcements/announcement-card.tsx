@@ -44,7 +44,7 @@ export function AnnouncementCard({
 
   return (
     <>
-      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all sm:p-6">
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] sm:p-6">
         <div className="flex flex-col gap-2 pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold tracking-tight text-[#171717] sm:text-base">

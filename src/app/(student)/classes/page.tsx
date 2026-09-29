@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export const metadata = {
   title: "Live Classes | Bootcamp LMS",
@@ -44,7 +45,7 @@ export default async function StudentClassesPage() {
         </div>
 
         {upcoming.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
+          <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
             {upcoming.map((session) => (
               <SessionCard
                 key={session.id}
@@ -52,7 +53,7 @@ export default async function StudentClassesPage() {
                 basePath="/classes"
               />
             ))}
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center shadow-2xs">
             <div className="rounded-xl bg-[#F7F4ED] p-3 text-[#737373] border border-[#E7E3DA]">
@@ -82,7 +83,7 @@ export default async function StudentClassesPage() {
         </div>
 
         {past.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
+          <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
             {past.map((session) => (
               <SessionCard
                 key={session.id}
@@ -90,7 +91,7 @@ export default async function StudentClassesPage() {
                 basePath="/classes"
               />
             ))}
-          </div>
+          </ScrollReveal>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center shadow-2xs">
             <div className="rounded-xl bg-[#F7F4ED] p-3 text-[#737373] border border-[#E7E3DA]">

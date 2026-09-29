@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { markReadAction, markAllReadAction } from "@/lib/notifications/actions";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 interface Notification {
   id: string;
@@ -78,6 +79,7 @@ export function NotificationsClient({
 }) {
   const [notifications, setNotifications] = useState(initialNotifications);
   const [, startTransition] = useTransition();
+  const listRef = useScrollReveal<HTMLUListElement>();
 
   const unread = notifications.filter((n) => !n.readAt).length;
 
@@ -133,7 +135,7 @@ export function NotificationsClient({
           </p>
         </div>
       ) : (
-        <ul className="divide-y divide-[#E7E3DA] rounded-2xl border border-[#E7E3DA] bg-white overflow-hidden shadow-xs">
+        <ul ref={listRef} className="reveal-stagger divide-y divide-[#E7E3DA] rounded-2xl border border-[#E7E3DA] bg-white overflow-hidden shadow-xs">
           {notifications.map((n) => {
             const isUnread = !n.readAt;
 

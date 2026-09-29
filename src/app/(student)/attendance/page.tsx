@@ -4,6 +4,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentAttendance } from "@/lib/attendance/queries";
 import { SubmitExcuseModal } from "@/components/excuses/submit-excuse-modal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export const metadata = {
   title: "Attendance Records | Student Portal",
@@ -34,7 +35,7 @@ export default async function StudentAttendancePage() {
       />
 
       {/* Summary KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Attendance Rate"
           value={summary.attendanceRate !== null ? `${summary.attendanceRate}%` : "—"}
@@ -82,10 +83,11 @@ export default async function StudentAttendancePage() {
             variant: summary.approvedExcusedCount > 0 ? "info" : "neutral",
           }}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Attendance History Section */}
-      <section className="space-y-4">
+      <ScrollReveal>
+        <section className="space-y-4">
         <div className="flex items-center justify-between pb-1 border-b border-[#E7E3DA]">
           <div>
             <h3 className="text-base font-bold tracking-tight text-[#171717]">
@@ -330,6 +332,7 @@ export default async function StudentAttendancePage() {
           </>
         )}
       </section>
+      </ScrollReveal>
     </div>
   );
 }

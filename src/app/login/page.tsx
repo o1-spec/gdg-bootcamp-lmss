@@ -132,7 +132,7 @@ export default function LoginPage() {
             />
           </div>
           {/* Form Card */}
-          <div className="bg-white border border-[#E7E3DA] rounded-2xl p-7 sm:p-9 shadow-xs">
+          <div className="bg-white border border-[#E7E3DA] rounded-2xl p-7 sm:p-9 shadow-xs animate-page">
             {/* Header inside card */}
             <div className="space-y-1.5 mb-7">
               <h2 className="text-2xl font-bold tracking-tight text-[#171717]">
@@ -243,7 +243,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="h-12 w-full rounded-xl bg-[#171717] text-sm font-semibold text-[#F7F4ED] hover:bg-[#262626] active:bg-[#000000] focus:outline-none focus:ring-2 focus:ring-[#171717] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                className="h-12 w-full rounded-xl bg-[#171717] text-sm font-semibold text-[#F7F4ED] hover:bg-[#262626] active:bg-[#000000] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#171717] focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
                 {loading ? (
                   <>

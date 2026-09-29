@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { AnnouncementItem } from "@/lib/announcements/queries";
 import { AnnouncementCard } from "./announcement-card";
 import { AnnouncementFormModal } from "./announcement-form-modal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 interface AnnouncementFeedProps {
   announcements: AnnouncementItem[];
@@ -84,7 +85,7 @@ export function AnnouncementFeed({
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <ScrollReveal mode="stagger" innerClassName="space-y-4">
           {filtered.map((ann) => (
             <AnnouncementCard
               key={ann.id}
@@ -93,7 +94,7 @@ export function AnnouncementFeed({
               cohortId={cohortId}
             />
           ))}
-        </div>
+        </ScrollReveal>
       )}
 
       {/* Create Modal */}

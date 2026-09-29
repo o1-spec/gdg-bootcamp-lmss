@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAdminOverview } from "@/lib/progress/queries";
 import { getAdminSessions } from "@/lib/sessions/queries";
@@ -65,7 +66,7 @@ export default async function AdminDashboardPage() {
       />
 
       {/* Primary Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Students"
           value={overview.totalActiveStudents}
@@ -90,11 +91,11 @@ export default async function AdminDashboardPage() {
           subtitle="Scheduled live sessions"
           badge={{ text: "Scheduled", variant: "neutral" }}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Secondary Operational Metrics */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]">
           <p className="text-xs font-medium text-[#737373]">Cohort Attendance Rate</p>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold tracking-tight text-[#171717]">
@@ -115,7 +116,7 @@ export default async function AdminDashboardPage() {
           <p className="mt-1 text-[11px] text-[#737373]">Average across all tracks</p>
         </div>
 
-        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5">
+        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]">
           <p className="text-xs font-medium text-[#737373]">Ungraded Submissions</p>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold tracking-tight text-[#171717]">
@@ -132,7 +133,7 @@ export default async function AdminDashboardPage() {
           <p className="mt-1 text-[11px] text-[#737373]">Across {overview.totalAssignments} assignments</p>
         </div>
 
-        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5">
+        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]">
           <p className="text-xs font-medium text-[#737373]">Pending Excuses</p>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold tracking-tight text-[#171717]">
@@ -147,7 +148,7 @@ export default async function AdminDashboardPage() {
           <p className="mt-1 text-[11px] text-[#737373]">Awaiting instructor/admin action</p>
         </div>
 
-        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5">
+        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]">
           <p className="text-xs font-medium text-[#737373]">Completion Rate</p>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold tracking-tight text-[#171717]">
@@ -159,10 +160,10 @@ export default async function AdminDashboardPage() {
           </div>
           <p className="mt-1 text-[11px] text-[#737373]">Certified / enrolled students</p>
         </div>
-      </div>
+      </ScrollReveal>
 
       {/* Main Grid: Upcoming Classes & Quick Actions */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <ScrollReveal innerClassName="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Upcoming Sessions (2 cols) */}
         <div className="space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
@@ -301,10 +302,11 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
 
       {/* Track Overview Table */}
-      <div className="space-y-4">
+      <ScrollReveal>
+        <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base font-semibold text-[#171717]">Track Performance Overview</h2>
@@ -387,9 +389,10 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Bottom Grid: Recent Activity (Audit Log) & Latest Announcement */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <ScrollReveal innerClassName="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Recent Activity / Audit Log */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -489,7 +492,7 @@ export default async function AdminDashboardPage() {
             )}
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorProgress } from "@/lib/progress/queries";
 import { getTrackCompletion } from "@/lib/completion/queries";
@@ -84,7 +85,7 @@ export default async function InstructorProgressPage({
       {trackProgress ? (
         <>
           {/* Summary Stat Cards */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Active Students"
               value={trackProgress.totalActiveStudents}
@@ -125,10 +126,11 @@ export default async function InstructorProgressPage({
                 variant: trackProgress.gradingBacklog === 0 ? "success" : "warning",
               }}
             />
-          </div>
+          </ScrollReveal>
 
           {/* Student Roster Progress Table */}
-          <div className="rounded-2xl border border-[#E7E3DA] bg-white shadow-2xs">
+          <ScrollReveal>
+            <div className="rounded-2xl border border-[#E7E3DA] bg-white shadow-2xs">
             <div className="flex flex-col gap-1 border-b border-[#E7E3DA] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div>
                 <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
@@ -247,6 +249,7 @@ export default async function InstructorProgressPage({
               </div>
             )}
           </div>
+          </ScrollReveal>
         </>
       ) : null}
     </div>

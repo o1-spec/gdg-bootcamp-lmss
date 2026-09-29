@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorAttendanceSessions } from "@/lib/attendance/queries";
 
@@ -62,7 +63,7 @@ export default async function InstructorAttendancePage({
       />
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Track Average Attendance"
           value={`${avgAttendance}%`}
@@ -87,7 +88,7 @@ export default async function InstructorAttendancePage({
           subtitle={`${pastSessions.length} completed`}
           badge={{ text: "Active Roster", variant: "info" }}
         />
-      </div>
+      </ScrollReveal>
 
       {assignedTracks.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-12 text-center">
@@ -147,11 +148,11 @@ export default async function InstructorAttendancePage({
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4">
+              <ScrollReveal mode="stagger" innerClassName="grid grid-cols-1 gap-4">
                 {sessions.map((session) => (
                   <div
                     key={session.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs hover:border-[#171717]/30 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8]"
                   >
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
@@ -228,7 +229,7 @@ export default async function InstructorAttendancePage({
                     </div>
                   </div>
                 ))}
-              </div>
+              </ScrollReveal>
             )}
           </section>
         </>
