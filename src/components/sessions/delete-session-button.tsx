@@ -37,33 +37,33 @@ export function DeleteSessionButton({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/40"
+        className="rounded-xl border border-[#EA4335]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#EA4335] hover:bg-[#EA4335]/10 transition-colors"
       >
         Delete Session
       </button>
 
       {/* Confirmation Dialog */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-2xs">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-xl space-y-4">
+            <h3 className="text-base font-semibold text-[#171717]">
               Confirm Delete Session
             </h3>
-            <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-xs text-[#737373] leading-relaxed">
               Are you sure you want to delete{" "}
-              <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">
+              <strong className="text-[#171717] font-semibold">
                 &ldquo;{sessionTitle}&rdquo;
               </strong>
               ? This action cannot be undone.
             </p>
 
             {errorMessage && (
-              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+              <div className="rounded-xl border border-[#EA4335]/20 bg-[#EA4335]/10 p-3 text-xs text-[#EA4335]">
                 {errorMessage}
               </div>
             )}
 
-            <div className="mt-5 flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-2 border-t border-[#E7E3DA]">
               <button
                 type="button"
                 disabled={isDeleting}
@@ -71,7 +71,7 @@ export function DeleteSessionButton({
                   setIsOpen(false);
                   setErrorMessage(null);
                 }}
-                className="rounded-lg border border-zinc-200 px-3.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                className="rounded-xl border border-[#E7E3DA] bg-white px-4 py-2 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
               >
                 Cancel
               </button>
@@ -79,7 +79,7 @@ export function DeleteSessionButton({
                 type="button"
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="rounded-lg bg-red-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+                className="rounded-xl bg-[#EA4335] px-4 py-2 text-xs font-semibold text-white hover:bg-[#EA4335]/90 disabled:opacity-50 transition-colors"
               >
                 {isDeleting ? "Deleting..." : "Yes, Delete"}
               </button>

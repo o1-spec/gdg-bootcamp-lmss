@@ -17,12 +17,12 @@ export function NextClassCard({ session }: NextClassCardProps) {
               Next Live Class
             </span>
 
-            <span className="rounded-full bg-[#262626] px-2.5 py-0.5 text-[11px] font-medium text-zinc-300 border border-[#333333]">
+            <span className="rounded-full bg-[#262626] px-2.5 py-0.5 text-[11px] font-medium text-[#E7E3DA] border border-[#333333]">
               {session.track}
             </span>
 
             {session.type && (
-              <span className="rounded-full bg-[#262626] px-2.5 py-0.5 text-[11px] font-medium text-zinc-400 border border-[#333333]">
+              <span className="rounded-full bg-[#262626] px-2.5 py-0.5 text-[11px] font-medium text-[#A3A3A3] border border-[#333333]">
                 {session.type}
               </span>
             )}
@@ -36,11 +36,11 @@ export function NextClassCard({ session }: NextClassCardProps) {
           </div>
 
           {/* Metadata: Date, Time & Instructor */}
-          <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-zinc-400">
+          <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-[#A3A3A3]">
             {/* Date and Time */}
             <div className="flex items-center gap-1.5">
               <svg
-                className="h-4 w-4 text-zinc-500"
+                className="h-4 w-4 text-[#737373]"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.75}
@@ -61,7 +61,7 @@ export function NextClassCard({ session }: NextClassCardProps) {
             {session.instructor?.name && (
               <div className="flex items-center gap-1.5">
                 <svg
-                  className="h-4 w-4 text-zinc-500"
+                  className="h-4 w-4 text-[#737373]"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.75}
@@ -107,7 +107,7 @@ export function NextClassCard({ session }: NextClassCardProps) {
               <span>Join Class</span>
             </a>
           ) : (
-            <span className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#262626] px-5 text-xs font-medium text-zinc-400 sm:w-auto border border-[#333333]">
+            <span className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#262626] px-5 text-xs font-medium text-[#737373] sm:w-auto border border-[#333333]">
               Link Available Soon
             </span>
           )}
