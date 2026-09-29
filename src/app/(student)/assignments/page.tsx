@@ -73,13 +73,13 @@ export default async function StudentAssignmentsPage() {
         />
       </div>
 
-      {/* Upcoming Section */}
+      {/* Due Soon / Upcoming Section */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-            Upcoming Assignments
-          </h2>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center justify-between pb-1 border-b border-[#E7E3DA]">
+          <h3 className="text-base font-bold tracking-tight text-[#171717]">
+            Due Soon & In Progress
+          </h3>
+          <span className="text-xs text-[#737373]">
             {upcoming.length} pending
           </span>
         </div>
@@ -95,8 +95,8 @@ export default async function StudentAssignmentsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/30">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center shadow-2xs">
+            <p className="text-xs text-[#737373]">
               No upcoming assignments. You are all caught up!
             </p>
           </div>
@@ -105,11 +105,11 @@ export default async function StudentAssignmentsPage() {
 
       {/* Submitted Section */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="flex items-center justify-between pb-1 border-b border-[#E7E3DA]">
+          <h3 className="text-base font-bold tracking-tight text-[#171717]">
             Submitted Work
-          </h2>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          </h3>
+          <span className="text-xs text-[#737373]">
             {submitted.length} submitted
           </span>
         </div>
@@ -125,8 +125,8 @@ export default async function StudentAssignmentsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/30">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center shadow-2xs">
+            <p className="text-xs text-[#737373]">
               No submitted assignments yet.
             </p>
           </div>
@@ -136,11 +136,11 @@ export default async function StudentAssignmentsPage() {
       {/* Past Due Section */}
       {pastDue.length > 0 && (
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E7E3DA]">
+            <h3 className="text-base font-bold tracking-tight text-[#171717]">
               Past Due (Unsubmitted)
-            </h2>
-            <span className="text-xs text-rose-600 dark:text-rose-400 font-medium">
+            </h3>
+            <span className="text-xs text-[#EA4335] font-semibold">
               {pastDue.length} missed
             </span>
           </div>

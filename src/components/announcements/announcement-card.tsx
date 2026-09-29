@@ -44,35 +44,35 @@ export function AnnouncementCard({
 
   return (
     <>
-      <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs transition-all dark:border-zinc-800 dark:bg-zinc-950 sm:p-6">
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all sm:p-6">
         <div className="flex flex-col gap-2 pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-base">
+            <h3 className="text-sm font-semibold tracking-tight text-[#171717] sm:text-base">
               {announcement.title}
             </h3>
             {announcement.trackName ? (
-              <span className="rounded bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-950/60 dark:text-sky-300">
+              <span className="rounded-md bg-[#4285F4]/10 px-2 py-0.5 text-2xs font-medium text-[#4285F4]">
                 {announcement.trackName}
               </span>
             ) : (
-              <span className="rounded bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+              <span className="rounded-md bg-[#F7F4ED] border border-[#E7E3DA] px-2 py-0.5 text-2xs font-medium text-[#737373]">
                 All Tracks
               </span>
             )}
           </div>
 
-          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+          <span className="text-2xs text-[#737373]">
             {formattedDate}
           </span>
         </div>
 
-        <p className="whitespace-pre-wrap text-xs leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-sm">
+        <p className="whitespace-pre-wrap text-xs leading-relaxed text-[#171717]/85 sm:text-sm">
           {announcement.body}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 pt-3 text-[11px] text-zinc-400 dark:border-zinc-900 dark:text-zinc-500">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#E7E3DA] pt-3 text-2xs text-[#737373]">
           <div>
-            Posted by <span className="font-medium text-zinc-700 dark:text-zinc-300">{announcement.authorName}</span>{" "}
+            Posted by <span className="font-medium text-[#171717]">{announcement.authorName}</span>{" "}
             ({announcement.authorRole.toLowerCase()})
           </div>
 
@@ -82,7 +82,7 @@ export function AnnouncementCard({
                 type="button"
                 onClick={() => setIsEditing(true)}
                 disabled={isPending}
-                className="font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                className="font-medium text-[#737373] hover:text-[#171717] transition-colors"
               >
                 Edit
               </button>
@@ -90,7 +90,7 @@ export function AnnouncementCard({
                 type="button"
                 onClick={handleDelete}
                 disabled={isPending}
-                className="font-medium text-red-600 hover:text-red-700 dark:text-red-400"
+                className="font-medium text-[#EA4335] hover:underline transition-colors"
               >
                 {isPending ? "Deleting..." : "Delete"}
               </button>
@@ -99,7 +99,7 @@ export function AnnouncementCard({
         </div>
 
         {deleteError && (
-          <p className="mt-2 text-xs text-red-600 dark:text-red-400">{deleteError}</p>
+          <p className="mt-2 text-xs text-[#EA4335]">{deleteError}</p>
         )}
       </div>
 

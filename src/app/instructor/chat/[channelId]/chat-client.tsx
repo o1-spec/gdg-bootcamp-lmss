@@ -89,69 +89,72 @@ export function ModeratorChatWindow({
       </div>
 
       {/* Moderation panel toggle */}
-      <div className="shrink-0 w-64 border-l border-zinc-200 dark:border-zinc-800 overflow-y-auto">
-        <div className="p-3 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="shrink-0 w-64 border-l border-[#E7E3DA] bg-white overflow-y-auto">
+        <div className="p-3 border-b border-[#E7E3DA]">
           <button
+            type="button"
             onClick={() => setShowMutePanel(!showMutePanel)}
-            className="w-full rounded-lg bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            className="w-full rounded-xl border border-[#E7E3DA] bg-[#F7F4ED] px-3 py-2 text-xs font-semibold text-[#171717] hover:bg-[#E7E3DA]/50 transition-colors"
           >
-            {showMutePanel ? "↑ Hide" : "🔇 Mute user"}
+            {showMutePanel ? "↑ Hide Mute Panel" : "🔇 Mute User"}
           </button>
         </div>
 
         {showMutePanel && (
-          <div className="p-3 space-y-2 border-b border-zinc-200 dark:border-zinc-800">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
-              Mute user
+          <div className="p-3.5 space-y-2.5 border-b border-[#E7E3DA] bg-[#F7F4ED]/40">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#737373]">
+              Mute User
             </p>
             {muteError && (
-              <p className="text-[11px] text-red-600 dark:text-red-400">{muteError}</p>
+              <p className="text-[11px] text-[#EA4335]">{muteError}</p>
             )}
             <input
               type="text"
               value={muteUserId}
               onChange={(e) => setMuteUserId(e.target.value)}
               placeholder="User ID"
-              className="w-full rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-xs dark:border-zinc-700 dark:bg-zinc-900"
+              className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden"
             />
             <input
               type="text"
               value={muteReason}
               onChange={(e) => setMuteReason(e.target.value)}
               placeholder="Reason (optional)"
-              className="w-full rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-xs dark:border-zinc-700 dark:bg-zinc-900"
+              className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden"
             />
             <button
+              type="button"
               onClick={handleMute}
-              className="w-full rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700"
+              className="w-full rounded-xl bg-[#EA4335] px-3 py-2 text-xs font-semibold text-white hover:bg-red-700 transition-colors shadow-2xs"
             >
-              Mute
+              Confirm Mute
             </button>
           </div>
         )}
 
         {/* Active mutes */}
-        <div className="p-3">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">
-            Active mutes ({mutes.length})
+        <div className="p-3.5">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#737373] mb-2.5">
+            Active Mutes ({mutes.length})
           </p>
           {mutes.length === 0 ? (
-            <p className="text-xs text-zinc-400">No active mutes.</p>
+            <p className="text-xs text-[#737373]">No active mutes.</p>
           ) : (
             <ul className="space-y-2">
               {mutes.map((m) => (
                 <li
                   key={m.id}
-                  className="rounded-lg border border-zinc-200 dark:border-zinc-800 p-2 text-xs"
+                  className="rounded-xl border border-[#E7E3DA] bg-[#F7F4ED]/40 p-2.5 text-xs"
                 >
-                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">{m.user.name}</p>
-                  <p className="text-zinc-500">{m.user.email}</p>
-                  {m.reason && <p className="text-zinc-400 italic mt-0.5">{m.reason}</p>}
+                  <p className="font-semibold text-[#171717]">{m.user.name}</p>
+                  <p className="text-2xs text-[#737373]">{m.user.email}</p>
+                  {m.reason && <p className="text-2xs text-[#737373] italic mt-1">{m.reason}</p>}
                   <button
+                    type="button"
                     onClick={() => handleUnmute(m.user.id)}
-                    className="mt-1.5 rounded px-2 py-0.5 text-[10px] font-semibold text-green-700 bg-green-50 hover:bg-green-100 dark:bg-green-950/30 dark:text-green-400 dark:hover:bg-green-900/40"
+                    className="mt-2 rounded-lg border border-[#34A853]/30 bg-green-50 px-2.5 py-1 text-2xs font-semibold text-[#34A853] hover:bg-green-100 transition-colors"
                   >
-                    Unmute
+                    Unmute User
                   </button>
                 </li>
               ))}

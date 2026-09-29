@@ -63,141 +63,157 @@ export default async function StudentAttendancePage() {
           title="Classes Present"
           value={`${summary.presentCount} / ${summary.totalCompletedEligible}`}
           subtitle={`${summary.lateCount} late check-in${summary.lateCount === 1 ? "" : "s"} recorded`}
-          badge={{ text: "On-time", variant: "info" }}
+          badge={{ text: "On-time", variant: "success" }}
+        />
+        <StatCard
+          title="Late Check-ins"
+          value={`${summary.lateCount}`}
+          subtitle="Arrived after class started"
+          badge={{
+            text: summary.lateCount > 0 ? "Late" : "Zero late",
+            variant: summary.lateCount > 0 ? "warning" : "neutral",
+          }}
         />
         <StatCard
           title="Excused Absences"
           value={`${summary.approvedExcusedCount}`}
-          subtitle="Approved by instructor or admin"
+          subtitle="Excluded from requirement score"
           badge={{
-            text: summary.approvedExcusedCount > 0 ? "Excluded" : "None",
+            text: summary.approvedExcusedCount > 0 ? "Excused" : "None",
             variant: summary.approvedExcusedCount > 0 ? "info" : "neutral",
           }}
-        />
-        <StatCard
-          title="Eligible Classes"
-          value={`${summary.totalCompletedEligible} eligible`}
-          subtitle={`${summary.totalCompletedSessions} completed (${summary.totalScheduled} total)`}
-          badge={{ text: "Active Cohort", variant: "neutral" }}
         />
       </div>
 
       {/* Attendance History Section */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pb-1 border-b border-[#E7E3DA]">
           <div>
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-base font-bold tracking-tight text-[#171717]">
               Attendance Log
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            </h3>
+            <p className="text-xs text-[#737373]">
               Approved excused absences are automatically excluded from your attendance rate calculation.
             </p>
           </div>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-[#737373]">
             {records.length} {records.length === 1 ? "session" : "sessions"} tracked
           </span>
         </div>
 
         {records.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 p-10 text-center dark:border-zinc-800 dark:bg-zinc-900/30">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center shadow-2xs">
+            <p className="text-xs text-[#737373]">
               No class sessions recorded yet. Attendance records will appear here as your cohort progresses.
             </p>
           </div>
         ) : (
           <>
             {/* Desktop Table View */}
-            <div className="hidden sm:block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="hidden sm:block overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white shadow-2xs">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-zinc-200 bg-zinc-50/75 dark:border-zinc-800 dark:bg-zinc-900/40">
+                <thead className="border-b border-[#E7E3DA] bg-[#F7F4ED]">
                   <tr>
-                    <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
+                    <th className="px-5 py-3.5 font-semibold text-[#171717]">
                       Session
                     </th>
-                    <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
+                    <th className="px-5 py-3.5 font-semibold text-[#171717]">
                       Date & Schedule
                     </th>
-                    <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                      Attendance Status
+                    <th className="px-5 py-3.5 font-semibold text-[#171717]">
+                      Status
                     </th>
-                    <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
+                    <th className="px-5 py-3.5 font-semibold text-[#171717]">
                       Method
                     </th>
-                    <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100 text-right">
+                    <th className="px-5 py-3.5 font-semibold text-[#171717] text-right">
                       Excuse / Action
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                <tbody className="divide-y divide-[#E7E3DA]">
                   {records.map((r) => {
                     const isCompleted = new Date(r.endsAt) < new Date();
                     return (
                       <tr
                         key={r.sessionId}
-                        className="transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30"
+                        className="transition-colors hover:bg-[#F7F4ED]/50"
                       >
-                        <td className="px-4 py-3.5">
-                          <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                        <td className="px-5 py-4">
+                          <p className="font-bold text-[#171717]">
                             {r.sessionTitle}
                           </p>
-                          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                          <p className="text-[11px] text-[#737373] mt-0.5">
                             {r.trackName ? `${r.trackName} Track` : "Shared Cohort"} • Instructor: {r.instructorName}
                           </p>
                         </td>
 
-                        <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400">
-                          {dateFormatter.format(r.startsAt)}
-                          <p className="text-2xs text-zinc-400">
+                        <td className="px-5 py-4 text-[#737373]">
+                          <span className="font-medium text-[#171717]">{dateFormatter.format(r.startsAt)}</span>
+                          <p className="text-2xs text-[#737373] mt-0.5">
                             {timeFormatter.format(r.startsAt)} – {timeFormatter.format(r.endsAt)}
                           </p>
                         </td>
 
-                        <td className="px-4 py-3.5">
+                        <td className="px-5 py-4">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             {r.status === "PRESENT" ? (
-                              <Badge variant="success">Present</Badge>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#34A853]/10 px-2.5 py-0.5 text-xs font-medium text-[#34A853] border border-[#34A853]/25">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#34A853]" />
+                                Present
+                              </span>
                             ) : r.status === "LATE" ? (
-                              <Badge variant="warning">Late</Badge>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FBBC04]/15 px-2.5 py-0.5 text-xs font-medium text-[#996500] border border-[#FBBC04]/30">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#FBBC04]" />
+                                Late
+                              </span>
                             ) : r.status === "ABSENT" ? (
-                              <Badge variant="danger">Absent</Badge>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EA4335]/10 px-2.5 py-0.5 text-xs font-medium text-[#EA4335] border border-[#EA4335]/25">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#EA4335]" />
+                                Absent
+                              </span>
                             ) : (
-                              <Badge variant="neutral">Upcoming / Unmarked</Badge>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F4ED] px-2.5 py-0.5 text-xs font-medium text-[#737373] border border-[#E7E3DA]">
+                                Upcoming
+                              </span>
                             )}
 
                             {r.excuseStatus === "APPROVED" && (
-                              <Badge variant="info">Excused</Badge>
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#4285F4]/10 px-2.5 py-0.5 text-xs font-medium text-[#4285F4] border border-[#4285F4]/25">
+                                Excused
+                              </span>
                             )}
                           </div>
                         </td>
 
-                        <td className="px-4 py-3.5 text-zinc-500 dark:text-zinc-400">
+                        <td className="px-5 py-4 text-[#737373]">
                           {r.method === "CHECK_IN" ? (
-                            <span className="text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+                            <span className="text-[11px] font-semibold text-[#34A853]">
                               Self Check-in
                             </span>
                           ) : r.method === "MANUAL" ? (
-                            <span className="text-[11px] font-medium text-blue-700 dark:text-blue-300">
+                            <span className="text-[11px] font-semibold text-[#4285F4]">
                               Instructor Marked
                             </span>
                           ) : r.method === "IMPORT" ? (
-                            <span className="text-[11px] font-medium text-purple-700 dark:text-purple-300">
+                            <span className="text-[11px] font-semibold text-[#737373]">
                               Imported Report
                             </span>
                           ) : (
-                            <span className="text-2xs text-zinc-400 italic">—</span>
+                            <span className="text-2xs text-[#737373] italic">—</span>
                           )}
                         </td>
 
-                        <td className="px-4 py-3.5 text-right">
+                        <td className="px-5 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
                             {r.excuseStatus && (
                               <span
-                                className={`text-2xs font-medium px-2 py-0.5 rounded-full ${
+                                className={`text-2xs font-semibold px-2.5 py-0.5 rounded-full border ${
                                   r.excuseStatus === "APPROVED"
-                                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                                    ? "bg-[#34A853]/10 text-[#34A853] border-[#34A853]/25"
                                     : r.excuseStatus === "REJECTED"
-                                    ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
-                                    : "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                                    ? "bg-[#EA4335]/10 text-[#EA4335] border-[#EA4335]/25"
+                                    : "bg-[#FBBC04]/15 text-[#996500] border-[#FBBC04]/30"
                                 }`}
                               >
                                 {r.excuseStatus === "PENDING"
@@ -240,35 +256,45 @@ export default async function StudentAttendancePage() {
                 return (
                   <div
                     key={r.sessionId}
-                    className="rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 space-y-2.5"
+                    className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs space-y-3"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                        <h4 className="text-sm font-bold text-[#171717]">
                           {r.sessionTitle}
                         </h4>
-                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                        <p className="text-[11px] text-[#737373] mt-0.5">
                           {r.trackName ? `${r.trackName} Track` : "Shared Cohort"}
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5">
                         {r.status === "PRESENT" ? (
-                          <Badge variant="success">Present</Badge>
+                          <span className="rounded-full bg-[#34A853]/10 text-[#34A853] border border-[#34A853]/25 px-2 py-0.5 text-2xs font-semibold">
+                            Present
+                          </span>
                         ) : r.status === "LATE" ? (
-                          <Badge variant="warning">Late</Badge>
+                          <span className="rounded-full bg-[#FBBC04]/15 text-[#996500] border border-[#FBBC04]/30 px-2 py-0.5 text-2xs font-semibold">
+                            Late
+                          </span>
                         ) : r.status === "ABSENT" ? (
-                          <Badge variant="danger">Absent</Badge>
+                          <span className="rounded-full bg-[#EA4335]/10 text-[#EA4335] border border-[#EA4335]/25 px-2 py-0.5 text-2xs font-semibold">
+                            Absent
+                          </span>
                         ) : (
-                          <Badge variant="neutral">Upcoming</Badge>
+                          <span className="rounded-full bg-[#F7F4ED] text-[#737373] border border-[#E7E3DA] px-2 py-0.5 text-2xs font-medium">
+                            Upcoming
+                          </span>
                         )}
                         {r.excuseStatus === "APPROVED" && (
-                          <Badge variant="info">Excused</Badge>
+                          <span className="rounded-full bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/25 px-2 py-0.5 text-2xs font-semibold">
+                            Excused
+                          </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-zinc-100 pt-2 text-[11px] text-zinc-500 dark:border-zinc-900 dark:text-zinc-400">
+                    <div className="flex items-center justify-between border-t border-[#E7E3DA] pt-3 text-xs text-[#737373]">
                       <span>{dateFormatter.format(r.startsAt)}</span>
                       <div className="flex items-center gap-2">
                         <span>

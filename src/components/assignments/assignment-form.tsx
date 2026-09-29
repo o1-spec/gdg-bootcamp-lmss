@@ -120,20 +120,21 @@ export function AssignmentForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {formError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+        <div className="rounded-xl border border-[#EA4335]/30 bg-red-50 p-4 text-xs text-[#EA4335]">
           {formError}
         </div>
       )}
 
-      <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-6 space-y-4">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 pb-3 border-b border-zinc-100 dark:border-zinc-900">
-          Assignment Information
+      {/* Section 1: Basic Information */}
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 sm:p-7 shadow-2xs space-y-4">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717] pb-3 border-b border-[#E7E3DA]">
+          Basic Information
         </h3>
 
         {/* Title */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-            Title <span className="text-red-500">*</span>
+          <label className="block text-xs font-medium text-[#171717]">
+            Title <span className="text-[#EA4335]">*</span>
           </label>
           <input
             type="text"
@@ -141,14 +142,14 @@ export function AssignmentForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Sliding Window Exercise: Max Subarray & Min Window"
-            className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-zinc-100"
+            className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs text-[#171717] placeholder-[#737373]/60 focus:border-[#171717] focus:outline-hidden"
           />
         </div>
 
         {/* Description */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-            Description & Problem Requirements <span className="text-red-500">*</span>
+          <label className="block text-xs font-medium text-[#171717]">
+            Description & Problem Requirements <span className="text-[#EA4335]">*</span>
           </label>
           <textarea
             rows={5}
@@ -156,27 +157,27 @@ export function AssignmentForm({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Provide problem prompts, test constraints, and submission expectations..."
-            className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-zinc-100"
+            className="w-full rounded-xl border border-[#E7E3DA] bg-white p-3 text-xs text-[#171717] placeholder-[#737373]/60 focus:border-[#171717] focus:outline-hidden"
           />
         </div>
 
         {/* Cohort & Track Assignment */}
         {hasSubmissions && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">
+          <div className="rounded-xl border border-[#FBBC04]/40 bg-amber-50/60 p-3.5 text-xs text-[#B45309]">
             Track and cohort are locked because students have already submitted work for this assignment.
           </div>
         )}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-1">
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Cohort <span className="text-red-500">*</span>
+            <label className="block text-xs font-medium text-[#171717]">
+              Cohort <span className="text-[#EA4335]">*</span>
             </label>
             <select
               disabled={hasSubmissions}
               value={cohortId}
               onChange={(e) => setCohortId(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 focus:border-zinc-900 focus:outline-none disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-100"
+              className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden disabled:opacity-50"
             >
               {cohorts.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -187,14 +188,14 @@ export function AssignmentForm({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Assigned Track {!isShared && <span className="text-red-500">*</span>}
+            <label className="block text-xs font-medium text-[#171717]">
+              Assigned Track {!isShared && <span className="text-[#EA4335]">*</span>}
             </label>
             <select
               disabled={hasSubmissions || isShared}
               value={trackId}
               onChange={(e) => setTrackId(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 focus:border-zinc-900 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-100"
+              className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {tracks.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -213,58 +214,44 @@ export function AssignmentForm({
             disabled={hasSubmissions}
             checked={isShared}
             onChange={(e) => setIsShared(e.target.checked)}
-            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 disabled:opacity-50 dark:border-zinc-700 dark:focus:ring-zinc-100"
+            className="h-4 w-4 rounded border-[#E7E3DA] text-[#171717] focus:ring-[#171717] disabled:opacity-50"
           />
-          <label htmlFor="isShared" className="text-xs text-zinc-700 dark:text-zinc-300">
-            <strong>Cohort-Wide Assignment:</strong> Assigned to all students across all tracks in this cohort
+          <label htmlFor="isShared" className="text-xs text-[#737373]">
+            <strong className="text-[#171717]">Cohort-Wide Assignment:</strong> Assigned to all students across all tracks in this cohort
           </label>
         </div>
       </div>
 
-      {/* Deadline & Grading Criteria */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-6 space-y-4">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 pb-3 border-b border-zinc-100 dark:border-zinc-900">
-          Due Date & Scoring
+      {/* Section 2: Submission Rules */}
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 sm:p-7 shadow-2xs space-y-4">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717] pb-3 border-b border-[#E7E3DA]">
+          Submission Rules
         </h3>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Due Date <span className="text-red-500">*</span>
+            <label className="block text-xs font-medium text-[#171717]">
+              Due Date <span className="text-[#EA4335]">*</span>
             </label>
             <input
               type="date"
               required
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-100"
+              className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Due Time <span className="text-red-500">*</span>
+            <label className="block text-xs font-medium text-[#171717]">
+              Due Time <span className="text-[#EA4335]">*</span>
             </label>
             <input
               type="time"
               required
               value={dueTime}
               onChange={(e) => setDueTime(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-100"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              Max Score (Points) <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              min="1"
-              required
-              value={maxScore}
-              onChange={(e) => setMaxScore(e.target.value)}
-              className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-xs text-zinc-900 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-100"
+              className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden"
             />
           </div>
         </div>
@@ -276,11 +263,32 @@ export function AssignmentForm({
             type="checkbox"
             checked={allowLateSubmission}
             onChange={(e) => setAllowLateSubmission(e.target.checked)}
-            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 dark:border-zinc-700 dark:focus:ring-zinc-100"
+            className="h-4 w-4 rounded border-[#E7E3DA] text-[#171717] focus:ring-[#171717]"
           />
-          <label htmlFor="allowLateSubmission" className="text-xs text-zinc-700 dark:text-zinc-300">
+          <label htmlFor="allowLateSubmission" className="text-xs text-[#737373]">
             Allow late submissions (students can submit after the deadline, flagged as Late)
           </label>
+        </div>
+      </div>
+
+      {/* Section 3: Grading */}
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 sm:p-7 shadow-2xs space-y-4">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717] pb-3 border-b border-[#E7E3DA]">
+          Grading
+        </h3>
+
+        <div className="space-y-1.5 max-w-xs">
+          <label className="block text-xs font-medium text-[#171717]">
+            Max Score (Points) <span className="text-[#EA4335]">*</span>
+          </label>
+          <input
+            type="number"
+            min="1"
+            required
+            value={maxScore}
+            onChange={(e) => setMaxScore(e.target.value)}
+            className="w-full h-12 rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs text-[#171717] focus:border-[#171717] focus:outline-hidden"
+          />
         </div>
       </div>
 
@@ -288,14 +296,14 @@ export function AssignmentForm({
       <div className="flex items-center justify-end gap-3 pt-2">
         <Link
           href={cancelHref}
-          className="rounded-lg border border-zinc-200 px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+          className="rounded-xl border border-[#E7E3DA] bg-white px-4 py-2 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
         >
           Cancel
         </Link>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="rounded-xl bg-[#171717] px-5 py-2 text-xs font-semibold text-white transition-colors hover:bg-black disabled:opacity-50 shadow-2xs"
         >
           {isSubmitting
             ? "Saving Assignment..."

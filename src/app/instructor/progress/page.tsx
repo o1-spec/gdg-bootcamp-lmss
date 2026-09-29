@@ -30,11 +30,11 @@ export default async function InstructorProgressPage({
           title="Track Progress & Monitoring"
           description="Monitor student learning velocity, attendance patterns, and grading status"
         />
-        <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-950">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center">
+          <p className="text-sm font-semibold text-[#171717]">
             No Assigned Tracks
           </p>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-[#737373]">
             You are not currently assigned as lead instructor to any bootcamp tracks.
           </p>
         </div>
@@ -60,16 +60,16 @@ export default async function InstructorProgressPage({
         action={
           data.assignedTracks.length > 1 ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">Track:</span>
-              <div className="flex rounded-lg border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900">
+              <span className="text-xs text-[#737373]">Track:</span>
+              <div className="flex rounded-xl border border-[#E7E3DA] bg-white p-1">
                 {data.assignedTracks.map((t) => (
                   <Link
                     key={t.id}
                     href={`/instructor/progress?trackId=${t.id}`}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
                       t.id === data.selectedTrackId
-                        ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                        ? "bg-[#171717] text-white"
+                        : "text-[#737373] hover:text-[#171717]"
                     }`}
                   >
                     {t.name}
@@ -128,83 +128,83 @@ export default async function InstructorProgressPage({
           </div>
 
           {/* Student Roster Progress Table */}
-          <div className="rounded-xl border border-zinc-200 bg-white shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="flex flex-col gap-1 border-b border-zinc-100 p-5 dark:border-zinc-900 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="rounded-2xl border border-[#E7E3DA] bg-white shadow-2xs">
+            <div className="flex flex-col gap-1 border-b border-[#E7E3DA] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div>
-                <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+                <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
                   Student Progress Overview ({trackProgress.trackName} Track)
                 </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs text-[#737373]">
                   Non-comparative progress monitoring across attendance and assignment submissions
                 </p>
               </div>
-              <span className="text-xs text-zinc-400">
+              <span className="text-xs text-[#737373]">
                 {trackProgress.students.length} students enrolled
               </span>
             </div>
 
             {trackProgress.students.length === 0 ? (
-              <div className="p-8 text-center text-xs text-zinc-500">
+              <div className="p-8 text-center text-xs text-[#737373]">
                 No active students currently enrolled in this track.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-zinc-100 bg-zinc-50 text-[11px] font-medium text-zinc-500 dark:border-zinc-900 dark:bg-zinc-900/50 dark:text-zinc-400">
+                  <thead className="border-b border-[#E7E3DA] bg-[#F7F4ED]/60 text-[11px] font-medium text-[#737373]">
                     <tr>
-                      <th className="px-5 py-3 sm:px-6">Student Name</th>
-                      <th className="px-4 py-3">Attendance</th>
-                      <th className="px-4 py-3">Submissions</th>
-                      <th className="px-4 py-3">Missing</th>
-                      <th className="px-4 py-3">Completion Status</th>
-                      <th className="px-4 py-3">Released Average</th>
-                      <th className="px-5 py-3 sm:px-6">Last Activity</th>
+                      <th className="px-5 py-3.5 sm:px-6 font-semibold text-[#171717]">Student Name</th>
+                      <th className="px-4 py-3.5 font-semibold text-[#171717]">Attendance</th>
+                      <th className="px-4 py-3.5 font-semibold text-[#171717]">Submissions</th>
+                      <th className="px-4 py-3.5 font-semibold text-[#171717]">Missing</th>
+                      <th className="px-4 py-3.5 font-semibold text-[#171717]">Completion Status</th>
+                      <th className="px-4 py-3.5 font-semibold text-[#171717]">Released Average</th>
+                      <th className="px-5 py-3.5 sm:px-6 font-semibold text-[#171717]">Last Activity</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900">
+                  <tbody className="divide-y divide-[#E7E3DA]">
                     {trackProgress.students.map((student) => {
                       const comp = completionMap.get(student.userId);
                       return (
                         <tr
                           key={student.userId}
-                          className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
+                          className="hover:bg-[#F7F4ED]/40 transition-colors"
                         >
-                          <td className="px-5 py-3.5 sm:px-6">
+                          <td className="px-5 py-4 sm:px-6">
                             <div>
-                              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                              <span className="font-semibold text-[#171717]">
                                 {student.name}
                               </span>
-                              <p className="text-[11px] text-zinc-400">{student.email}</p>
+                              <p className="text-[11px] text-[#737373]">{student.email}</p>
                             </div>
                           </td>
 
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <span
-                              className={`font-medium ${
+                              className={`font-semibold ${
                                 student.attendanceRate >= 80
-                                  ? "text-emerald-700 dark:text-emerald-400"
-                                  : "text-amber-700 dark:text-amber-400"
+                                  ? "text-[#34A853]"
+                                  : "text-[#B45309]"
                               }`}
                             >
                               {student.attendanceRate}%
                             </span>
                           </td>
 
-                          <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-100">
+                          <td className="px-4 py-4 font-medium text-[#171717]">
                             {student.assignmentsSubmitted}
                           </td>
 
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             {student.assignmentsMissing > 0 ? (
-                              <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 dark:bg-red-950/60 dark:text-red-300">
+                              <span className="rounded-full bg-red-50 px-2 py-0.5 text-2xs font-semibold text-[#EA4335] border border-[#EA4335]/30">
                                 {student.assignmentsMissing} missing
                               </span>
                             ) : (
-                              <span className="text-zinc-400">0</span>
+                              <span className="text-[#737373]">0</span>
                             )}
                           </td>
 
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             {comp ? (
                               <Badge
                                 variant={
@@ -222,21 +222,21 @@ export default async function InstructorProgressPage({
                                   : "Not Met"}
                               </Badge>
                             ) : (
-                              <span className="text-zinc-400 text-2xs">—</span>
+                              <span className="text-[#737373] text-2xs">—</span>
                             )}
                           </td>
 
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             {student.releasedGradeAverage !== null ? (
-                              <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                              <span className="font-semibold text-[#171717]">
                                 {student.releasedGradeAverage}%
                               </span>
                             ) : (
-                              <span className="text-zinc-400">None released</span>
+                              <span className="text-[#737373]">None released</span>
                             )}
                           </td>
 
-                          <td className="px-5 py-3.5 sm:px-6 text-zinc-500 dark:text-zinc-400">
+                          <td className="px-5 py-4 sm:px-6 text-[#737373]">
                             {student.lastActivity || "—"}
                           </td>
                         </tr>

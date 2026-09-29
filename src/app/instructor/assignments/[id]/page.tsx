@@ -52,7 +52,7 @@ export default async function InstructorAssignmentDetailsPage({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/instructor/assignments"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#737373] hover:text-[#171717] transition-colors"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -63,13 +63,13 @@ export default async function InstructorAssignmentDetailsPage({
         <div className="flex items-center gap-2">
           <Link
             href={`/instructor/grading?assignment=${assignment.id}`}
-            className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="rounded-xl bg-[#171717] px-3.5 py-2 text-xs font-semibold text-white shadow-2xs hover:bg-black transition-colors"
           >
             Grading Queue ({assignment.submissionCount || 0})
           </Link>
           <Link
             href={`/instructor/assignments/${assignment.id}/edit`}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-800 shadow-2xs hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-xl border border-[#E7E3DA] bg-white px-3.5 py-2 text-xs font-semibold text-[#171717] shadow-2xs hover:bg-[#F7F4ED] transition-colors"
           >
             Edit Assignment
           </Link>
@@ -80,7 +80,7 @@ export default async function InstructorAssignmentDetailsPage({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-8 space-y-6">
+      <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs sm:p-8 space-y-6">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             {assignment.track ? (
@@ -89,81 +89,81 @@ export default async function InstructorAssignmentDetailsPage({
               <Badge variant="warning">Shared (All Cohort)</Badge>
             )}
 
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">•</span>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="text-xs text-[#E7E3DA]">•</span>
+            <span className="text-xs text-[#737373]">
               {assignment.cohort.name}
             </span>
           </div>
 
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl">
             {assignment.title}
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 rounded-xl border border-zinc-100 bg-zinc-50/75 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/40 sm:grid-cols-3 text-xs">
+        <div className="grid grid-cols-1 gap-4 rounded-xl border border-[#E7E3DA] bg-[#F7F4ED]/60 p-4 sm:grid-cols-3 text-xs">
           <div>
-            <span className="text-zinc-400 font-medium">Due Date & Schedule</span>
-            <p className="font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+            <span className="text-[#737373] font-medium">Due Date & Schedule</span>
+            <p className="font-semibold text-[#171717] mt-1">
               {dateFormatter.format(assignment.dueAt)}
             </p>
-            <p className="text-2xs text-zinc-500 dark:text-zinc-400">{timeFormatter.format(assignment.dueAt)}</p>
+            <p className="text-2xs text-[#737373]">{timeFormatter.format(assignment.dueAt)}</p>
           </div>
 
           <div>
-            <span className="text-zinc-400 font-medium">Scoring Basis</span>
-            <p className="font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+            <span className="text-[#737373] font-medium">Scoring Basis</span>
+            <p className="font-semibold text-[#171717] mt-1">
               {assignment.maxScore} Max Points
             </p>
-            <p className="text-2xs text-zinc-500 dark:text-zinc-400">Standard grading scale</p>
+            <p className="text-2xs text-[#737373]">Standard grading scale</p>
           </div>
 
           <div>
-            <span className="text-zinc-400 font-medium">Late Policy</span>
-            <p className="font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+            <span className="text-[#737373] font-medium">Late Policy</span>
+            <p className="font-semibold text-[#171717] mt-1">
               {assignment.allowLateSubmission ? "Late Submissions Permitted" : "No Late Submissions"}
             </p>
-            <p className="text-2xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-2xs text-[#737373]">
               {assignment.submissionCount} total student submissions
             </p>
           </div>
         </div>
 
-        <div className="space-y-2 border-t border-zinc-100 dark:border-zinc-800/80 pt-5">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="space-y-2 border-t border-[#E7E3DA] pt-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
             Problem Description & Specifications
           </h2>
-          <div className="text-xs leading-relaxed text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
+          <div className="text-xs leading-relaxed text-[#171717] whitespace-pre-wrap">
             {assignment.description}
           </div>
         </div>
 
         {/* Rubric Section */}
-        <div className="space-y-3 border-t border-zinc-100 dark:border-zinc-800/80 pt-5">
+        <div className="space-y-3 border-t border-[#E7E3DA] pt-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
               Grading Rubric
             </h2>
             {rubric && <RubricDeleteButton assignmentId={id} />}
           </div>
           {rubric ? (
-            <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden">
+            <div className="divide-y divide-[#E7E3DA] rounded-xl border border-[#E7E3DA] bg-white overflow-hidden">
               {rubric.criteria.map((c) => (
                 <div key={c.id} className="flex items-center justify-between px-4 py-3">
                   <div>
-                    <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">{c.title}</p>
-                    {c.description && <p className="text-xs text-zinc-500">{c.description}</p>}
+                    <p className="text-xs font-semibold text-[#171717]">{c.title}</p>
+                    {c.description && <p className="text-xs text-[#737373] mt-0.5">{c.description}</p>}
                   </div>
-                  <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">{c.maxScore} pts</span>
+                  <span className="text-xs font-bold text-[#171717]">{c.maxScore} pts</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3">
-                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Total</span>
-                <span className="text-xs font-bold">{rubric.criteria.reduce((s, c) => s + c.maxScore, 0)} / {assignment.maxScore} pts</span>
+              <div className="flex items-center justify-between bg-[#F7F4ED]/60 px-4 py-3">
+                <span className="text-xs font-semibold text-[#737373]">Total</span>
+                <span className="text-xs font-bold text-[#171717]">{rubric.criteria.reduce((s, c) => s + c.maxScore, 0)} / {assignment.maxScore} pts</span>
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 p-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+            <div className="rounded-xl border border-dashed border-[#E7E3DA] bg-[#F7F4ED]/30 p-5">
+              <p className="text-xs text-[#737373] mb-3">
                 No rubric yet. Add one to enable per-criterion grading.
               </p>
               <RubricBuilder

@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { ClassSession } from "@/types";
-import { Badge } from "@/components/ui/badge";
 
 interface UpcomingClassesProps {
   classes: ClassSession[];
@@ -9,54 +8,69 @@ interface UpcomingClassesProps {
 
 export function UpcomingClasses({ classes }: UpcomingClassesProps) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-6">
-      <div className="flex items-center justify-between pb-4">
+    <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
+      <div className="flex items-center justify-between pb-4 border-b border-[#E7E3DA]">
         <div>
-          <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-base font-bold tracking-tight text-[#171717]">
             Upcoming Classes
           </h3>
-          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            Sessions scheduled for this week
+          <p className="mt-0.5 text-xs text-[#737373]">
+            Upcoming sessions scheduled for your cohort
           </p>
         </div>
         <Link
           href="/classes"
-          className="text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="text-xs font-semibold text-[#171717] hover:underline"
         >
           View all
         </Link>
       </div>
 
-      <div className="divide-y divide-zinc-100 dark:divide-zinc-900">
-        {classes.map((cls) => (
+      <div className="divide-y divide-[#E7E3DA]">
+        {classes.slice(0, 4).map((cls) => (
           <div
             key={cls.id}
-            className="flex flex-col gap-2 py-3.5 first:pt-2 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-2.5 py-4 first:pt-4 last:pb-1 sm:flex-row sm:items-center sm:justify-between"
           >
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+            <div className="space-y-1.5 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs sm:text-sm font-semibold text-[#171717] truncate">
                   {cls.title}
                 </span>
-                <Badge variant="neutral">{cls.type}</Badge>
+                <span className="rounded-full bg-[#F7F4ED] px-2 py-0.5 text-[10px] font-medium text-[#737373] border border-[#E7E3DA]">
+                  {cls.track || cls.type}
+                </span>
               </div>
-              <div className="flex items-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400">
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#737373]">
                 <span>
                   {cls.date} • {cls.time}
                 </span>
-                <span>•</span>
-                <span>Instructor: {cls.instructor.name}</span>
+                {cls.instructor?.name && (
+                  <>
+                    <span className="text-[#E7E3DA]" aria-hidden="true">•</span>
+                    <span>Instructor: {cls.instructor.name}</span>
+                  </>
+                )}
               </div>
             </div>
 
-            <a
-              href={cls.meetingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-7 items-center justify-center rounded-md border border-zinc-200 px-3 text-[11px] font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 sm:self-center"
-            >
-              Meeting Link
-            </a>
+            <div className="shrink-0 self-start sm:self-center">
+              {cls.meetingUrl ? (
+                <a
+                  href={cls.meetingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 items-center justify-center rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
+                >
+                  Join Link
+                </a>
+              ) : (
+                <span className="inline-flex h-8 items-center justify-center rounded-xl bg-[#F7F4ED] px-3 text-xs font-medium text-[#737373] border border-[#E7E3DA]">
+                  Scheduled
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>

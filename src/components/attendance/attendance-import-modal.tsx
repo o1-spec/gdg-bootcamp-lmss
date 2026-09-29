@@ -116,24 +116,24 @@ export function AttendanceImportModal({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+        className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
       >
-        <svg className="h-4 w-4 text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <svg className="h-4 w-4 text-[#737373]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
         </svg>
-        Import Meet/Zoom CSV
+        <span>Import Meet/Zoom CSV</span>
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#E7E3DA] bg-white p-6 sm:p-7 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                <h3 className="text-base font-semibold text-[#171717]">
                   Import Meeting Attendance CSV
                 </h3>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                  {sessionTitle} • Match participant emails against enrolled bootcamp students
+                <p className="mt-1 text-xs text-[#737373]">
+                  {sessionTitle} • Match participant emails against enrolled students
                 </p>
               </div>
               <button
@@ -142,37 +142,37 @@ export function AttendanceImportModal({
                   setIsOpen(false);
                   if (importId) discardImportAction(importId);
                 }}
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                className="text-[#737373] hover:text-[#171717] p-1 rounded-lg"
               >
                 ✕
               </button>
             </div>
 
             {error && (
-              <div className="mt-4 rounded-lg bg-red-50 p-3 text-xs text-red-700 dark:bg-red-950/50 dark:text-red-300">
+              <div className="mt-4 rounded-xl border border-[#EA4335]/30 bg-red-50 p-3.5 text-xs text-[#EA4335]">
                 {error}
               </div>
             )}
 
             {appliedCount !== null && (
-              <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-xs text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+              <div className="mt-4 rounded-xl border border-[#34A853]/30 bg-green-50 p-3.5 text-xs text-[#34A853] font-medium">
                 Successfully imported and marked Present for {appliedCount} student{appliedCount === 1 ? "" : "s"}!
               </div>
             )}
 
             {!preview ? (
-              <form onSubmit={handlePreview} className="mt-4 space-y-4">
+              <form onSubmit={handlePreview} className="mt-5 space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  <label className="block text-xs font-medium text-[#171717] mb-1.5">
                     Upload CSV File
                   </label>
                   <input
                     type="file"
                     accept=".csv,text/csv"
                     onChange={handleFileChange}
-                    className="block w-full text-xs text-zinc-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200 dark:file:bg-zinc-800 dark:file:text-zinc-300"
+                    className="block w-full text-xs text-[#737373] file:mr-4 file:py-2 file:px-3.5 file:rounded-xl file:border file:border-[#E7E3DA] file:text-xs file:font-medium file:bg-[#F7F4ED] file:text-[#171717] hover:file:bg-[#E7E3DA]/50 transition-colors"
                   />
-                  <p className="mt-1 text-2xs text-zinc-400">
+                  <p className="mt-1.5 text-2xs text-[#737373]">
                     Supports Google Meet attendance reports, Zoom meeting logs, and standard CSVs with an &ldquo;Email&rdquo; column.
                   </p>
                 </div>
@@ -180,7 +180,7 @@ export function AttendanceImportModal({
                 <div>
                   <label
                     htmlFor="csv-raw-text"
-                    className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+                    className="block text-xs font-medium text-[#171717] mb-1.5"
                   >
                     Or Paste CSV Content
                   </label>
@@ -190,46 +190,46 @@ export function AttendanceImportModal({
                     value={csvText}
                     onChange={(e) => setCsvText(e.target.value)}
                     placeholder="Name,Email,Join Time,Leave Time&#10;Alice Smith,alice@example.com,10:00,11:30"
-                    className="w-full font-mono rounded-lg border border-zinc-200 bg-white p-2.5 text-xs text-zinc-900 placeholder-zinc-400 focus:border-zinc-500 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                    className="w-full font-mono rounded-xl border border-[#E7E3DA] bg-white p-3 text-xs text-[#171717] placeholder-[#737373]/60 focus:border-[#171717] focus:outline-hidden"
                   />
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2">
+                <div className="flex justify-end gap-2.5 pt-2">
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    className="rounded-xl border border-[#E7E3DA] bg-white px-4 py-2 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading || !csvText.trim()}
-                    className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+                    className="rounded-xl bg-[#171717] px-4 py-2 text-xs font-semibold text-white hover:bg-black transition-colors disabled:opacity-50"
                   >
                     {loading ? "Parsing CSV..." : "Preview Matches"}
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="mt-4 space-y-4">
+              <div className="mt-5 space-y-4">
                 {/* Match Stats */}
                 <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                    <p className="text-xs text-zinc-500">CSV Total</p>
-                    <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                  <div className="rounded-xl bg-[#F7F4ED]/60 p-3 border border-[#E7E3DA]">
+                    <p className="text-xs text-[#737373]">CSV Total</p>
+                    <p className="text-base font-bold text-[#171717] mt-0.5">
                       {preview.totalRows}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-emerald-50 p-2.5 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-                    <p className="text-xs text-emerald-700 dark:text-emerald-300">Enrolled Students Matched</p>
-                    <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+                  <div className="rounded-xl bg-green-50/70 p-3 border border-[#34A853]/30">
+                    <p className="text-xs text-[#34A853] font-medium">Students Matched</p>
+                    <p className="text-base font-bold text-[#34A853] mt-0.5">
                       {preview.matched.length}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                    <p className="text-xs text-zinc-500">Unmatched / Guests</p>
-                    <p className="text-sm font-bold text-zinc-600 dark:text-zinc-400">
+                  <div className="rounded-xl bg-[#F7F4ED]/60 p-3 border border-[#E7E3DA]">
+                    <p className="text-xs text-[#737373]">Unmatched / Guests</p>
+                    <p className="text-base font-bold text-[#737373] mt-0.5">
                       {preview.unmatched.length}
                     </p>
                   </div>
@@ -238,59 +238,61 @@ export function AttendanceImportModal({
                 {/* Matched Students Table */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                    <h4 className="text-xs font-semibold text-[#171717]">
                       Select Students to Mark Present ({selectedUserIds.size} selected)
                     </h4>
                     <button
                       type="button"
                       onClick={toggleAll}
-                      className="text-2xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+                      className="text-2xs font-medium text-[#737373] hover:text-[#171717]"
                     >
                       {selectedUserIds.size === preview.matched.length ? "Deselect All" : "Select All"}
                     </button>
                   </div>
 
                   {preview.matched.length === 0 ? (
-                    <p className="rounded-lg border border-dashed border-zinc-200 p-4 text-center text-xs text-zinc-500 dark:border-zinc-800">
+                    <p className="rounded-xl border border-dashed border-[#E7E3DA] p-5 text-center text-xs text-[#737373]">
                       No emails matched enrolled students in this track/cohort.
                     </p>
                   ) : (
-                    <div className="max-h-48 overflow-y-auto rounded-lg border border-zinc-200 dark:border-zinc-800">
+                    <div className="max-h-52 overflow-y-auto rounded-xl border border-[#E7E3DA]">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-zinc-50 text-2xs text-zinc-500 dark:bg-zinc-900">
+                        <thead className="bg-[#F7F4ED]/75 text-2xs text-[#737373]">
                           <tr>
-                            <th className="px-3 py-2 w-8">
+                            <th className="px-3.5 py-2.5 w-8">
                               <input
                                 type="checkbox"
                                 checked={selectedUserIds.size === preview.matched.length && preview.matched.length > 0}
                                 onChange={toggleAll}
+                                className="rounded border-[#E7E3DA]"
                               />
                             </th>
-                            <th className="px-3 py-2">Student</th>
-                            <th className="px-3 py-2">Email</th>
-                            <th className="px-3 py-2">Current LMS Status</th>
+                            <th className="px-3.5 py-2.5 font-semibold text-[#171717]">Student</th>
+                            <th className="px-3.5 py-2.5 font-semibold text-[#171717]">Email</th>
+                            <th className="px-3.5 py-2.5 font-semibold text-[#171717]">Current Status</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900">
+                        <tbody className="divide-y divide-[#E7E3DA]">
                           {preview.matched.map((m) => (
                             <tr
                               key={m.userId}
                               onClick={() => toggleUser(m.userId)}
-                              className="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                              className="cursor-pointer hover:bg-[#F7F4ED]/40 transition-colors"
                             >
-                              <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                              <td className="px-3.5 py-2.5" onClick={(e) => e.stopPropagation()}>
                                 <input
                                   type="checkbox"
                                   checked={selectedUserIds.has(m.userId)}
                                   onChange={() => toggleUser(m.userId)}
+                                  className="rounded border-[#E7E3DA]"
                                 />
                               </td>
-                              <td className="px-3 py-2 font-medium text-zinc-900 dark:text-zinc-100">
+                              <td className="px-3.5 py-2.5 font-medium text-[#171717]">
                                 {m.name}
                               </td>
-                              <td className="px-3 py-2 text-zinc-500">{m.email}</td>
-                              <td className="px-3 py-2">
-                                <span className="inline-flex rounded-full px-2 py-0.5 text-2xs font-medium bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                              <td className="px-3.5 py-2.5 text-[#737373]">{m.email}</td>
+                              <td className="px-3.5 py-2.5">
+                                <span className="inline-flex rounded-full px-2 py-0.5 text-2xs font-medium bg-[#F7F4ED] text-[#737373] border border-[#E7E3DA]">
                                   {m.lmsStatus || "UNMARKED"}
                                 </span>
                               </td>
@@ -304,29 +306,29 @@ export function AttendanceImportModal({
 
                 {/* Unmatched list if any */}
                 {preview.unmatched.length > 0 && (
-                  <div className="space-y-1">
-                    <h5 className="text-2xs font-semibold text-zinc-500 uppercase tracking-wider">
+                  <div className="space-y-1.5 pt-2">
+                    <h5 className="text-2xs font-semibold text-[#737373] uppercase tracking-wider">
                       Unmatched Participants ({preview.unmatched.length})
                     </h5>
-                    <p className="text-2xs text-zinc-400">
+                    <p className="text-2xs text-[#737373]">
                       These participants from the meeting are not enrolled students in this track/cohort.
                     </p>
-                    <div className="max-h-24 overflow-y-auto rounded-lg border border-zinc-100 bg-zinc-50/50 p-2 text-2xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/30">
+                    <div className="max-h-24 overflow-y-auto rounded-xl border border-[#E7E3DA] bg-[#F7F4ED]/40 p-2.5 text-2xs text-[#737373]">
                       {preview.unmatched.map((u, idx) => (
                         <div key={idx} className="flex justify-between py-0.5">
-                          <span>{u.name || "Unknown"}</span>
-                          <span className="font-mono text-zinc-400">{u.email}</span>
+                          <span className="font-medium text-[#171717]">{u.name || "Unknown"}</span>
+                          <span className="font-mono text-[#737373]">{u.email}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between pt-3 border-t border-zinc-100 dark:border-zinc-900">
+                <div className="flex items-center justify-between pt-4 border-t border-[#E7E3DA]">
                   <button
                     type="button"
                     onClick={handleDiscard}
-                    className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    className="rounded-xl border border-[#E7E3DA] bg-white px-3.5 py-2 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
                   >
                     Discard & Re-upload
                   </button>
@@ -335,7 +337,7 @@ export function AttendanceImportModal({
                     type="button"
                     disabled={loading || selectedUserIds.size === 0}
                     onClick={handleApply}
-                    className="rounded-lg bg-emerald-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-emerald-700 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                    className="rounded-xl bg-[#34A853] px-4 py-2 text-xs font-semibold text-white hover:bg-[#2d9247] disabled:opacity-50 transition-colors shadow-xs"
                   >
                     {loading
                       ? "Applying..."

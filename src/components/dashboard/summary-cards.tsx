@@ -11,9 +11,12 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       title: "Attendance",
       value: `${summary.attendancePercentage}%`,
       subtitle: `${summary.attendedSessions} of ${summary.totalSessions} sessions attended`,
+      accentDot: "bg-[#34A853]",
+      statusText: summary.attendancePercentage >= 75 ? "On track" : "Attention needed",
+      statusColor: summary.attendancePercentage >= 75 ? "text-[#34A853]" : "text-[#EA4335]",
       icon: (
         <svg
-          className="h-4 w-4 text-emerald-600 dark:text-emerald-400"
+          className="h-4 w-4 text-[#34A853]"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.75}
@@ -26,16 +29,22 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           />
         </svg>
       ),
-      badgeText: "In good standing",
-      badgeColor: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300",
     },
     {
       title: "Assignments",
       value: `${summary.completedAssignments} / ${summary.totalAssignments}`,
-      subtitle: `${summary.pendingReviewAssignments} currently pending review`,
+      subtitle:
+        summary.pendingReviewAssignments > 0
+          ? `${summary.pendingReviewAssignments} pending review`
+          : "All submissions up to date",
+      accentDot: "bg-[#4285F4]",
+      statusText: `${Math.round(
+        (summary.completedAssignments / Math.max(1, summary.totalAssignments)) * 100
+      )}% done`,
+      statusColor: "text-[#4285F4]",
       icon: (
         <svg
-          className="h-4 w-4 text-sky-600 dark:text-sky-400"
+          className="h-4 w-4 text-[#4285F4]"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.75}
@@ -48,16 +57,22 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           />
         </svg>
       ),
-      badgeText: "80% completed",
-      badgeColor: "text-sky-700 bg-sky-50 dark:bg-sky-950/60 dark:text-sky-300",
     },
     {
       title: "Average Score",
-      value: `${summary.averageScore}%`,
+      value: summary.averageScore > 0 ? `${summary.averageScore}%` : "—",
       subtitle: "Across all graded submissions",
+      accentDot: "bg-[#FBBC04]",
+      statusText:
+        summary.averageScore >= 80
+          ? "Good performance"
+          : summary.averageScore > 0
+          ? "In progress"
+          : "Not yet graded",
+      statusColor: summary.averageScore >= 80 ? "text-[#34A853]" : "text-[#737373]",
       icon: (
         <svg
-          className="h-4 w-4 text-amber-600 dark:text-amber-400"
+          className="h-4 w-4 text-[#FBBC04]"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.75}
@@ -70,8 +85,6 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           />
         </svg>
       ),
-      badgeText: "Grade A",
-      badgeColor: "text-amber-700 bg-amber-50 dark:bg-amber-950/60 dark:text-amber-300",
     },
   ];
 
@@ -80,29 +93,31 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       {cards.map((card) => (
         <div
           key={card.title}
-          className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950"
+          className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-shadow hover:shadow-xs"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              {card.title}
-            </span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
+            <div className="flex items-center gap-2">
+              <span className={`h-1.5 w-1.5 rounded-full ${card.accentDot}`} />
+              <span className="text-xs font-medium text-[#737373]">
+                {card.title}
+              </span>
+            </div>
+
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7F4ED] border border-[#E7E3DA]">
               {card.icon}
             </div>
           </div>
 
-          <div className="mt-2.5 flex items-baseline justify-between">
-            <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl">
               {card.value}
             </span>
-            <span
-              className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${card.badgeColor}`}
-            >
-              {card.badgeText}
+            <span className={`text-[11px] font-medium ${card.statusColor}`}>
+              {card.statusText}
             </span>
           </div>
 
-          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-2 text-xs text-[#737373] leading-relaxed">
             {card.subtitle}
           </p>
         </div>

@@ -99,39 +99,44 @@ export default async function StudentDashboardPage() {
     : null;
 
   return (
-    <div className="space-y-6">
-      {/* 1. Welcome Section */}
+    <div className="space-y-6 sm:space-y-8">
+      {/* 1. Welcome Greeting Section */}
       <WelcomeSection student={studentProfile} />
 
-      {/* 2. Next Class Card (if any scheduled) */}
+      {/* 2. Next Class Prominent Card */}
       {nextSession ? (
         <NextClassCard session={nextSession} />
       ) : (
-        <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950 sm:p-6">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            No Live Class Scheduled
-          </h3>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            You do not have any upcoming class sessions today. Check your track schedule for upcoming dates.
+        <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-[#737373]" aria-hidden="true" />
+            <h3 className="text-sm font-semibold text-[#171717]">
+              No Live Class Scheduled Today
+            </h3>
+          </div>
+          <p className="mt-1 text-xs text-[#737373] max-w-xl leading-relaxed">
+            You do not have any upcoming class sessions scheduled for today. Check your track schedule for upcoming dates and recorded sessions.
           </p>
         </div>
       )}
 
-      {/* 3. Small Summary Cards */}
+      {/* 3. 3 Compact Summary Cards */}
       <SummaryCards summary={studentSummary} />
 
-      {/* 4. Main Content Grid */}
+      {/* 4. Primary Content Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Left Column: Upcoming Classes & Recent Assignments */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Upcoming Classes */}
           {upcomingList.length > 0 ? (
             <UpcomingClasses classes={upcomingList} />
           ) : (
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
+              <h3 className="text-base font-bold tracking-tight text-[#171717]">
                 Upcoming Classes
               </h3>
-              <p className="mt-1 text-xs text-zinc-500">No further classes scheduled this week.</p>
+              <p className="mt-1 text-xs text-[#737373]">
+                No further live sessions scheduled for this week.
+              </p>
             </div>
           )}
 
@@ -139,57 +144,115 @@ export default async function StudentDashboardPage() {
           <RecentAssignments assignments={recentAsgList} />
         </div>
 
+        {/* Right Column: Announcement & Progress Snapshot */}
         <div className="space-y-6 lg:col-span-1">
           {/* Latest Announcement */}
           {announcementObj ? (
             <LatestAnnouncement announcement={announcementObj} />
           ) : (
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
+              <h3 className="text-base font-bold tracking-tight text-[#171717]">
                 Latest Announcement
               </h3>
-              <p className="mt-1 text-xs text-zinc-500">No cohort announcements posted yet.</p>
+              <p className="mt-1 text-xs text-[#737373]">
+                No cohort announcements posted yet.
+              </p>
             </div>
           )}
 
-          {/* Quick Track Info */}
-          <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-6">
-            <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Track Resources ({data.trackName})
-            </h3>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-              Curriculum guides and repository links
-            </p>
+          {/* Progress Snapshot & Track Resources */}
+          <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
+            <div className="border-b border-[#E7E3DA] pb-4">
+              <h3 className="text-base font-bold tracking-tight text-[#171717]">
+                Progress Snapshot
+              </h3>
+              <p className="mt-0.5 text-xs text-[#737373]">
+                Track: {data.trackName}
+              </p>
+            </div>
 
-            <ul className="mt-4 space-y-2 text-xs">
-              <li>
-                <Link
-                  href="/classes"
-                  className="flex items-center justify-between rounded-lg p-2 text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                >
-                  <span className="font-medium">Class Recordings & Notes</span>
-                  <span className="text-[11px] text-zinc-400">View Archive</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/assignments"
-                  className="flex items-center justify-between rounded-lg p-2 text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                >
-                  <span className="font-medium">Assignment Workspace</span>
-                  <span className="text-[11px] text-zinc-400">{data.totalVisibleAssignments} exercises</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/progress"
-                  className="flex items-center justify-between rounded-lg p-2 text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                >
-                  <span className="font-medium">Attendance & Grades Report</span>
-                  <span className="text-[11px] text-zinc-400">View Details</span>
-                </Link>
-              </li>
-            </ul>
+            {/* Attendance Requirement Bar */}
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-[#737373]">
+                  Attendance (75% min required)
+                </span>
+                <span className="font-semibold text-[#171717]">
+                  {data.attendanceRate}%
+                </span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-[#F7F4ED] border border-[#E7E3DA] overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    data.attendanceRate >= 75 ? "bg-[#34A853]" : "bg-[#FBBC04]"
+                  }`}
+                  style={{ width: `${Math.min(100, Math.max(0, data.attendanceRate))}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Assignment Completion Bar */}
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-[#737373]">
+                  Assignments Completed
+                </span>
+                <span className="font-semibold text-[#171717]">
+                  {data.submittedAssignments} / {Math.max(1, data.totalVisibleAssignments)}
+                </span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-[#F7F4ED] border border-[#E7E3DA] overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[#4285F4] transition-all duration-300"
+                  style={{
+                    width: `${Math.min(
+                      100,
+                      Math.round(
+                        (data.submittedAssignments /
+                          Math.max(1, data.totalVisibleAssignments)) *
+                          100
+                      )
+                    )}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Track Resources Links */}
+            <div className="mt-6 pt-4 border-t border-[#E7E3DA]">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#737373] mb-2">
+                Quick Navigation
+              </p>
+              <ul className="space-y-1 text-xs">
+                <li>
+                  <Link
+                    href="/classes"
+                    className="flex items-center justify-between rounded-xl px-2.5 py-2 text-[#171717] hover:bg-[#F7F4ED] transition-colors"
+                  >
+                    <span className="font-medium">Class Archive</span>
+                    <span className="text-[11px] text-[#737373]">Recordings</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/assignments"
+                    className="flex items-center justify-between rounded-xl px-2.5 py-2 text-[#171717] hover:bg-[#F7F4ED] transition-colors"
+                  >
+                    <span className="font-medium">Assignment Workspace</span>
+                    <span className="text-[11px] text-[#737373]">{data.totalVisibleAssignments} tasks</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/progress"
+                    className="flex items-center justify-between rounded-xl px-2.5 py-2 text-[#171717] hover:bg-[#F7F4ED] transition-colors"
+                  >
+                    <span className="font-medium">Detailed Grade Report</span>
+                    <span className="text-[11px] text-[#737373]">Full metrics</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

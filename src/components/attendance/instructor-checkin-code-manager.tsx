@@ -71,25 +71,25 @@ export function InstructorCheckinCodeManager({
   };
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-7 space-y-5">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-zinc-100 dark:border-zinc-900">
+    <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-xs sm:p-7 space-y-5">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-[#E7E3DA]">
         <div>
-          <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
             Session Check-in Code
           </h3>
-          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            Show this code to students during class. Codes are only redeemable during the session window.
+          <p className="mt-0.5 text-xs text-[#737373]">
+            Present this code to students during live class. Codes are only valid during the scheduled session window.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           {isLive ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Window Open
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-[#34A853]/15 px-2.5 py-0.5 text-xs font-semibold text-[#34A853] border border-[#34A853]/30">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#34A853] animate-pulse" />
+              Check-in Window Open
             </span>
           ) : (
-            <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+            <span className="rounded-md bg-[#F7F4ED] border border-[#E7E3DA] px-2.5 py-0.5 text-xs font-medium text-[#737373]">
               Window Closed
             </span>
           )}
@@ -97,19 +97,19 @@ export function InstructorCheckinCodeManager({
       </div>
 
       {errorMsg && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+        <div className="rounded-xl border border-[#EA4335]/30 bg-[#EA4335]/10 p-3 text-xs text-[#EA4335] font-medium">
           {errorMsg}
         </div>
       )}
 
       {/* Code Display & Primary Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-zinc-50/50 p-5 dark:border-zinc-800 dark:bg-zinc-900/40">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-[#E7E3DA] bg-[#F7F4ED]/60 p-5">
         <div className="flex items-center gap-4">
           <div className="text-center sm:text-left">
-            <span className="text-2xs font-semibold uppercase tracking-wider text-zinc-400">
+            <span className="text-3xs font-semibold uppercase tracking-wider text-[#737373]">
               Active Code
             </span>
-            <div className="mt-1 font-mono text-2xl font-bold tracking-widest text-zinc-900 dark:text-zinc-100">
+            <div className="mt-1 font-mono text-2xl sm:text-3xl font-bold tracking-widest text-[#171717]">
               {code ? (isRevealed ? code : "••••••") : "NO CODE SET"}
             </div>
           </div>
@@ -118,7 +118,7 @@ export function InstructorCheckinCodeManager({
             <button
               type="button"
               onClick={() => setIsRevealed(!isRevealed)}
-              className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-xl border border-[#E7E3DA] bg-white px-3 py-1.5 text-xs font-semibold text-[#171717] hover:bg-[#F7F4ED] transition-colors"
               title={isRevealed ? "Hide code" : "Reveal code"}
             >
               {isRevealed ? "Hide" : "Reveal"}
@@ -131,7 +131,7 @@ export function InstructorCheckinCodeManager({
             <button
               type="button"
               onClick={handleCopy}
-              className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-800 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="inline-flex h-9 items-center justify-center rounded-xl border border-[#E7E3DA] bg-white px-3.5 text-xs font-semibold text-[#171717] hover:bg-[#F7F4ED] transition-colors shadow-2xs"
             >
               {copied ? "Copied!" : "Copy Code"}
             </button>
@@ -141,7 +141,7 @@ export function InstructorCheckinCodeManager({
             type="button"
             disabled={isGenerating}
             onClick={handleGenerate}
-            className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-3.5 text-xs font-semibold text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-9 items-center justify-center rounded-xl bg-[#171717] px-4 text-xs font-semibold text-white hover:bg-black transition-colors disabled:opacity-50 shadow-xs"
           >
             {isGenerating
               ? "Generating..."
@@ -153,7 +153,7 @@ export function InstructorCheckinCodeManager({
           <button
             type="button"
             onClick={() => setShowCustomInput(!showCustomInput)}
-            className="text-xs text-zinc-500 hover:underline dark:text-zinc-400 px-1"
+            className="text-xs text-[#737373] hover:text-[#171717] hover:underline px-1 transition-colors"
           >
             {showCustomInput ? "Cancel custom" : "Custom code"}
           </button>
@@ -169,12 +169,12 @@ export function InstructorCheckinCodeManager({
             value={customCode}
             onChange={(e) => setCustomCode(e.target.value.toUpperCase())}
             placeholder="ENTER 4-10 CHARS (e.g. SLIDE26)"
-            className="rounded-lg border border-zinc-200 bg-transparent px-3 py-1.5 text-xs font-mono uppercase text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-zinc-100"
+            className="rounded-xl border border-[#E7E3DA] bg-white px-3.5 py-2 text-xs font-mono uppercase text-[#171717] placeholder-[#737373] focus:border-[#171717] focus:outline-hidden"
           />
           <button
             type="submit"
             disabled={isGenerating || !customCode.trim()}
-            className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="rounded-xl bg-[#171717] px-4 py-2 text-xs font-semibold text-white hover:bg-black disabled:opacity-50 transition-colors shadow-xs"
           >
             Save Code
           </button>

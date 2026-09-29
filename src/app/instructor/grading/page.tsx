@@ -50,12 +50,12 @@ export default async function InstructorGradingPage({
 
         <div className="flex items-center gap-2">
           {ungradedCount > 0 && (
-            <span className="rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+            <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-[#B45309] border border-[#FBBC04]/40">
               {ungradedCount} Ungraded
             </span>
           )}
           {gradedPendingCount > 0 && (
-            <span className="rounded-lg bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60">
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-[#4285F4] border border-[#4285F4]/30">
               {gradedPendingCount} Ready to Release
             </span>
           )}
@@ -63,10 +63,10 @@ export default async function InstructorGradingPage({
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-4 sm:p-5 shadow-2xs">
         {/* Status Filter Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mr-1">
+          <span className="text-xs font-medium text-[#737373] mr-1">
             Status:
           </span>
           <Link
@@ -74,10 +74,10 @@ export default async function InstructorGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               !status || status === "all"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:text-[#171717] hover:bg-[#F7F4ED]"
             }`}
           >
             All ({submissions.length})
@@ -88,10 +88,10 @@ export default async function InstructorGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "ungraded"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:text-[#171717] hover:bg-[#F7F4ED]"
             }`}
           >
             Ungraded
@@ -102,10 +102,10 @@ export default async function InstructorGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "graded"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:text-[#171717] hover:bg-[#F7F4ED]"
             }`}
           >
             Graded (Unreleased)
@@ -116,10 +116,10 @@ export default async function InstructorGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "released"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:text-[#171717] hover:bg-[#F7F4ED]"
             }`}
           >
             Released
@@ -130,10 +130,10 @@ export default async function InstructorGradingPage({
         <div className="flex flex-wrap items-center gap-3">
           {tracks.length > 1 && (
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-zinc-400">Track:</span>
+              <span className="text-[#737373]">Track:</span>
               <Link
                 href={`/instructor/grading`}
-                className="text-zinc-700 dark:text-zinc-300 font-medium hover:underline"
+                className="text-[#171717] font-semibold hover:underline"
               >
                 Reset
               </Link>
@@ -141,7 +141,7 @@ export default async function InstructorGradingPage({
           )}
 
           {assignments.length > 1 && (
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-[#737373]">
               <span>{assignments.length} assignments</span>
             </div>
           )}
@@ -157,12 +157,12 @@ export default async function InstructorGradingPage({
       {/* Bulk Release Panel */}
       {gradedPendingCount > 0 && (
         <div className="space-y-4">
-          <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
+          <div className="border-t border-[#E7E3DA] pt-6">
+            <h2 className="text-sm font-semibold text-[#171717] mb-1">
               Bulk Grade Release
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">
-              Select multiple graded submissions to release at once.
+            <p className="text-xs text-[#737373] mb-4">
+              Select multiple graded submissions to release to students at once.
             </p>
             <BulkReleasePanel
               submissions={submissions.map((s) => ({

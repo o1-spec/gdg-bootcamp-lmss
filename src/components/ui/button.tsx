@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }
@@ -14,23 +14,25 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 disabled:pointer-events-none disabled:opacity-50";
+    "inline-flex items-center justify-center font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] disabled:pointer-events-none disabled:opacity-50";
 
   const sizeStyles = {
-    sm: "h-8 px-3 text-xs rounded-lg gap-1.5",
-    md: "h-9 px-4 text-xs font-medium rounded-lg gap-2",
-    lg: "h-10 px-5 text-sm rounded-lg gap-2",
+    sm: "h-8 px-3 text-xs rounded-xl gap-1.5",
+    md: "h-10 px-4 text-xs font-semibold rounded-xl gap-2",
+    lg: "h-11 px-5 text-sm rounded-xl gap-2",
   };
 
   const variantStyles = {
     primary:
-      "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 shadow-xs",
+      "bg-[#171717] text-white hover:bg-[#262626] shadow-2xs",
     secondary:
-      "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700",
+      "bg-white border border-[#E7E3DA] text-[#171717] hover:bg-[#F7F4ED] shadow-2xs",
     outline:
-      "border border-zinc-200 bg-transparent text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-900",
+      "border border-[#E7E3DA] bg-transparent text-[#171717] hover:bg-[#F7F4ED]",
     ghost:
-      "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800",
+      "text-[#737373] hover:text-[#171717] hover:bg-[#F7F4ED]",
+    danger:
+      "bg-[#EA4335] text-white hover:bg-[#D93025] shadow-2xs",
   };
 
   return (

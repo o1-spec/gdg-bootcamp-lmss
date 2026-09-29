@@ -118,10 +118,10 @@ export default async function InstructorStudentsPage() {
       accessorKey: "name",
       cell: (item) => (
         <div>
-          <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+          <p className="font-semibold text-[#171717]">
             {item.name}
           </p>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+          <p className="text-2xs text-[#737373]">
             {item.email}
           </p>
         </div>
@@ -131,7 +131,7 @@ export default async function InstructorStudentsPage() {
       header: "Track",
       accessorKey: "trackName",
       cell: (item) => (
-        <span className="font-medium text-zinc-700 dark:text-zinc-300">
+        <span className="rounded-md bg-[#F7F4ED] border border-[#E7E3DA] px-2 py-0.5 text-2xs font-medium text-[#171717]">
           {item.trackName}
         </span>
       ),
@@ -139,7 +139,7 @@ export default async function InstructorStudentsPage() {
     {
       header: "Attendance",
       cell: (item) => (
-        <span className="font-medium text-zinc-700 dark:text-zinc-300">
+        <span className="font-semibold text-[#171717]">
           {item.attendanceRate}%
         </span>
       ),
@@ -147,7 +147,7 @@ export default async function InstructorStudentsPage() {
     {
       header: "Assignments",
       cell: (item) => (
-        <span>
+        <span className="text-xs text-[#171717]">
           {item.assignmentsCompleted} / {item.totalAssignments}
         </span>
       ),
@@ -155,7 +155,7 @@ export default async function InstructorStudentsPage() {
     {
       header: "Average Score",
       cell: (item) => (
-        <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+        <span className="font-bold text-[#171717]">
           {item.averageScore}%
         </span>
       ),
@@ -181,7 +181,7 @@ export default async function InstructorStudentsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Assigned Students"
+        title="Students"
         description="Monitor student engagement, attendance compliance, and academic benchmarks for your assigned tracks"
       />
 
@@ -197,8 +197,8 @@ export default async function InstructorStudentsPage() {
           value={`${avgAttendance}%`}
           subtitle="Across assigned tracks"
           badge={{
-            text: avgAttendance >= 80 ? "Good" : "At Risk",
-            variant: avgAttendance >= 80 ? "success" : "warning",
+            text: avgAttendance >= 75 ? "Good" : "At Risk",
+            variant: avgAttendance >= 75 ? "success" : "warning",
           }}
         />
         <StatCard
@@ -213,14 +213,58 @@ export default async function InstructorStudentsPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-          Student Roster
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
+          Student Roster ({students.length})
         </h3>
-        <DataTable
-          columns={columns}
-          data={students}
-          keyExtractor={(item) => item.id}
-        />
+
+        {/* Desktop Table View */}
+        <div className="hidden sm:block">
+          <DataTable
+            columns={columns}
+            data={students}
+            keyExtractor={(item) => item.id}
+          />
+        </div>
+
+        {/* Mobile Stacked Card View */}
+        <div className="sm:hidden space-y-3">
+          {students.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center text-xs text-[#737373]">
+              No students enrolled in your assigned tracks.
+            </div>
+          ) : (
+            students.map((student) => (
+              <div
+                key={student.id}
+                className="rounded-2xl border border-[#E7E3DA] bg-white p-4 shadow-xs space-y-2.5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-semibold text-sm text-[#171717]">{student.name}</p>
+                    <p className="text-2xs text-[#737373]">{student.email}</p>
+                  </div>
+                  <Badge variant={student.status === "Active" ? "success" : "warning"}>
+                    {student.status}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#E7E3DA] text-center">
+                  <div className="rounded-xl bg-[#F7F4ED] p-2">
+                    <p className="text-3xs text-[#737373] uppercase font-semibold">Track</p>
+                    <p className="text-2xs font-bold text-[#171717] truncate">{student.trackName}</p>
+                  </div>
+                  <div className="rounded-xl bg-[#F7F4ED] p-2">
+                    <p className="text-3xs text-[#737373] uppercase font-semibold">Attendance</p>
+                    <p className="text-xs font-bold text-[#171717]">{student.attendanceRate}%</p>
+                  </div>
+                  <div className="rounded-xl bg-[#F7F4ED] p-2">
+                    <p className="text-3xs text-[#737373] uppercase font-semibold">Score</p>
+                    <p className="text-xs font-bold text-[#171717]">{student.averageScore}%</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

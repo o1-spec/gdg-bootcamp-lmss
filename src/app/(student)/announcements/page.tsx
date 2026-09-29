@@ -15,8 +15,8 @@ export default async function StudentAnnouncementsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Cohort Announcements"
-        description="Important notifications, schedule revisions, and curriculum broadcasts"
+        title="Announcements"
+        description="Updates, schedule revisions, and curriculum broadcasts"
       />
 
       <AnnouncementFeed

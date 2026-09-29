@@ -50,34 +50,34 @@ export default async function InstructorSessionAttendancePage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Breadcrumb & Link */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
           href={`/instructor/classes/${session.id}`}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#737373] hover:text-[#171717] transition-colors"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
-          Back to Session Details
+          Back to Class Details
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <AttendanceImportModal
             sessionId={session.id}
             sessionTitle={session.title}
           />
 
           {session.isLive ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#34A853]/15 px-2.5 py-0.5 text-xs font-semibold text-[#34A853] border border-[#34A853]/30">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#34A853] animate-pulse" />
               Live Class
             </span>
           ) : session.isPast ? (
-            <Badge variant="neutral">Completed Class</Badge>
+            <Badge variant="neutral">Completed</Badge>
           ) : (
-            <Badge variant="info">Upcoming Class</Badge>
+            <Badge variant="info">Upcoming</Badge>
           )}
 
           {session.trackName ? (
@@ -108,19 +108,19 @@ export default async function InstructorSessionAttendancePage({
         <StatCard
           title="Present"
           value={stats.presentCount}
-          subtitle="Self or marked"
+          subtitle="Self-checkin or marked"
           badge={{ text: "On Time", variant: "success" }}
         />
         <StatCard
           title="Late"
           value={stats.lateCount}
-          subtitle="Manual override"
-          badge={{ text: "Punctuality", variant: "warning" }}
+          subtitle="Tardy arrivals"
+          badge={{ text: "Late", variant: "warning" }}
         />
         <StatCard
           title="Absent"
           value={stats.absentCount}
-          subtitle="Confirmed absent"
+          subtitle="Confirmed absences"
           badge={{ text: "Missed", variant: "danger" }}
         />
         <StatCard

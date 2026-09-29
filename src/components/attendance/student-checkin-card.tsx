@@ -72,23 +72,23 @@ export function StudentCheckinCard({
   };
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950 sm:p-7">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-zinc-100 dark:border-zinc-900">
+    <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs sm:p-7">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-[#E7E3DA]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <span className="h-2 w-2 rounded-full bg-[#34A853] animate-pulse" />
+            <h3 className="text-sm font-bold tracking-tight text-[#171717]">
               Live Class Check-In
             </h3>
           </div>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-xs text-[#737373]">
             Window: {timeFormatter.format(startsAt)} – {timeFormatter.format(endsAt)}
           </p>
         </div>
 
         <Link
           href="/attendance"
-          className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="text-xs font-semibold text-[#171717] hover:underline"
         >
           View Attendance History →
         </Link>
@@ -96,63 +96,63 @@ export function StudentCheckinCard({
 
       <div className="mt-5">
         {checkedInStatus ? (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 dark:border-emerald-900/60 dark:bg-emerald-950/40">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-[#34A853]/30 bg-[#34A853]/10 p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#34A853] text-white shadow-2xs">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-semibold text-emerald-900 dark:text-emerald-200">
+                <p className="text-xs font-bold text-[#171717]">
                   {successMessage || "Check-in Confirmed"}
                 </p>
-                <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
-                  Status: <strong className="font-semibold uppercase">{checkedInStatus}</strong>
+                <p className="text-[11px] text-[#34A853] font-semibold">
+                  Status: <span className="uppercase">{checkedInStatus}</span>
                 </p>
               </div>
             </div>
-            <span className="rounded-md bg-emerald-200/60 px-2.5 py-1 text-2xs font-semibold text-emerald-900 dark:bg-emerald-900/60 dark:text-emerald-200">
+            <span className="rounded-full bg-white px-3 py-0.5 text-2xs font-semibold text-[#34A853] border border-[#34A853]/30 shadow-2xs">
               Recorded
             </span>
           </div>
         ) : isBefore ? (
-          <div className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-            <svg className="h-5 w-5 text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#E7E3DA] bg-[#F7F4ED] p-4">
+            <svg className="h-5 w-5 text-[#737373] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            <p className="text-xs text-[#737373]">
               Check-in is not open yet. It will open promptly when class begins at{" "}
-              <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">
+              <strong className="text-[#171717] font-semibold">
                 {timeFormatter.format(startsAt)}
               </strong>.
             </p>
           </div>
         ) : isAfter ? (
-          <div className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-            <svg className="h-5 w-5 text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#E7E3DA] bg-[#F7F4ED] p-4">
+            <svg className="h-5 w-5 text-[#737373] shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
             </svg>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            <p className="text-xs text-[#737373]">
               Check-in window has closed. This session ended at{" "}
-              <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">
+              <strong className="text-[#171717] font-semibold">
                 {timeFormatter.format(endsAt)}
               </strong>.
             </p>
           </div>
         ) : isLive ? (
           <form onSubmit={handleCheckIn} className="space-y-4">
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            <p className="text-xs text-[#737373]">
               Enter the 6-character check-in code provided on-screen by your instructor during class.
             </p>
 
             {errorMessage && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+              <div className="rounded-xl border border-[#EA4335]/30 bg-[#EA4335]/10 p-3 text-xs font-medium text-[#EA4335]">
                 {errorMessage}
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-2.5">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
                 maxLength={10}
@@ -160,13 +160,13 @@ export function StudentCheckinCard({
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="e.g. SLID26"
-                className="w-full sm:max-w-xs rounded-xl border border-zinc-200 bg-transparent px-4 py-2.5 text-center font-mono text-base font-bold tracking-widest uppercase text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-600 dark:focus:border-zinc-100"
+                className="w-full sm:max-w-xs rounded-xl border border-[#E7E3DA] bg-white px-4 py-2.5 text-center font-mono text-base font-bold tracking-widest uppercase text-[#171717] placeholder:text-[#737373]/50 focus:border-[#171717] focus:outline-none shadow-2xs"
               />
 
               <button
                 type="submit"
                 disabled={isSubmitting || !code.trim()}
-                className="inline-flex h-11 items-center justify-center rounded-xl bg-zinc-900 px-6 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                className="inline-flex h-11 items-center justify-center rounded-xl bg-[#171717] px-6 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-[#262626] disabled:opacity-50"
               >
                 {isSubmitting ? "Verifying..." : "Confirm Check In"}
               </button>

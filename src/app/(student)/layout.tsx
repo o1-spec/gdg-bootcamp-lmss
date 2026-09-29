@@ -1,6 +1,7 @@
 import React from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { requireStudent } from "@/lib/auth/session";
+import { getUnreadCount } from "@/lib/notifications/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export default async function StudentLayout({
   children: React.ReactNode;
 }) {
   const user = await requireStudent();
+  const unreadCount = await getUnreadCount(user.id).catch(() => 0);
 
   const initials = user.name
     .split(" ")
@@ -27,6 +29,7 @@ export default async function StudentLayout({
     <AppShell
       role="student"
       title="Student Portal"
+      unreadNotifications={unreadCount}
       user={{
         name: user.name,
         email: user.email,

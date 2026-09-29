@@ -9,6 +9,7 @@ interface SidebarProps {
   role: UserRole;
   isOpen: boolean;
   onClose: () => void;
+  unreadNotifications?: number;
 }
 
 interface NavItem {
@@ -17,7 +18,7 @@ interface NavItem {
   icon: (props: { className?: string }) => React.JSX.Element;
 }
 
-// Icons
+// Icons (Zero packages, accessible inline SVG)
 const HomeIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -54,6 +55,12 @@ const BellIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const ChatIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+  </svg>
+);
+
 const UsersIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
@@ -63,6 +70,12 @@ const UsersIcon = ({ className }: { className?: string }) => (
 const CheckBadgeIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+  </svg>
+);
+
+const ClipboardCheckIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-3 2.25 2.25L15 13.5" />
   </svg>
 );
 
@@ -90,27 +103,9 @@ const UserPlusIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const ChatIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-  </svg>
-);
-
-const NotificationsIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-  </svg>
-);
-
 const ShieldCheckIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-  </svg>
-);
-
-const ClipboardCheckIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-3 2.25 2.25L15 13.5" />
   </svg>
 );
 
@@ -127,9 +122,9 @@ const studentNavItems: NavItem[] = [
   { name: "Attendance", href: "/attendance", icon: CalendarCheckIcon },
   { name: "Assignments", href: "/assignments", icon: FileTextIcon },
   { name: "Progress", href: "/progress", icon: ChartBarIcon },
-  { name: "Chat", href: "/chat", icon: ChatIcon },
-  { name: "Notifications", href: "/notifications", icon: NotificationsIcon },
   { name: "Announcements", href: "/announcements", icon: BellIcon },
+  { name: "Chat", href: "/chat", icon: ChatIcon },
+  { name: "Notifications", href: "/notifications", icon: BellIcon },
 ];
 
 const instructorNavItems: NavItem[] = [
@@ -165,7 +160,7 @@ const adminNavItems: NavItem[] = [
   { name: "Announcements", href: "/admin/announcements", icon: BellIcon },
 ];
 
-export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
+export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -184,11 +179,13 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
       : "Student";
 
   const renderNavLinks = () => (
-    <>
+    <div className="flex flex-1 flex-col justify-between">
+      {/* Primary Navigation Section */}
       <div className="space-y-1">
-        <p className="px-3 pb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+        <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
           Navigation
         </p>
+
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -197,35 +194,43 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
               item.href !== "/admin/dashboard" &&
               pathname.startsWith(item.href));
 
+          const isNotificationItem = item.href === "/notifications";
+          const showBadge = isNotificationItem && unreadNotifications > 0;
+
           return (
             <Link
               key={item.name}
               href={item.href}
               onClick={onClose}
-              className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+              className={`group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-colors ${
                 isActive
-                  ? "bg-zinc-100 font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
-                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
+                  ? "bg-[#262626] font-semibold text-white shadow-2xs"
+                  : "text-zinc-400 hover:bg-[#262626]/50 hover:text-zinc-200"
               }`}
             >
-              <item.icon
-                className={`h-4 w-4 shrink-0 transition-colors ${
-                  isActive
-                    ? "text-zinc-900 dark:text-zinc-100"
-                    : "text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300"
-                }`}
-              />
-              <span>{item.name}</span>
+              <div className="flex items-center gap-3">
+                <item.icon
+                  className={`h-4 w-4 shrink-0 transition-colors ${
+                    isActive
+                      ? "text-white"
+                      : "text-zinc-500 group-hover:text-zinc-300"
+                  }`}
+                />
+                <span>{item.name}</span>
+              </div>
+
+              {showBadge && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EA4335] px-1.5 text-[10px] font-bold text-white">
+                  {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                </span>
+              )}
             </Link>
           );
         })}
       </div>
 
-      <div className="mt-auto space-y-1 border-t border-zinc-200 pt-4 dark:border-zinc-800">
-        <p className="px-3 pb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-          Account
-        </p>
-
+      {/* Bottom Account & System Section */}
+      <div className="mt-8 space-y-3 pt-4 border-t border-[#262626]">
         <button
           type="button"
           onClick={async () => {
@@ -237,10 +242,10 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
               router.refresh();
             }
           }}
-          className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-zinc-600 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-zinc-400 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+          className="group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-medium text-zinc-400 transition-colors hover:bg-red-950/20 hover:text-red-400"
         >
           <svg
-            className="h-4 w-4 shrink-0 text-zinc-400 group-hover:text-red-600 dark:text-zinc-500 dark:group-hover:text-red-400"
+            className="h-4 w-4 shrink-0 text-zinc-500 group-hover:text-red-400 transition-colors"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.75}
@@ -252,39 +257,49 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
               d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
             />
           </svg>
-          <span>Logout</span>
+          <span>Sign Out</span>
         </button>
+
+        <div className="px-3 pt-2 text-[11px] text-zinc-600 font-mono flex items-center justify-between">
+          <span>Bootcamp LMS</span>
+          <span>v1.0</span>
+        </div>
       </div>
-    </>
+    </div>
   );
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 lg:flex">
-        {/* Brand header */}
-        <div className="flex h-16 items-center gap-2.5 border-b border-zinc-200 px-6 dark:border-zinc-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
-            B
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+      {/* Desktop Sidebar (Charcoal #171717) */}
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-[#262626] bg-[#171717] text-white lg:flex sticky top-0 h-screen">
+        {/* Brand Header */}
+        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-6">
+          <div className="flex items-center gap-2.5">
+            {/* 4 Accent Dots */}
+            <div className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-[#4285F4]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#EA4335]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#FBBC04]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#34A853]" aria-hidden="true" />
+            </div>
+            <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
               Bootcamp LMS
             </span>
-            <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-              {roleLabel}
-            </span>
           </div>
+
+          <span className="rounded-md border border-[#333333] bg-[#262626]/70 px-2 py-0.5 text-[10px] font-medium text-zinc-400">
+            {roleLabel}
+          </span>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation List */}
         <nav className="flex flex-1 flex-col p-4 overflow-y-auto">{renderNavLinks()}</nav>
       </aside>
 
       {/* Mobile Drawer Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -292,29 +307,28 @@ export function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
       {/* Mobile Drawer Content */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-zinc-200 bg-white transition-transform duration-200 ease-in-out dark:border-zinc-800 dark:bg-zinc-950 lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#262626] bg-[#171717] text-white transition-transform duration-200 ease-in-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-6 dark:border-zinc-800">
+        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-6">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 text-xs font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
-              B
+            <div className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-[#4285F4]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#EA4335]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#FBBC04]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#34A853]" aria-hidden="true" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-                Bootcamp LMS
-              </span>
-              <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                {roleLabel}
-              </span>
-            </div>
+            <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
+              Bootcamp LMS
+            </span>
           </div>
+
           <button
             type="button"
             onClick={onClose}
             aria-label="Close navigation"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-[#262626] hover:text-white"
           >
             <svg
               className="h-5 w-5"

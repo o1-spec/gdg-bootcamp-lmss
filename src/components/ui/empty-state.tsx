@@ -8,8 +8,8 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, description, action }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 p-8 text-center dark:border-zinc-800">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-500">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center sm:p-12 shadow-2xs">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#737373] border border-[#E7E3DA]">
         <svg
           className="h-5 w-5"
           fill="none"
@@ -24,10 +24,10 @@ export function EmptyState({ title, description, action }: EmptyStateProps) {
           />
         </svg>
       </div>
-      <h3 className="mt-3 text-xs font-semibold text-zinc-900 dark:text-zinc-100 sm:text-sm">
+      <h3 className="mt-3 text-sm font-semibold text-[#171717]">
         {title}
       </h3>
-      <p className="mt-1 max-w-sm text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="mt-1 max-w-sm text-xs text-[#737373] leading-relaxed">
         {description}
       </p>
       {action && <div className="mt-4">{action}</div>}
