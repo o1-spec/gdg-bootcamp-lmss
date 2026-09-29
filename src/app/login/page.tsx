@@ -4,6 +4,27 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+const CAROUSEL_SLIDES = [
+  {
+    src: "/IMG_2242.jpg",
+    alt: "Students actively collaborating on code at GDGOC LASU bootcamp",
+    title: "Team Collaboration",
+    caption: "Students building real-world projects together in teams",
+  },
+  {
+    src: "/IMG_9342.jpg",
+    alt: "Instructor delivering live session at GDGOC LASU bootcamp",
+    title: "Interactive Workshops",
+    caption: "Live coding sessions, guidance, and direct instructor feedback",
+  },
+  {
+    src: "/IMG_2428.jpg",
+    alt: "Bootcamp cohort session in the GDGOC LASU hall",
+    title: "Vibrant Community",
+    caption: "A supportive community of tech talent learning and growing as one",
+  },
+];
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -12,6 +33,25 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  React.useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [isPaused]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,16 +120,16 @@ export default function LoginPage() {
       </header>
 
       {/* Desktop Left Brand Panel (>= lg screens) */}
-      <aside className="hidden lg:flex lg:w-[46%] xl:w-[44%] bg-[#171717] text-white flex-col justify-between p-12 xl:p-16 border-r border-[#262626] relative overflow-hidden">
+      <aside className="hidden lg:flex lg:w-[46%] xl:w-[44%] bg-[#171717] text-white flex-col justify-between p-8 xl:p-10 border-r border-[#262626] relative overflow-hidden">
         {/* Top: Branding with logo badge */}
-        <div className="space-y-4">
-          <div className="inline-flex items-center gap-3 rounded-2xl bg-white px-3.5 py-2.5 border border-white/10 shadow-xs">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-3 rounded-2xl bg-white px-3.5 py-2 border border-white/10 shadow-xs">
             <Image
               src="/GDGOC-LASU-logo.webp"
               alt="Google Developer Groups on Campus - Lagos State University"
               width={220}
               height={42}
-              className="h-8 w-auto object-contain"
+              className="h-7.5 w-auto object-contain"
               priority
             />
           </div>
@@ -98,20 +138,106 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Center: Headline & Value Proposition */}
-        <div className="space-y-6 my-auto py-12">
-          <h1 className="text-4xl xl:text-5xl font-bold tracking-tight text-white leading-[1.12]">
-            Learn.<br />
-            Practice.<br />
-            Improve.
-          </h1>
-          <p className="text-sm xl:text-base text-zinc-400 font-normal leading-relaxed max-w-sm">
-            One place for classes, attendance, assignments, feedback, and progress.
-          </p>
+        {/* Center: Headline & Value Proposition + Larger Photo Carousel */}
+        <div className="space-y-4 my-auto py-2">
+          <div className="space-y-1.5">
+            <h1 className="text-2xl xl:text-3xl font-bold tracking-tight text-white leading-snug">
+              Learn. Practice. Improve.
+            </h1>
+            <p className="text-xs xl:text-sm text-zinc-400 font-normal leading-relaxed max-w-sm">
+              One place for classes, attendance, assignments, feedback, and progress.
+            </p>
+          </div>
+
+          {/* Photo Carousel: Much bigger and larger, pill badge removed */}
+          <div
+            className="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-xl group h-80 xl:h-88 2xl:h-104"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            aria-label="Bootcamp highlights carousel"
+          >
+            {CAROUSEL_SLIDES.map((slide, index) => {
+              const isActive = index === currentSlide;
+              return (
+                <div
+                  key={slide.src}
+                  className={`absolute inset-0 transition-all duration-700 ease-out ${isActive
+                    ? "opacity-100 scale-100 z-10"
+                    : "opacity-0 scale-105 z-0 pointer-events-none"
+                    }`}
+                  aria-hidden={!isActive}
+                >
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className="object-cover object-center"
+                    priority={index === 0}
+                  />
+                  {/* Subtle dark gradient overlay for text readability */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />
+
+                  {/* Slide Text Content (pill badge removed as requested) */}
+                  <div className="absolute inset-x-0 bottom-0 p-4 xl:p-5 flex flex-col justify-end text-white">
+                    <p className="text-sm xl:text-base font-semibold text-white drop-shadow-sm">
+                      {slide.title}
+                    </p>
+                    <p className="text-xs text-zinc-300 drop-shadow-sm mt-0.5 line-clamp-1">
+                      {slide.caption}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Previous / Next Arrow Controls */}
+            <div className="absolute inset-y-0 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
+              <button
+                type="button"
+                onClick={handlePrevSlide}
+                aria-label="Previous slide"
+                className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white/90 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-black/80 hover:text-white active:scale-90 cursor-pointer shadow-md"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleNextSlide}
+                aria-label="Next slide"
+                className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white/90 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-black/80 hover:text-white active:scale-90 cursor-pointer shadow-md"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Indicator Dots */}
+            <div className="absolute bottom-3 right-4 z-20 flex items-center gap-1.5">
+              {CAROUSEL_SLIDES.map((_, dotIndex) => {
+                const isCurrent = dotIndex === currentSlide;
+                return (
+                  <button
+                    key={dotIndex}
+                    type="button"
+                    onClick={() => setCurrentSlide(dotIndex)}
+                    aria-label={`Go to slide ${dotIndex + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${isCurrent
+                      ? "w-5 bg-white shadow-xs"
+                      : "w-1.5 bg-white/40 hover:bg-white/70"
+                      }`}
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Bottom: Minimal Footnote */}
-        <div className="pt-6 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-500">
+        <div className="pt-4 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-500">
           <span>Google Developer Groups on Campus • LASU</span>
           <span className="font-mono text-2xs text-zinc-600">v1.0</span>
         </div>
