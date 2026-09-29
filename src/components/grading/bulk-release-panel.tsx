@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { bulkReleaseGradesAction } from "@/lib/assignments/actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Submission {
   id: string;
@@ -100,7 +101,7 @@ export function BulkReleasePanel({ submissions }: BulkReleaseProps) {
           </span>
         </label>
 
-        {selected.size > 0 && !confirming && (
+        {selected.size > 0 && (
           <button
             type="button"
             onClick={() => setConfirming(true)}
@@ -109,30 +110,46 @@ export function BulkReleasePanel({ submissions }: BulkReleaseProps) {
             Release {selected.size} grade{selected.size !== 1 ? "s" : ""}
           </button>
         )}
-
-        {confirming && (
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs text-[#737373]">
-              Release {selected.size} grade{selected.size !== 1 ? "s" : ""}? This cannot be undone.
-            </span>
-            <button
-              type="button"
-              onClick={handleRelease}
-              disabled={isPending}
-              className="rounded-xl bg-[#EA4335] px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-40 transition-colors shadow-2xs"
-            >
-              {isPending ? "Releasing…" : "Confirm"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setConfirming(false)}
-              className="text-xs text-[#737373] hover:text-[#171717] font-medium"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
       </div>
+
+      {/* Bulk release confirmation dialog */}
+      <ConfirmDialog
+        open={confirming}
+        onClose={() => setConfirming(false)}
+        onConfirm={handleRelease}
+        title={`Release ${selected.size} grade${selected.size !== 1 ? "s" : ""}?`}
+        description={
+          <>
+            You are about to release{" "}
+            <strong className="font-semibold text-[#171717]">
+              {selected.size} grade{selected.size !== 1 ? "s" : ""}
+            </strong>{" "}
+            to students. Once released, students will immediately see their
+            scores and feedback.{" "}
+            <span className="text-[#EA4335] font-medium">
+              This cannot be undone.
+            </span>
+          </>
+        }
+        confirmLabel={`Release ${selected.size} grade${selected.size !== 1 ? "s" : ""}`}
+        variant="primary"
+        loading={isPending}
+        icon={
+          <svg
+            className="h-6 w-6 text-[#34A853]"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.75}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+        }
+      />
 
       {/* Submission rows */}
       <div className="rounded-2xl border border-[#E7E3DA] bg-white shadow-2xs overflow-hidden">

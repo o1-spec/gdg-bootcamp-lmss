@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "@/types";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface SidebarProps {
   role: UserRole;
@@ -164,6 +165,18 @@ const adminNavItems: NavItem[] = [
 export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [signOutOpen, setSignOutOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      router.push("/login");
+      router.refresh();
+    }
+  };
 
   const navItems =
     role === "admin"
@@ -234,14 +247,9 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
       <div className="mt-8 space-y-3 pt-4 border-t border-[#262626]">
         <button
           type="button"
-          onClick={async () => {
+          onClick={() => {
             onClose();
-            try {
-              await fetch("/api/auth/logout", { method: "POST" });
-            } finally {
-              router.push("/login");
-              router.refresh();
-            }
+            setSignOutOpen(true);
           }}
           className="group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-medium text-zinc-400 transition-colors hover:bg-red-950/20 hover:text-red-400"
         >
@@ -362,6 +370,24 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
 
         <nav className="flex flex-1 flex-col p-4 overflow-y-auto">{renderNavLinks()}</nav>
       </aside>
+
+      {/* ===== Sign-Out Confirmation Dialog ===== */}
+      <ConfirmDialog
+        open={signOutOpen}
+        onClose={() => setSignOutOpen(false)}
+        onConfirm={handleSignOut}
+        title="Sign out?"
+        description="You will be logged out of the Bootcamp LMS. Any unsaved changes will be lost."
+        confirmLabel="Yes, sign me out"
+        cancelLabel="Stay logged in"
+        variant="danger"
+        loading={signingOut}
+        icon={
+          <svg className="h-6 w-6 text-[#EA4335]" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+          </svg>
+        }
+      />
     </>
   );
 }

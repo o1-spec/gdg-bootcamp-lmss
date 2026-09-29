@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { deleteAssignmentAction } from "@/lib/assignments/actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface DeleteAssignmentButtonProps {
   assignmentId: string;
@@ -42,50 +43,47 @@ export function DeleteAssignmentButton({
         Delete Assignment
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[#E7E3DA] bg-white p-6 sm:p-7 shadow-xl">
-            <h3 className="text-base font-semibold text-[#171717]">
-              Confirm Delete Assignment
-            </h3>
-            <p className="mt-2 text-xs text-[#737373] leading-relaxed">
-              Are you sure you want to delete{" "}
-              <strong className="text-[#171717] font-semibold">
-                &ldquo;{assignmentTitle}&rdquo;
-              </strong>
-              ? Assignments with existing student submissions cannot be deleted.
-            </p>
-
-            {errorMessage && (
-              <div className="mt-3 rounded-xl border border-[#EA4335]/30 bg-red-50 p-3.5 text-xs text-[#EA4335]">
-                {errorMessage}
-              </div>
-            )}
-
-            <div className="mt-6 flex justify-end gap-2.5">
-              <button
-                type="button"
-                disabled={isDeleting}
-                onClick={() => {
-                  setIsOpen(false);
-                  setErrorMessage(null);
-                }}
-                className="rounded-xl border border-[#E7E3DA] bg-white px-4 py-2 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={isDeleting}
-                onClick={handleDelete}
-                className="rounded-xl bg-[#EA4335] px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50 transition-colors shadow-2xs"
-              >
-                {isDeleting ? "Deleting..." : "Yes, Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          setErrorMessage(null);
+        }}
+        onConfirm={handleDelete}
+        title="Delete assignment?"
+        description={
+          <>
+            You are about to permanently delete{" "}
+            <strong className="font-semibold text-[#171717]">
+              &ldquo;{assignmentTitle}&rdquo;
+            </strong>
+            .{" "}
+            <span className="text-[#EA4335] font-medium">
+              Assignments with existing student submissions cannot be deleted.
+            </span>{" "}
+            This action cannot be undone.
+          </>
+        }
+        confirmLabel="Yes, delete assignment"
+        variant="danger"
+        loading={isDeleting}
+        error={errorMessage}
+        icon={
+          <svg
+            className="h-6 w-6 text-[#EA4335]"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.75}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+            />
+          </svg>
+        }
+      />
     </>
   );
 }

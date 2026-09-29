@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { SubmissionForGrading } from "@/lib/assignments/queries";
 import { gradeSubmissionAction, releaseGradeAction } from "@/lib/assignments/actions";
 
@@ -22,6 +23,8 @@ export function GradingForm({ submissionData, backHref }: GradingFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  const [releaseConfirmOpen, setReleaseConfirmOpen] = useState(false);
+  const [releaseMode, setReleaseMode] = useState<"saveAndRelease" | "directRelease">("saveAndRelease");
 
   const handleSave = async (releaseNow: boolean) => {
     setFormError(null);
@@ -285,10 +288,13 @@ export function GradingForm({ submissionData, backHref }: GradingFormProps) {
             <button
               type="button"
               disabled={isSubmitting}
-              onClick={() => handleSave(true)}
+              onClick={() => {
+                setReleaseMode("saveAndRelease");
+                setReleaseConfirmOpen(true);
+              }}
               className="rounded-xl bg-[#171717] px-5 py-2.5 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-black disabled:opacity-50"
             >
-              {isSubmitting ? "Releasing..." : "Save & Release Grade"}
+              Save &amp; Release Grade
             </button>
           ) : (
             <button
@@ -305,7 +311,10 @@ export function GradingForm({ submissionData, backHref }: GradingFormProps) {
             <button
               type="button"
               disabled={isSubmitting}
-              onClick={handleDirectRelease}
+              onClick={() => {
+                setReleaseMode("directRelease");
+                setReleaseConfirmOpen(true);
+              }}
               className="rounded-xl bg-[#34A853] px-5 py-2.5 text-xs font-semibold text-white shadow-2xs hover:bg-[#2d9247] disabled:opacity-50 transition-colors"
             >
               Release Now
@@ -313,6 +322,46 @@ export function GradingForm({ submissionData, backHref }: GradingFormProps) {
           )}
         </div>
       </div>
+
+      {/* Release grade confirmation */}
+      <ConfirmDialog
+        open={releaseConfirmOpen}
+        onClose={() => setReleaseConfirmOpen(false)}
+        onConfirm={() => {
+          setReleaseConfirmOpen(false);
+          if (releaseMode === "saveAndRelease") {
+            handleSave(true);
+          } else {
+            handleDirectRelease();
+          }
+        }}
+        title="Release grade to student?"
+        description={
+          <>
+            Once released, the student will immediately see their{" "}
+            <strong className="font-semibold text-[#171717]">score and feedback</strong>.
+            This cannot be undone. Make sure your feedback is final before proceeding.
+          </>
+        }
+        confirmLabel="Yes, release grade"
+        variant="primary"
+        loading={isSubmitting}
+        icon={
+          <svg
+            className="h-6 w-6 text-[#34A853]"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.75}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+        }
+      />
     </div>
   );
 }
