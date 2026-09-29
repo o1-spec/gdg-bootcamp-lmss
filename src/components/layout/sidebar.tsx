@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "@/types";
@@ -260,8 +261,8 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
           <span>Sign Out</span>
         </button>
 
-        <div className="px-3 pt-2 text-[11px] text-zinc-600 font-mono flex items-center justify-between">
-          <span>Bootcamp LMS</span>
+        <div className="px-3 pt-2 text-[11px] text-zinc-500 font-mono flex items-center justify-between">
+          <span>GDGOC LASU • LMS</span>
           <span>v1.0</span>
         </div>
       </div>
@@ -273,18 +274,26 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
       {/* Desktop Sidebar (Charcoal #171717) */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-[#262626] bg-[#171717] text-white lg:flex sticky top-0 h-screen">
         {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-6">
+        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-5">
           <div className="flex items-center gap-2.5">
-            {/* 4 Accent Dots */}
-            <div className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-[#4285F4]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#EA4335]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#FBBC04]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#34A853]" aria-hidden="true" />
+            <div className="relative h-7 w-7 overflow-hidden rounded-lg border border-[#333333] bg-[#F7F4ED] shrink-0">
+              <Image
+                src="/icon.png"
+                alt="GDG Logo"
+                width={28}
+                height={28}
+                className="h-full w-full object-cover"
+                priority
+              />
             </div>
-            <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
-              Bootcamp LMS
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold tracking-wider uppercase text-zinc-100">
+                Bootcamp LMS
+              </span>
+              <span className="text-[10px] text-zinc-400 font-medium">
+                GDGOC LASU
+              </span>
+            </div>
           </div>
 
           <span className="rounded-md border border-[#333333] bg-[#262626]/70 px-2 py-0.5 text-[10px] font-medium text-zinc-400">
@@ -311,17 +320,26 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-6">
+        <div className="flex h-16 items-center justify-between border-b border-[#262626] px-5">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-[#4285F4]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#EA4335]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#FBBC04]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#34A853]" aria-hidden="true" />
+            <div className="relative h-7 w-7 overflow-hidden rounded-lg border border-[#333333] bg-[#F7F4ED] shrink-0">
+              <Image
+                src="/icon.png"
+                alt="GDG Logo"
+                width={28}
+                height={28}
+                className="h-full w-full object-cover"
+                priority
+              />
             </div>
-            <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
-              Bootcamp LMS
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold tracking-wider uppercase text-zinc-100">
+                Bootcamp LMS
+              </span>
+              <span className="text-[10px] text-zinc-400 font-medium">
+                GDGOC LASU
+              </span>
+            </div>
           </div>
 
           <button

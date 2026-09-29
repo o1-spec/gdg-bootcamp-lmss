@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { UserRole } from "@/types";
 
@@ -56,6 +57,16 @@ export function DashboardHeader({
             />
           </svg>
         </button>
+
+        <div className="lg:hidden flex h-7 w-7 rounded-lg overflow-hidden shrink-0 border border-[#E7E3DA] bg-[#F7F4ED]">
+          <Image
+            src="/icon.png"
+            alt="GDG Logo"
+            width={28}
+            height={28}
+            className="h-full w-full object-cover"
+          />
+        </div>
 
         <div>
           <h1 className="text-base font-bold tracking-tight text-[#171717] sm:text-lg">

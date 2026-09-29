@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -57,38 +58,44 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F7F4ED]">
       {/* Mobile Header (< lg screens) */}
-      <header className="lg:hidden bg-[#171717] text-white px-6 py-4 flex items-center justify-between border-b border-[#262626]">
+      <header className="lg:hidden bg-[#171717] text-white px-5 py-3.5 flex items-center justify-between border-b border-[#262626]">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#4285F4]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#EA4335]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FBBC04]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#34A853]" />
+          <div className="h-7 w-7 rounded-lg overflow-hidden shrink-0 border border-[#333333] bg-[#F7F4ED]">
+            <Image
+              src="/icon.png"
+              alt="GDG Logo"
+              width={28}
+              height={28}
+              className="h-full w-full object-cover"
+              priority
+            />
           </div>
           <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200">
             Bootcamp LMS
           </span>
         </div>
         <span className="text-2xs text-zinc-400 font-mono tracking-wide">
-          Focused Learning
+          GDGOC LASU
         </span>
       </header>
 
       {/* Desktop Left Brand Panel (>= lg screens) */}
       <aside className="hidden lg:flex lg:w-[46%] xl:w-[44%] bg-[#171717] text-white flex-col justify-between p-12 xl:p-16 border-r border-[#262626] relative overflow-hidden">
-        {/* Top: Branding with subtle accent dots */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#4285F4]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#EA4335]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#FBBC04]" aria-hidden="true" />
-              <span className="h-2 w-2 rounded-full bg-[#34A853]" aria-hidden="true" />
-            </div>
-            <span className="text-xs font-semibold tracking-widest uppercase text-zinc-400">
-              Bootcamp LMS
-            </span>
+        {/* Top: Branding with logo badge */}
+        <div className="space-y-4">
+          <div className="inline-flex items-center gap-3 rounded-2xl bg-white px-3.5 py-2.5 border border-white/10 shadow-xs">
+            <Image
+              src="/GDGOC-LASU-logo.webp"
+              alt="Google Developer Groups on Campus - Lagos State University"
+              width={220}
+              height={42}
+              className="h-8 w-auto object-contain"
+              priority
+            />
           </div>
+          <p className="text-xs font-medium tracking-wide text-zinc-400">
+            Bootcamp Learning Management System
+          </p>
         </div>
 
         {/* Center: Headline & Value Proposition */}
@@ -105,7 +112,7 @@ export default function LoginPage() {
 
         {/* Bottom: Minimal Footnote */}
         <div className="pt-6 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-500">
-          <span>Built for focused learning.</span>
+          <span>Google Developer Groups on Campus • LASU</span>
           <span className="font-mono text-2xs text-zinc-600">v1.0</span>
         </div>
       </aside>
@@ -113,6 +120,17 @@ export default function LoginPage() {
       {/* Right Content Area: Centered Login Form on Warm Cream Background */}
       <main className="flex-1 flex flex-col justify-center items-center p-6 sm:p-10 lg:p-16 xl:p-24 min-h-[calc(100vh-57px)] lg:min-h-screen">
         <div className="w-full max-w-105 space-y-6">
+          {/* Logo above login card */}
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/GDGOC-LASU-logo.webp"
+              alt="Google Developer Groups on Campus - Lagos State University"
+              width={260}
+              height={50}
+              className="h-10 sm:h-11 w-auto object-contain"
+              priority
+            />
+          </div>
           {/* Form Card */}
           <div className="bg-white border border-[#E7E3DA] rounded-2xl p-7 sm:p-9 shadow-xs">
             {/* Header inside card */}
