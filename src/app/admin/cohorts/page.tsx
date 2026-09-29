@@ -95,7 +95,7 @@ export default async function AdminCohortsPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
           All Cohorts ({cohorts.length})
         </h3>
         <AdminCohortsTable cohorts={cohorts} />

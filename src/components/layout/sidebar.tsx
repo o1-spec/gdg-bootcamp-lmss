@@ -136,12 +136,17 @@ const instructorNavItems: NavItem[] = [
   { name: "Assignments", href: "/instructor/assignments", icon: FileTextIcon },
   { name: "Grading", href: "/instructor/grading", icon: CheckBadgeIcon },
   { name: "Progress", href: "/instructor/progress", icon: ChartBarIcon },
-  { name: "Chat", href: "/instructor/chat", icon: ChatIcon },
   { name: "Announcements", href: "/instructor/announcements", icon: BellIcon },
+  { name: "Chat", href: "/instructor/chat", icon: ChatIcon },
 ];
 
 const adminNavItems: NavItem[] = [
   { name: "Overview", href: "/admin/dashboard", icon: HomeIcon },
+  { name: "Cohorts", href: "/admin/cohorts", icon: FolderIcon },
+  { name: "Tracks", href: "/admin/tracks", icon: LayersIcon },
+  { name: "Students", href: "/admin/students", icon: UsersIcon },
+  { name: "Instructors", href: "/admin/instructors", icon: IdentificationIcon },
+  { name: "Enrollments", href: "/admin/enrollments", icon: UserPlusIcon },
   { name: "Classes", href: "/admin/classes", icon: VideoIcon },
   { name: "Attendance", href: "/admin/attendance", icon: CalendarCheckIcon },
   { name: "Excuses", href: "/admin/excuses", icon: ClipboardCheckIcon },
@@ -150,14 +155,9 @@ const adminNavItems: NavItem[] = [
   { name: "Progress", href: "/admin/progress", icon: ChartBarIcon },
   { name: "Completion", href: "/admin/completion", icon: AcademicCapIcon },
   { name: "Certificates", href: "/admin/certificates", icon: CheckBadgeIcon },
-  { name: "Chat", href: "/admin/chat", icon: ChatIcon },
-  { name: "Cohorts", href: "/admin/cohorts", icon: FolderIcon },
-  { name: "Tracks", href: "/admin/tracks", icon: LayersIcon },
-  { name: "Students", href: "/admin/students", icon: UsersIcon },
-  { name: "Instructors", href: "/admin/instructors", icon: IdentificationIcon },
-  { name: "Enrollments", href: "/admin/enrollments", icon: UserPlusIcon },
-  { name: "Audit Log", href: "/admin/audit-log", icon: ShieldCheckIcon },
   { name: "Announcements", href: "/admin/announcements", icon: BellIcon },
+  { name: "Chat", href: "/admin/chat", icon: ChatIcon },
+  { name: "Audit Log", href: "/admin/audit-log", icon: ShieldCheckIcon },
 ];
 
 export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: SidebarProps) {

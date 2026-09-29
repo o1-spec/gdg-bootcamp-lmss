@@ -59,23 +59,24 @@ export default async function AdminAuditLogPage({
   return (
     <div className="space-y-6">
       <PageHeader
-        title="System Audit Log"
+        title="Audit Log"
         description="Immutable record of administrative, instructor, and student sensitive actions"
       />
 
       {/* Filter Controls */}
       <form
         method="GET"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 text-xs"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 rounded-2xl border border-[#E7E3DA] bg-white p-4 text-xs"
       >
         <div>
-          <label className="block text-2xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+          <label className="block text-[11px] font-semibold text-[#737373] uppercase tracking-wider mb-1">
             Action
           </label>
           <select
             name="action"
             defaultValue={filters.action || "ALL"}
-            className="w-full rounded-lg border border-zinc-200 bg-white p-2 text-xs text-zinc-900 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+            aria-label="Filter by action"
+            className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:outline-hidden focus:ring-2 focus:ring-[#171717]"
           >
             <option value="ALL">All Actions ({actionStats.reduce((a, b) => a + b.count, 0)})</option>
             {actionStats.map((a) => (
@@ -87,13 +88,14 @@ export default async function AdminAuditLogPage({
         </div>
 
         <div>
-          <label className="block text-2xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+          <label className="block text-[11px] font-semibold text-[#737373] uppercase tracking-wider mb-1">
             Actor
           </label>
           <select
             name="actorId"
             defaultValue={filters.actorId || "ALL"}
-            className="w-full rounded-lg border border-zinc-200 bg-white p-2 text-xs text-zinc-900 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+            aria-label="Filter by actor"
+            className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:outline-hidden focus:ring-2 focus:ring-[#171717]"
           >
             <option value="ALL">All Actors</option>
             {actors.map((act) => (
@@ -105,13 +107,14 @@ export default async function AdminAuditLogPage({
         </div>
 
         <div>
-          <label className="block text-2xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+          <label className="block text-[11px] font-semibold text-[#737373] uppercase tracking-wider mb-1">
             Target Type
           </label>
           <select
             name="targetType"
             defaultValue={filters.targetType || "ALL"}
-            className="w-full rounded-lg border border-zinc-200 bg-white p-2 text-xs text-zinc-900 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+            aria-label="Filter by target type"
+            className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:outline-hidden focus:ring-2 focus:ring-[#171717]"
           >
             <option value="ALL">All Targets</option>
             {targetTypes.map((tt) => (
@@ -123,27 +126,28 @@ export default async function AdminAuditLogPage({
         </div>
 
         <div>
-          <label className="block text-2xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+          <label className="block text-[11px] font-semibold text-[#737373] uppercase tracking-wider mb-1">
             Date From
           </label>
           <input
             type="date"
             name="from"
             defaultValue={filters.from || ""}
-            className="w-full rounded-lg border border-zinc-200 bg-white p-2 text-xs text-zinc-900 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+            aria-label="Filter date from"
+            className="w-full h-10 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:outline-hidden focus:ring-2 focus:ring-[#171717]"
           />
         </div>
 
         <div className="flex items-end gap-2">
           <button
             type="submit"
-            className="w-full rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+            className="w-full h-10 rounded-xl bg-[#171717] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#171717]/90 cursor-pointer"
           >
             Apply Filters
           </button>
           <Link
             href="/admin/audit-log"
-            className="rounded-lg border border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs font-medium text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717] transition-colors"
           >
             Reset
           </Link>
@@ -152,89 +156,85 @@ export default async function AdminAuditLogPage({
 
       {/* Log Entries Table */}
       {logs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-zinc-200 p-10 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center text-xs text-[#737373]">
           No audit log entries match the current filters.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-zinc-200 bg-zinc-50/75 dark:border-zinc-800 dark:bg-zinc-900/40">
-              <tr>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Timestamp
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Actor
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Action
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Target
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Metadata
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {logs.map((log) => {
-                const actionBadgeVariant = log.action.includes("APPROVED") || log.action.includes("ISSUED")
-                  ? "success"
-                  : log.action.includes("REJECTED") || log.action.includes("DELETED")
-                    ? "danger"
-                    : log.action.includes("OVERRIDDEN") || log.action.includes("MUTE")
-                      ? "warning"
-                      : "info";
+        <div className="overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-[#E7E3DA] bg-[#F7F4ED]/60 text-[11px] font-medium text-[#737373]">
+                <tr>
+                  <th className="px-5 py-3 sm:px-6">Timestamp</th>
+                  <th className="px-4 py-3">Actor</th>
+                  <th className="px-4 py-3">Action</th>
+                  <th className="px-4 py-3">Target</th>
+                  <th className="px-5 py-3 sm:px-6">Metadata Summary</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E7E3DA]">
+                {logs.map((log) => {
+                  const actionBadgeVariant = log.action.includes("APPROVED") || log.action.includes("ISSUED")
+                    ? "success"
+                    : log.action.includes("REJECTED") || log.action.includes("DELETED")
+                      ? "danger"
+                      : log.action.includes("OVERRIDDEN") || log.action.includes("MUTE")
+                        ? "warning"
+                        : "neutral";
 
-                return (
-                  <tr
-                    key={log.id}
-                    className="transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30"
-                  >
-                    <td className="px-4 py-3 text-zinc-500 font-mono text-[11px] whitespace-nowrap">
-                      {dateFormatter.format(new Date(log.createdAt))}
-                    </td>
+                  const metaString = log.metadata ? JSON.stringify(log.metadata) : null;
 
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                          {log.actor.name}
+                  return (
+                    <tr
+                      key={log.id}
+                      className="hover:bg-[#F7F4ED]/40 transition-colors"
+                    >
+                      <td className="px-5 py-3.5 sm:px-6 text-[#737373] font-mono text-[11px] whitespace-nowrap">
+                        {dateFormatter.format(new Date(log.createdAt))}
+                      </td>
+
+                      <td className="px-4 py-3.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-[#171717]">
+                            {log.actor.name}
+                          </span>
+                          <span className="rounded bg-[#F7F4ED] border border-[#E7E3DA] px-1.5 py-0.5 text-[10px] font-medium text-[#737373]">
+                            {log.actor.role}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#737373]">{log.actor.email}</p>
+                      </td>
+
+                      <td className="px-4 py-3.5">
+                        <Badge variant={actionBadgeVariant}>{log.action}</Badge>
+                      </td>
+
+                      <td className="px-4 py-3.5">
+                        <span className="font-medium text-[#171717]">
+                          {log.targetType}
                         </span>
-                        <span className="rounded bg-zinc-100 px-1 py-0.2 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                          {log.actor.role}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-zinc-400">{log.actor.email}</p>
-                    </td>
+                        {log.targetId && (
+                          <p className="font-mono text-[11px] text-[#737373] truncate max-w-40">
+                            {log.targetId.slice(0, 12)}...
+                          </p>
+                        )}
+                      </td>
 
-                    <td className="px-4 py-3">
-                      <Badge variant={actionBadgeVariant}>{log.action}</Badge>
-                    </td>
-
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                        {log.targetType}
-                      </span>
-                      <p className="font-mono text-2xs text-zinc-400 truncate max-w-35">
-                        {log.targetId}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 max-w-xs">
-                      {log.metadata ? (
-                        <pre className="font-mono text-2xs text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/60 p-1.5 rounded border border-zinc-100 dark:border-zinc-800 truncate">
-                          {JSON.stringify(log.metadata)}
-                        </pre>
-                      ) : (
-                        <span className="text-2xs text-zinc-400">—</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className="px-5 py-3.5 sm:px-6 max-w-xs">
+                        {metaString ? (
+                          <span className="font-mono text-[11px] text-[#737373] bg-[#F7F4ED] px-2 py-1 rounded border border-[#E7E3DA] block truncate" title={metaString}>
+                            {metaString}
+                          </span>
+                        ) : (
+                          <span className="text-[11px] text-[#737373]">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

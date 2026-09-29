@@ -148,7 +148,7 @@ export default async function AdminStudentsPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
           Student Records ({totalRegistered} registered)
         </h3>
         <AdminStudentsTable students={students} />

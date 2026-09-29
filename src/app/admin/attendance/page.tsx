@@ -89,28 +89,28 @@ export default async function AdminAttendancePage({
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
-        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-[#E7E3DA] bg-white p-4">
+        <span className="text-xs font-medium text-[#737373]">
           Filter:
         </span>
 
         <div className="flex flex-wrap items-center gap-1.5">
           <Link
             href="/admin/attendance"
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               !trackFilter || trackFilter === "all"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             All Tracks
           </Link>
           <Link
             href="/admin/attendance?track=shared"
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               trackFilter === "shared"
-                ? "bg-amber-600 text-white dark:bg-amber-500 dark:text-zinc-950 font-semibold"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             Cohort Shared
@@ -119,10 +119,10 @@ export default async function AdminAttendancePage({
             <Link
               key={t.id}
               href={`/admin/attendance?track=${t.id}`}
-              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
                 trackFilter === t.id
-                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                  : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  ? "bg-[#171717] text-white"
+                  : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
               }`}
             >
               {t.name}
@@ -134,17 +134,17 @@ export default async function AdminAttendancePage({
       {/* Session Roster List */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          <h2 className="text-base font-semibold text-[#171717]">
             Sessions & Attendance Records
           </h2>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-[#737373]">
             {sessions.length} {sessions.length === 1 ? "session" : "sessions"}
           </span>
         </div>
 
         {sessions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 p-10 text-center dark:border-zinc-800 dark:bg-zinc-900/30">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center">
+            <p className="text-xs text-[#737373]">
               No sessions found matching this filter criteria.
             </p>
           </div>
@@ -153,13 +153,13 @@ export default async function AdminAttendancePage({
             {sessions.map((session) => (
               <div
                 key={session.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-2xs hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-5 hover:border-[#171717]/30 transition-colors"
               >
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     {session.isLive ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#34A853]/20 bg-[#34A853]/10 px-2.5 py-0.5 text-xs font-medium text-[#34A853]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#34A853] animate-pulse" />
                         Live Now
                       </span>
                     ) : session.isPast ? (
@@ -174,11 +174,11 @@ export default async function AdminAttendancePage({
                       <Badge variant="warning">Shared Cohort</Badge>
                     )}
 
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500">•</span>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">{session.cohortName}</span>
+                    <span className="text-xs text-[#737373]">•</span>
+                    <span className="text-xs text-[#737373]">{session.cohortName}</span>
 
                     {session.checkinCode && (
-                      <span className="font-mono text-xs font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded">
+                      <span className="font-mono text-xs font-semibold text-[#171717] bg-[#F7F4ED] px-2 py-0.5 rounded border border-[#E7E3DA]">
                         Code: {session.checkinCode}
                       </span>
                     )}
@@ -187,45 +187,45 @@ export default async function AdminAttendancePage({
                   <div>
                     <Link
                       href={`/admin/classes/${session.id}/attendance`}
-                      className="text-base font-semibold text-zinc-900 hover:underline dark:text-zinc-100"
+                      className="text-base font-semibold text-[#171717] hover:underline"
                     >
                       {session.title}
                     </Link>
-                    <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-0.5 text-xs text-[#737373]">
                       {dateFormatter.format(session.startsAt)} • {timeFormatter.format(session.startsAt)} – {timeFormatter.format(session.endsAt)}
                     </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-                    <span className="text-emerald-700 dark:text-emerald-300 font-medium">
+                    <span className="text-[#34A853] font-medium">
                       {session.presentCount} Present
                     </span>
-                    <span className="text-zinc-300 dark:text-zinc-700">•</span>
-                    <span className="text-amber-700 dark:text-amber-300 font-medium">
+                    <span className="text-[#E7E3DA]">•</span>
+                    <span className="text-[#FBBC04] font-medium">
                       {session.lateCount} Late
                     </span>
-                    <span className="text-zinc-300 dark:text-zinc-700">•</span>
-                    <span className="text-rose-700 dark:text-rose-300 font-medium">
+                    <span className="text-[#E7E3DA]">•</span>
+                    <span className="text-[#EA4335] font-medium">
                       {session.absentCount} Absent
                     </span>
-                    <span className="text-zinc-300 dark:text-zinc-700">•</span>
-                    <span className="text-zinc-500 dark:text-zinc-400">
+                    <span className="text-[#E7E3DA]">•</span>
+                    <span className="text-[#737373]">
                       {session.unmarkedCount} Unmarked
                     </span>
                   </div>
                 </div>
 
-                <div className="flex shrink-0 flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-zinc-100 dark:border-zinc-900">
+                <div className="flex shrink-0 flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#E7E3DA]">
                   <div className="text-left sm:text-right">
-                    <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                    <span className="text-sm font-bold text-[#171717]">
                       {session.attendanceRate}%
                     </span>
-                    <p className="text-[11px] text-zinc-400">Attendance Rate</p>
+                    <p className="text-[11px] text-[#737373]">Attendance Rate</p>
                   </div>
 
                   <Link
                     href={`/admin/classes/${session.id}/attendance`}
-                    className="inline-flex h-8 items-center justify-center rounded-lg bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                    className="inline-flex h-9 items-center justify-center rounded-xl bg-[#171717] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#171717]/90"
                   >
                     Manage Roster →
                   </Link>

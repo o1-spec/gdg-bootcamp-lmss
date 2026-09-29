@@ -50,12 +50,12 @@ export default async function AdminGradingPage({
 
         <div className="flex items-center gap-2">
           {ungradedCount > 0 && (
-            <span className="rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+            <span className="rounded-full border border-[#FBBC04]/20 bg-[#FBBC04]/10 px-3 py-1 text-xs font-semibold text-[#171717]">
               {ungradedCount} Ungraded
             </span>
           )}
           {gradedPendingCount > 0 && (
-            <span className="rounded-lg bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60">
+            <span className="rounded-full border border-[#4285F4]/20 bg-[#4285F4]/10 px-3 py-1 text-xs font-semibold text-[#4285F4]">
               {gradedPendingCount} Ready to Release
             </span>
           )}
@@ -63,9 +63,9 @@ export default async function AdminGradingPage({
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E7E3DA] bg-white p-4">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mr-1">
+          <span className="text-xs font-medium text-[#737373] mr-1">
             Status:
           </span>
           <Link
@@ -73,10 +73,10 @@ export default async function AdminGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               !status || status === "all"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             All ({submissions.length})
@@ -87,10 +87,10 @@ export default async function AdminGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "ungraded"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             Ungraded
@@ -101,10 +101,10 @@ export default async function AdminGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "graded"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             Graded (Unreleased)
@@ -115,10 +115,10 @@ export default async function AdminGradingPage({
               ...(track ? { track } : {}),
               ...(assignment ? { assignment } : {}),
             }).toString()}`}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               status === "released"
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "bg-[#171717] text-white"
+                : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
             Released
@@ -126,7 +126,7 @@ export default async function AdminGradingPage({
         </div>
 
         {/* Tracks Info */}
-        <div className="flex items-center gap-2 text-xs text-zinc-400">
+        <div className="flex items-center gap-2 text-xs text-[#737373]">
           <span>{tracks.length} tracks</span>
           <span>•</span>
           <span>{assignments.length} assignments</span>
@@ -141,12 +141,12 @@ export default async function AdminGradingPage({
 
       {/* Bulk Release Panel */}
       {submissions.filter((s) => s.score !== null && !s.released).length > 0 && (
-        <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6 space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="border-t border-[#E7E3DA] pt-6 space-y-3">
+          <h2 className="text-sm font-semibold text-[#171717]">
             Bulk Grade Release
           </h2>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Select multiple graded submissions to release at once.
+          <p className="text-xs text-[#737373]">
+            Select multiple graded submissions to release to students at once.
           </p>
           <BulkReleasePanel
             submissions={submissions.map((s) => ({

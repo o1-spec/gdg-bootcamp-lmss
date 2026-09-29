@@ -102,7 +102,7 @@ export default async function AdminInstructorsPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
           Instructor Roster ({instructors.length} staff)
         </h3>
         <AdminInstructorsTable instructors={instructors} />

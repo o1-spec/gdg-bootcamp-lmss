@@ -5,6 +5,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAdminOverview } from "@/lib/progress/queries";
+import { db } from "@/lib/db";
 
 export const metadata = {
   title: "Cross-Track Progress | Admin Console",
@@ -12,116 +13,180 @@ export const metadata = {
 
 export default async function AdminProgressPage() {
   await requireAdmin();
-  const overview = await getAdminOverview();
+  const [overview, enrollments, certificates, submissions] = await Promise.all([
+    getAdminOverview(),
+    db.enrollment.findMany({ select: { trackId: true, userId: true } }),
+    db.certificate.findMany({ select: { trackId: true, userId: true } }),
+    db.submission.findMany({
+      where: { released: true, score: { not: null } },
+      select: { score: true, assignment: { select: { maxScore: true, trackId: true } } },
+    }),
+  ]);
+
+  // Overall calculations
+  const totalStudents = overview.totalActiveStudents;
+  const avgAttendance = overview.averageCohortAttendance;
+  const avgSubmissionRate =
+    overview.trackOverviews.length > 0
+      ? Math.round(
+          overview.trackOverviews.reduce((acc, t) => acc + t.submissionRate, 0) /
+            overview.trackOverviews.length
+        )
+      : 0;
+
+  // Average released score
+  let totalScorePct = 0;
+  let scoredCount = 0;
+  for (const s of submissions) {
+    if (s.score !== null && s.assignment.maxScore > 0) {
+      totalScorePct += (s.score / s.assignment.maxScore) * 100;
+      scoredCount++;
+    }
+  }
+  const avgReleasedScore = scoredCount > 0 ? Math.round(totalScorePct / scoredCount) : 0;
+
+  // Overall Completion Rate
+  const totalEnrollments = enrollments.length;
+  const overallCompletionRate =
+    totalEnrollments > 0
+      ? Math.round((certificates.length / totalEnrollments) * 100)
+      : 0;
+
+  // Track completion map
+  const trackCertMap = new Map<string, number>();
+  for (const c of certificates) {
+    trackCertMap.set(c.trackId, (trackCertMap.get(c.trackId) || 0) + 1);
+  }
+
+  const trackEnrollmentMap = new Map<string, number>();
+  for (const e of enrollments) {
+    trackEnrollmentMap.set(e.trackId, (trackEnrollmentMap.get(e.trackId) || 0) + 1);
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
-        title="Cross-Track Progress & Analytics"
+        title="Cross-Track Progress & Operational Analytics"
         description={`Aggregated cohort progress for ${overview.cohortName} across all tracks`}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Top Cohort Summary */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard
-          title="Active Students"
-          value={overview.totalActiveStudents}
+          title="Total Students"
+          value={totalStudents}
           subtitle="Cohort enrollment"
           badge={{ text: "Active", variant: "info" }}
         />
         <StatCard
-          title="Cohort Attendance"
-          value={`${overview.averageCohortAttendance}%`}
-          subtitle="Average across all tracks"
-          badge={{ text: "Healthy", variant: "success" }}
-        />
-        <StatCard
-          title="Total Assignments"
-          value={overview.totalAssignments}
-          subtitle="Published exercises"
-          badge={{ text: `${overview.tracksCount} Tracks`, variant: "neutral" }}
-        />
-        <StatCard
-          title="Grading Backlog"
-          value={overview.ungradedSubmissionsCount}
-          subtitle="Submissions awaiting review"
+          title="Average Attendance"
+          value={`${avgAttendance}%`}
+          subtitle="All tracks combined"
           badge={{
-            text: overview.ungradedSubmissionsCount === 0 ? "Clear" : "Action Needed",
-            variant: overview.ungradedSubmissionsCount === 0 ? "success" : "warning",
+            text: avgAttendance >= 85 ? "Optimal" : "Attention",
+            variant: avgAttendance >= 85 ? "success" : "warning",
           }}
+        />
+        <StatCard
+          title="Submission Rate"
+          value={`${avgSubmissionRate}%`}
+          subtitle="Pacing across assignments"
+          badge={{ text: "Track Average", variant: "neutral" }}
+        />
+        <StatCard
+          title="Avg Released Score"
+          value={`${avgReleasedScore}%`}
+          subtitle="Graded problem sets"
+          badge={{ text: `${scoredCount} Graded`, variant: "success" }}
+        />
+        <StatCard
+          title="Completion Rate"
+          value={`${overallCompletionRate}%`}
+          subtitle={`${certificates.length} Certified`}
+          badge={{ text: "Cohort Final", variant: "neutral" }}
         />
       </div>
 
-      <div className="rounded-xl border border-zinc-200 bg-white shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="border-b border-zinc-100 p-5 dark:border-zinc-900 sm:p-6">
-          <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Track-by-Track Pacing & Completion Metrics
-          </h3>
-          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            Compare attendance rates, assignment submission velocity, and grading queues
+      {/* Track Breakdown Table */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-base font-semibold text-[#171717]">
+            Track Breakdown
+          </h2>
+          <p className="text-xs text-[#737373]">
+            Track performance, attendance rates, submission velocity, and certification rates
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-zinc-100 bg-zinc-50 text-[11px] font-medium text-zinc-500 dark:border-zinc-900 dark:bg-zinc-900/50 dark:text-zinc-400">
-              <tr>
-                <th className="px-5 py-3 sm:px-6">Track Name</th>
-                <th className="px-4 py-3">Active Students</th>
-                <th className="px-4 py-3">Lead Instructors</th>
-                <th className="px-4 py-3">Attendance Rate</th>
-                <th className="px-4 py-3">Submission Rate</th>
-                <th className="px-4 py-3">Grading Backlog</th>
-                <th className="px-5 py-3 sm:px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900">
-              {overview.trackOverviews.map((track) => (
-                <tr
-                  key={track.trackId}
-                  className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
-                >
-                  <td className="px-5 py-3.5 sm:px-6 font-semibold text-zinc-900 dark:text-zinc-100">
-                    {track.trackName} Track
-                  </td>
-                  <td className="px-4 py-3.5 text-zinc-700 dark:text-zinc-300">
-                    {track.activeStudents}
-                  </td>
-                  <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400">
-                    {track.instructors.length > 0
-                      ? track.instructors.join(", ")
-                      : "Unassigned"}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <span
-                      className={`font-medium ${
-                        track.attendanceRate >= 85
-                          ? "text-emerald-700 dark:text-emerald-400"
-                          : "text-amber-700 dark:text-amber-400"
-                      }`}
-                    >
-                      {track.attendanceRate}%
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-100">
-                    {track.submissionRate}%
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <Badge variant={track.gradingBacklog === 0 ? "success" : "warning"}>
-                      {track.gradingBacklog} pending
-                    </Badge>
-                  </td>
-                  <td className="px-5 py-3.5 sm:px-6 text-right">
-                    <Link
-                      href={`/admin/grading?trackId=${track.trackId}`}
-                      className="rounded-md border border-zinc-200 px-2.5 py-1 text-[11px] font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                    >
-                      View Grading Queue
-                    </Link>
-                  </td>
+        <div className="overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-[#E7E3DA] bg-[#F7F4ED]/60 text-[11px] font-medium text-[#737373]">
+                <tr>
+                  <th className="px-5 py-3 sm:px-6">Track</th>
+                  <th className="px-4 py-3">Students</th>
+                  <th className="px-4 py-3">Attendance</th>
+                  <th className="px-4 py-3">Submission Rate</th>
+                  <th className="px-4 py-3">Grading Backlog</th>
+                  <th className="px-4 py-3">Completion Rate</th>
+                  <th className="px-5 py-3 sm:px-6 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#E7E3DA]">
+                {overview.trackOverviews.map((track) => {
+                  const enrCount = trackEnrollmentMap.get(track.trackId) || track.activeStudents;
+                  const certCount = trackCertMap.get(track.trackId) || 0;
+                  const trackCompletionRate = enrCount > 0 ? Math.round((certCount / enrCount) * 100) : 0;
+
+                  return (
+                    <tr
+                      key={track.trackId}
+                      className="hover:bg-[#F7F4ED]/40 transition-colors"
+                    >
+                      <td className="px-5 py-3.5 sm:px-6 font-semibold text-[#171717]">
+                        {track.trackName}
+                      </td>
+                      <td className="px-4 py-3.5 text-[#171717]">
+                        {track.activeStudents}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <span
+                          className={`font-semibold ${
+                            track.attendanceRate >= 85
+                              ? "text-[#34A853]"
+                              : track.attendanceRate >= 70
+                              ? "text-[#FBBC04]"
+                              : "text-[#EA4335]"
+                          }`}
+                        >
+                          {track.attendanceRate}%
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 font-medium text-[#171717]">
+                        {track.submissionRate}%
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <Badge variant={track.gradingBacklog === 0 ? "success" : "warning"}>
+                          {track.gradingBacklog} pending
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3.5 font-semibold text-[#171717]">
+                        {trackCompletionRate}% ({certCount})
+                      </td>
+                      <td className="px-5 py-3.5 sm:px-6 text-right">
+                        <Link
+                          href={`/admin/grading?trackId=${track.trackId}`}
+                          className="inline-flex h-8 items-center rounded-lg border border-[#E7E3DA] bg-white px-3 text-xs font-medium text-[#171717] hover:bg-[#F7F4ED] transition-colors"
+                        >
+                          Grading Queue
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -78,7 +78,7 @@ export default async function AdminTracksPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
           Track Roster ({tracks.length} tracks)
         </h3>
         <AdminTracksTable tracks={tracks} />

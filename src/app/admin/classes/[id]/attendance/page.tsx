@@ -54,7 +54,7 @@ export default async function AdminSessionAttendancePage({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
           href={`/admin/classes/${session.id}`}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#737373] hover:text-[#171717] transition-colors"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -69,8 +69,8 @@ export default async function AdminSessionAttendancePage({
           />
 
           {session.isLive ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#34A853]/20 bg-[#34A853]/10 px-2.5 py-1 text-xs font-medium text-[#34A853]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#34A853] animate-pulse" />
               Live Class
             </span>
           ) : session.isPast ? (
@@ -85,8 +85,8 @@ export default async function AdminSessionAttendancePage({
             <Badge variant="warning">Shared (All Cohort)</Badge>
           )}
 
-          <span className="text-xs text-zinc-400 dark:text-zinc-500">•</span>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">{session.cohortName}</span>
+          <span className="text-xs text-[#737373]">•</span>
+          <span className="text-xs text-[#737373]">{session.cohortName}</span>
         </div>
       </div>
 

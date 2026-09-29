@@ -18,7 +18,7 @@ export function TrackFilterSelect({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-zinc-500">Track:</span>
+      <span className="text-xs font-medium text-[#737373]">Track:</span>
       <select
         value={currentTrackId}
         onChange={(e) => {
@@ -27,7 +27,7 @@ export function TrackFilterSelect({
           );
         }}
         aria-label="Filter by track"
-        className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-900 focus:outline-hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+        className="h-9 rounded-xl border border-[#E7E3DA] bg-white px-3 text-xs text-[#171717] focus:outline-hidden focus:ring-2 focus:ring-[#171717]"
       >
         <option value="ALL">All Tracks</option>
         {tracks.map((t) => (

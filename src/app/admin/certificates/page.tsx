@@ -36,75 +36,67 @@ export default async function AdminCertificatesPage() {
       />
 
       {certificates.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-zinc-200 p-10 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center text-xs text-[#737373]">
           No certificates have been issued yet. Students who meet all completion criteria can claim their certificate.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xs dark:border-zinc-800 dark:bg-zinc-950">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-zinc-200 bg-zinc-50/75 dark:border-zinc-800 dark:bg-zinc-900/40">
-              <tr>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Student
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Track / Cohort
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Certificate ID
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100">
-                  Issued Date
-                </th>
-                <th className="px-4 py-3 font-semibold text-zinc-900 dark:text-zinc-100 text-right">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {certificates.map((cert) => (
-                <tr
-                  key={cert.id}
-                  className="transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30"
-                >
-                  <td className="px-4 py-3.5">
-                    <p className="font-semibold text-zinc-900 dark:text-zinc-100">
-                      {cert.user.name}
-                    </p>
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                      {cert.user.email}
-                    </p>
-                  </td>
-
-                  <td className="px-4 py-3.5">
-                    <p className="font-medium text-zinc-900 dark:text-zinc-100">
-                      {cert.track.name}
-                    </p>
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                      {cert.cohort.name}
-                    </p>
-                  </td>
-
-                  <td className="px-4 py-3.5 font-mono text-zinc-900 dark:text-zinc-100 font-semibold">
-                    {cert.certificateCode}
-                  </td>
-
-                  <td className="px-4 py-3.5 text-zinc-500 dark:text-zinc-400">
-                    {dateFormatter.format(new Date(cert.issuedAt))}
-                  </td>
-
-                  <td className="px-4 py-3.5 text-right">
-                    <Link
-                      href={`/certificate/${cert.certificateCode}`}
-                      className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
-                    >
-                      View / Print
-                    </Link>
-                  </td>
+        <div className="overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-[#E7E3DA] bg-[#F7F4ED]/60 text-[11px] font-medium text-[#737373]">
+                <tr>
+                  <th className="px-5 py-3 sm:px-6">Student</th>
+                  <th className="px-4 py-3">Track / Cohort</th>
+                  <th className="px-4 py-3">Certificate ID</th>
+                  <th className="px-4 py-3">Issued Date</th>
+                  <th className="px-5 py-3 sm:px-6 text-right">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#E7E3DA]">
+                {certificates.map((cert) => (
+                  <tr
+                    key={cert.id}
+                    className="hover:bg-[#F7F4ED]/40 transition-colors"
+                  >
+                    <td className="px-5 py-3.5 sm:px-6">
+                      <p className="font-semibold text-[#171717]">
+                        {cert.user.name}
+                      </p>
+                      <p className="text-[11px] text-[#737373]">
+                        {cert.user.email}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3.5">
+                      <p className="font-medium text-[#171717]">
+                        {cert.track.name}
+                      </p>
+                      <p className="text-[11px] text-[#737373]">
+                        {cert.cohort.name}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3.5 font-mono text-[#171717] font-semibold">
+                      {cert.certificateCode}
+                    </td>
+
+                    <td className="px-4 py-3.5 text-[#737373]">
+                      {dateFormatter.format(new Date(cert.issuedAt))}
+                    </td>
+
+                    <td className="px-5 py-3.5 sm:px-6 text-right">
+                      <Link
+                        href={`/certificate/${cert.certificateCode}`}
+                        className="inline-flex h-8 items-center justify-center rounded-lg bg-[#171717] px-3 text-xs font-medium text-white transition-colors hover:bg-[#171717]/90"
+                      >
+                        View / Print
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

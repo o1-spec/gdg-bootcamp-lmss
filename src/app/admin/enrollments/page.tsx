@@ -71,7 +71,7 @@ export default async function AdminEnrollmentsPage() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h3 className="text-sm font-semibold tracking-tight text-[#171717]">
           Enrollment Records ({enrollments.length} enrollments)
         </h3>
         <AdminEnrollmentsTable enrollments={enrollments} />
