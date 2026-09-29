@@ -3,7 +3,6 @@ import { PageHeader } from "@/components/ui/page-header";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
-import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
   title: "Live Classes | Bootcamp LMS",

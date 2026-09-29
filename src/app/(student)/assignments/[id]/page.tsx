@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { requireStudent } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { StudentSubmissionForm } from "@/components/assignments/student-submission-form";

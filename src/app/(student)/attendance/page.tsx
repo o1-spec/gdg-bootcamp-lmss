@@ -1,7 +1,6 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { Badge } from "@/components/ui/badge";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentAttendance } from "@/lib/attendance/queries";
 import { SubmitExcuseModal } from "@/components/excuses/submit-excuse-modal";

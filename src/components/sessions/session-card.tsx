@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { SessionWithDetails } from "@/lib/sessions/queries";
 
 interface SessionCardProps {

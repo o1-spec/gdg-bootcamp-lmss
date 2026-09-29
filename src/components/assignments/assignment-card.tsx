@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { StudentAssignmentItem } from "@/lib/assignments/queries";
 
 interface AssignmentCardProps {
