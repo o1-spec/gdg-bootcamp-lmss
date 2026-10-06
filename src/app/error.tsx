@@ -1,21 +1,48 @@
 "use client";
-// src/app/error.tsx
-// Global error boundary — catches unexpected server/client errors.
-// Displays a safe message with no stack traces or internals.
+
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useEffect } from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
+interface GlobalErrorProps {
+  error: Error & { digest?: string };
+  reset: () => void;
+}
+
+/*
+|----------------------------------------------------------------------------------------------------
+| GlobalError
+|----------------------------------------------------------------------------------------------------
+| Global error boundary catching unexpected server and client errors.
+| Displays a safe user-facing message with no stack traces or internals.
+*/
 export default function GlobalError({
   error,
   reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+}: GlobalErrorProps) {
+  /*
+  |--------------------------------------------------
+  | useEffect — log error
+  |--------------------------------------------------
+  */
   useEffect(() => {
     // Log to server-side error tracking in the future (e.g. Sentry)
     console.error("[GlobalError]", error.digest ?? error.message);
   }, [error]);
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F7F4ED] px-4">
       <div className="text-center max-w-md w-full rounded-2xl border border-[#E7E3DA] bg-white p-8 sm:p-10 shadow-xs">

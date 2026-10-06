@@ -1,6 +1,17 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import {
   getChannelIfAuthorized,
@@ -13,8 +24,12 @@ import {
 import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
-// ── Send message ──────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| sendMessageAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling send Message workflows and cache revalidations.
+*/
 export async function sendMessageAction(
   channelId: string,
   body: string
@@ -46,8 +61,12 @@ export async function sendMessageAction(
   return { success: true };
 }
 
-// ── Delete message (soft) ─────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteMessageAction
+|----------------------------------------------------------------------------------------------------
+| Deletes or archives a Message Action record from the database.
+*/
 export async function deleteMessageAction(
   messageId: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -78,8 +97,12 @@ export async function deleteMessageAction(
   return { success: true };
 }
 
-// ── Mute user ─────────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| muteUserAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling mute User workflows and cache revalidations.
+*/
 export async function muteUserAction(
   userId: string,
   cohortId: string,
@@ -110,8 +133,12 @@ export async function muteUserAction(
   return { success: true };
 }
 
-// ── Unmute user ───────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| unmuteUserAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling unmute User workflows and cache revalidations.
+*/
 export async function unmuteUserAction(
   userId: string,
   cohortId: string

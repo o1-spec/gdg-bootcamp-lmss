@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { NextRequest, NextResponse } from "next/server";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 import { verifyRefreshToken, signAccessToken } from "@/lib/auth/jwt";
 import {
@@ -8,6 +19,12 @@ import {
   authCookieOptions,
 } from "@/lib/auth/session";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| POST
+|----------------------------------------------------------------------------------------------------
+| Handles incoming HTTP POST requests for this endpoint.
+*/
 export async function POST(req: NextRequest) {
   try {
     const refreshToken = req.cookies.get(REFRESH_COOKIE_NAME)?.value;

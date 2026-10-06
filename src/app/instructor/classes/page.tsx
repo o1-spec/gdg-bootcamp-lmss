@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Class Sessions | Instructor Portal",
   description: "Schedule live classes, manage meeting links, and upload recordings",
@@ -15,6 +31,12 @@ interface InstructorClassesPageProps {
   searchParams: Promise<{ track?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorClassesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Classes page view.
+*/
 export default async function InstructorClassesPage({
   searchParams,
 }: InstructorClassesPageProps) {

@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { NextRequest, NextResponse } from "next/server";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth/password";
 import { signAccessToken, signRefreshToken } from "@/lib/auth/jwt";
@@ -11,6 +22,12 @@ import {
   getRoleDashboardPath,
 } from "@/lib/auth/session";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| POST
+|----------------------------------------------------------------------------------------------------
+| Handles incoming HTTP POST requests for this endpoint.
+*/
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);

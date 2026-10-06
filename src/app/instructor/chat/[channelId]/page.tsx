@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { notFound } from "next/navigation";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { getChannelIfAuthorized, getChannelMessages, getMutesForCohort } from "@/lib/chat/queries";
 import { ModeratorChatWindow } from "./chat-client";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Props {
   params: Promise<{ channelId: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorChannelPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Channel page view.
+*/
 export default async function InstructorChannelPage({ params }: Props) {
   const { channelId } = await params;
   const user = await requireInstructor();

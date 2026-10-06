@@ -1,12 +1,39 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { ClassSession } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface UpcomingClassesProps {
   classes: ClassSession[];
 }
 
+/*
+|--------------------------------------------------
+| UpcomingClasses
+|--------------------------------------------------
+| Lists upcoming timetable sessions for the student's cohort with direct join links.
+*/
 export function UpcomingClasses({ classes }: UpcomingClassesProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
       <div className="flex items-center justify-between pb-4 border-b border-[#E7E3DA]">

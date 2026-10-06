@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAuditLogs, getAuditLogActions } from "@/lib/audit/queries";
 import { db } from "@/lib/db";
-import Link from "next/link";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Audit Log | Admin Console",
 };
@@ -20,6 +36,12 @@ interface AuditLogPageProps {
   }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminAuditLogPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Audit Log page view.
+*/
 export default async function AdminAuditLogPage({
   searchParams,
 }: AuditLogPageProps) {

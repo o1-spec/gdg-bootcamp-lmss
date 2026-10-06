@@ -1,7 +1,24 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { NextRequest, NextResponse } from "next/server";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { getCurrentUser } from "@/lib/auth/session";
 import { getChannelIfAuthorized, getChannelMessages } from "@/lib/chat/queries";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| GET
+|----------------------------------------------------------------------------------------------------
+| Handles incoming HTTP GET requests for this endpoint.
+*/
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ channelId: string }> }

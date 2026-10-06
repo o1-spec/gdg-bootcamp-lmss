@@ -1,3 +1,16 @@
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+| Core domain models and interface contracts for the
+| Bootcamp LMS platform.
+*/
+
+/*
+|--------------------------------------------------
+| user & profile types
+|--------------------------------------------------
+*/
 export type UserRole = "student" | "instructor" | "admin";
 
 export interface StudentProfile {
@@ -10,30 +23,6 @@ export interface StudentProfile {
   cohort: string;
   currentWeek: number;
   totalWeeks: number;
-}
-
-export interface Cohort {
-  id: string;
-  name: string;
-  status: "Active" | "Upcoming" | "Completed";
-  startDate: string;
-  endDate: string;
-  totalStudents: number;
-  tracksCount: number;
-}
-
-export interface Track {
-  id: string;
-  name: string;
-  cohortId: string;
-  cohortName: string;
-  description: string;
-  instructorName: string;
-  instructorEmail: string;
-  studentsCount: number;
-  sessionsCount: number;
-  assignmentsCount: number;
-  schedule: string;
 }
 
 export interface Student {
@@ -62,6 +51,35 @@ export interface Instructor {
   roleTitle: string;
 }
 
+/*
+|--------------------------------------------------
+| academic structure types
+|--------------------------------------------------
+*/
+export interface Cohort {
+  id: string;
+  name: string;
+  status: "Active" | "Upcoming" | "Completed";
+  startDate: string;
+  endDate: string;
+  totalStudents: number;
+  tracksCount: number;
+}
+
+export interface Track {
+  id: string;
+  name: string;
+  cohortId: string;
+  cohortName: string;
+  description: string;
+  instructorName: string;
+  instructorEmail: string;
+  studentsCount: number;
+  sessionsCount: number;
+  assignmentsCount: number;
+  schedule: string;
+}
+
 export interface ClassSession {
   id: string;
   title: string;
@@ -79,6 +97,11 @@ export interface ClassSession {
   isNext?: boolean;
 }
 
+/*
+|--------------------------------------------------
+| assessment & work types
+|--------------------------------------------------
+*/
 export interface Assignment {
   id: string;
   title: string;
@@ -105,6 +128,21 @@ export interface Submission {
   feedback?: string;
 }
 
+export interface DashboardSummary {
+  attendancePercentage: number;
+  attendedSessions: number;
+  totalSessions: number;
+  completedAssignments: number;
+  totalAssignments: number;
+  pendingReviewAssignments: number;
+  averageScore: number;
+}
+
+/*
+|--------------------------------------------------
+| operations & attendance types
+|--------------------------------------------------
+*/
 export interface Announcement {
   id: string;
   title: string;
@@ -136,17 +174,6 @@ export interface ActivityItem {
   targetRole?: string;
 }
 
-export interface DashboardSummary {
-  attendancePercentage: number;
-  attendedSessions: number;
-  totalSessions: number;
-  completedAssignments: number;
-  totalAssignments: number;
-  pendingReviewAssignments: number;
-  averageScore: number;
-}
-
 export type AttendanceStatus = "PRESENT" | "ABSENT" | "LATE";
 export type AttendanceMethod = "CHECK_IN" | "MANUAL" | "IMPORT";
 export type ExcuseStatus = "PENDING" | "APPROVED" | "REJECTED";
-

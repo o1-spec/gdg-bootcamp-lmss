@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { SessionForm } from "@/components/sessions/session-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Schedule New Session | Instructor Portal",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorNewClassPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor New Class page view.
+*/
 export default async function InstructorNewClassPage() {
   const user = await requireInstructor();
 

@@ -1,9 +1,17 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 import { deriveCompletion, type CompletionResult } from "./policy";
 
-/**
- * Compute completion status for a single student in a specific track.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentCompletion
+|----------------------------------------------------------------------------------------------------
+| Compute completion status for a single student in a specific track.
+*/
 export async function getStudentCompletion(
   userId: string,
   trackId: string
@@ -80,9 +88,12 @@ export async function getStudentCompletion(
   });
 }
 
-/**
- * Batch completion for all students in a track (instructor / admin use).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getTrackCompletion
+|----------------------------------------------------------------------------------------------------
+| Batch completion for all students in a track (instructor / admin use).
+*/
 export async function getTrackCompletion(trackId: string): Promise<
   { userId: string; name: string; email: string; completion: CompletionResult }[]
 > {

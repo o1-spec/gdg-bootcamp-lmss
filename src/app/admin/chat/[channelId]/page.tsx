@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { notFound } from "next/navigation";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { getChannelIfAuthorized, getChannelMessages, getMutesForCohort } from "@/lib/chat/queries";
 import { ModeratorChatWindow } from "@/app/instructor/chat/[channelId]/chat-client";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Props {
   params: Promise<{ channelId: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminChannelPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Channel page view.
+*/
 export default async function AdminChannelPage({ params }: Props) {
   const { channelId } = await params;
   const user = await requireAdmin();

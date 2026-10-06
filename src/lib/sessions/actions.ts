@@ -1,7 +1,18 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import { createSession, updateSession, deleteSession } from "./queries";
 
@@ -14,6 +25,12 @@ function isValidUrl(stringUrl: string): boolean {
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| createSessionAction
+|----------------------------------------------------------------------------------------------------
+| Creates and persists a new Session Action record.
+*/
 export async function createSessionAction(formData: FormData) {
   const user = await requireUser();
 
@@ -89,6 +106,12 @@ export async function createSessionAction(formData: FormData) {
   redirect(targetUrl);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| updateSessionAction
+|----------------------------------------------------------------------------------------------------
+| Updates an existing Session Action record in the database.
+*/
 export async function updateSessionAction(sessionId: string, formData: FormData) {
   const user = await requireUser();
 
@@ -170,6 +193,12 @@ export async function updateSessionAction(sessionId: string, formData: FormData)
   redirect(targetUrl);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteSessionAction
+|----------------------------------------------------------------------------------------------------
+| Deletes or archives a Session Action record from the database.
+*/
 export async function deleteSessionAction(sessionId: string) {
   const user = await requireUser();
 

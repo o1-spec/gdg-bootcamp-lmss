@@ -1,9 +1,25 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { submitAssignmentAction } from "@/lib/assignments/actions";
 import { StudentAssignmentItem } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface StudentSubmissionFormProps {
   assignmentId: string;
   dueAt: string | Date;
@@ -12,6 +28,12 @@ interface StudentSubmissionFormProps {
   initialSubmission: StudentAssignmentItem["submission"] | null;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentSubmissionForm
+|----------------------------------------------------------------------------------------------------
+| Form component managing Student Submission inputs and submissions.
+*/
 export function StudentSubmissionForm({
   assignmentId,
   dueAt: rawDueAt,

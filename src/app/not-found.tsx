@@ -1,9 +1,23 @@
-// src/app/not-found.tsx
-// Global 404 page — shown for any unmatched route.
-// Matches the existing app design system.
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import Link from "next/link";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| NotFound
+|----------------------------------------------------------------------------------------------------
+| Global 404 page shown for any unmatched route.
+| Matches the bootcamp LMS design system with friendly recovery action.
+*/
 export default function NotFound() {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F7F4ED] px-4">
       <div className="text-center max-w-md w-full rounded-2xl border border-[#E7E3DA] bg-white p-8 sm:p-10 shadow-xs">

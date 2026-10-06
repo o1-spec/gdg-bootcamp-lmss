@@ -1,13 +1,16 @@
-/**
- * Completion Policy
- * =================
- * Single source of truth for all completion criteria.
- * Edit this file to change the thresholds — nothing else needs updating.
- *
- * DEVELOPMENT ASSUMPTION: These defaults reflect typical bootcamp standards.
- * They have NOT been confirmed by a product decision and should be reviewed
- * before the first cohort launch.
- */
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
+
+/*
+|----------------------------------------------------------------------------------------------------
+| COMPLETION_POLICY
+|----------------------------------------------------------------------------------------------------
+| Single source of truth for all bootcamp track completion criteria.
+| Defines thresholds for attendance rates, required assignment submissions, and grading releases.
+*/
 export const COMPLETION_POLICY = {
   /** Minimum attendance rate required (0–100). Approved excuses are excluded from denominator. */
   minAttendanceRate: 75,
@@ -32,10 +35,12 @@ export interface CompletionResult {
   unmetRequirements: string[];
 }
 
-/**
- * Derive completion status from pre-computed metrics.
- * Pure function — no DB access.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| deriveCompletion
+|----------------------------------------------------------------------------------------------------
+| Derive completion status from pre-computed metrics. Pure function — no DB access.
+*/
 export function deriveCompletion(metrics: {
   totalCompletedSessions: number;
   approvedExcusedAbsences: number;

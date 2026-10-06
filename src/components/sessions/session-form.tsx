@@ -1,10 +1,26 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { createSessionAction, updateSessionAction } from "@/lib/sessions/actions";
 import { SessionWithDetails } from "@/lib/sessions/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SessionFormProps {
   initialSession?: SessionWithDetails;
   cohorts: { id: string; name: string }[];
@@ -12,6 +28,12 @@ interface SessionFormProps {
   cancelHref: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SessionForm
+|----------------------------------------------------------------------------------------------------
+| Form component managing Session inputs and submissions.
+*/
 export function SessionForm({
   initialSession,
   cohorts,

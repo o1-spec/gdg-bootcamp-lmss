@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Live Classes | Bootcamp LMS",
   description: "Join live class sessions and access past recordings",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentClassesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Classes page view.
+*/
 export default async function StudentClassesPage() {
   const user = await requireStudent();
   const { upcoming, past, activeTrackName } = await getStudentSessions(user.id);

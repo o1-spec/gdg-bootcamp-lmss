@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { AssignmentForm } from "@/components/assignments/assignment-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface InstructorEditAssignmentProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: InstructorEditAssignmentProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: InstructorEditAssignmentProps
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorEditAssignmentPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Edit Assignment page view.
+*/
 export default async function InstructorEditAssignmentPage({
   params,
 }: InstructorEditAssignmentProps) {

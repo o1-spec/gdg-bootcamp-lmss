@@ -1,4 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { DataTable, Column } from "@/components/ui/data-table";
@@ -7,14 +19,24 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { Student } from "@/types";
-import { Role } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Track Students | Instructor Portal",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorStudentsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Students page view.
+*/
 export default async function InstructorStudentsPage() {
   const user = await requireInstructor();
 

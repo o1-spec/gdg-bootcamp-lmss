@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { getInstructorGradingQueue } from "@/lib/assignments/queries";
 import { GradingQueueTable } from "@/components/grading/grading-queue-table";
 import { BulkReleasePanel } from "@/components/grading/bulk-release-panel";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Grading Queue | Admin Console",
   description: "Global grading oversight across all tracks, cohorts, and student submissions",
@@ -19,6 +35,12 @@ interface AdminGradingPageProps {
   }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminGradingPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Grading page view.
+*/
 export default async function AdminGradingPage({
   searchParams,
 }: AdminGradingPageProps) {

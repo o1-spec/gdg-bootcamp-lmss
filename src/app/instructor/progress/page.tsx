@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +19,11 @@ import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorProgress } from "@/lib/progress/queries";
 import { getTrackCompletion } from "@/lib/completion/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Track Progress | Instructor Portal",
 };
@@ -16,6 +32,12 @@ interface InstructorProgressPageProps {
   searchParams: Promise<{ trackId?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorProgressPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Progress page view.
+*/
 export default async function InstructorProgressPage({
   searchParams,
 }: InstructorProgressPageProps) {

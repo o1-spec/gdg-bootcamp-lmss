@@ -1,6 +1,17 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { getCurrentUser } from "@/lib/auth/session";
 import {
   createAnnouncement,
@@ -9,21 +20,42 @@ import {
 } from "./queries";
 import { notifyAnnouncement } from "@/lib/notifications/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface AnnouncementActionState {
   success: boolean;
   error?: string;
   fieldErrors?: Record<string, string>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| createAnnouncementAction
+|----------------------------------------------------------------------------------------------------
+| Server action validating form input and publishing cohort-wide or track-specific announcements.
+*/
 export async function createAnnouncementAction(
   prevState: unknown,
   formData: FormData
 ): Promise<AnnouncementActionState> {
+  /*
+  |--------------------------------------------------
+  | authentication validation
+  |--------------------------------------------------
+  */
   const user = await getCurrentUser();
   if (!user) {
     return { success: false, error: "Authentication required" };
   }
 
+  /*
+  |--------------------------------------------------
+  | form parsing & payload validation
+  |--------------------------------------------------
+  */
   const title = formData.get("title") as string;
   const body = formData.get("body") as string;
   const cohortId = formData.get("cohortId") as string;
@@ -40,6 +72,11 @@ export async function createAnnouncementAction(
     return { success: false, fieldErrors };
   }
 
+  /*
+  |--------------------------------------------------
+  | database mutation & cache revalidation
+  |--------------------------------------------------
+  */
   try {
     await createAnnouncement(
       {
@@ -69,16 +106,32 @@ export async function createAnnouncementAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| updateAnnouncementAction
+|----------------------------------------------------------------------------------------------------
+| Server action allowing authors and admins to modify existing announcement content and audience.
+*/
 export async function updateAnnouncementAction(
   id: string,
   prevState: unknown,
   formData: FormData
 ): Promise<AnnouncementActionState> {
+  /*
+  |--------------------------------------------------
+  | authentication validation
+  |--------------------------------------------------
+  */
   const user = await getCurrentUser();
   if (!user) {
     return { success: false, error: "Authentication required" };
   }
 
+  /*
+  |--------------------------------------------------
+  | form parsing & validation
+  |--------------------------------------------------
+  */
   const title = formData.get("title") as string;
   const body = formData.get("body") as string;
   const trackIdRaw = formData.get("trackId") as string;
@@ -93,6 +146,11 @@ export async function updateAnnouncementAction(
     return { success: false, fieldErrors };
   }
 
+  /*
+  |--------------------------------------------------
+  | database mutation & cache revalidation
+  |--------------------------------------------------
+  */
   try {
     await updateAnnouncement(
       id,
@@ -119,12 +177,28 @@ export async function updateAnnouncementAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteAnnouncementAction
+|----------------------------------------------------------------------------------------------------
+| Server action permanently removing an announcement and refreshing dependent dashboard paths.
+*/
 export async function deleteAnnouncementAction(id: string): Promise<AnnouncementActionState> {
+  /*
+  |--------------------------------------------------
+  | authentication validation
+  |--------------------------------------------------
+  */
   const user = await getCurrentUser();
   if (!user) {
     return { success: false, error: "Authentication required" };
   }
 
+  /*
+  |--------------------------------------------------
+  | database mutation & cache revalidation
+  |--------------------------------------------------
+  */
   try {
     await deleteAnnouncement(id, user.id, user.role);
 

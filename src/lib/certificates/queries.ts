@@ -1,20 +1,36 @@
-import { db } from "@/lib/db";
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import crypto from "crypto";
 
-/**
- * Generate a collision-resistant certificate code.
- * Format: BOOTCAMP-YYYY-XXXXXXXX (8 hex chars)
- */
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
+import { db } from "@/lib/db";
+
+/*
+|----------------------------------------------------------------------------------------------------
+| generateCode
+|----------------------------------------------------------------------------------------------------
+| Generates a collision-resistant certificate verification code.
+| Format: BOOTCAMP-YYYY-XXXXXXXX (8 uppercase hexadecimal characters).
+*/
 function generateCode(): string {
   const year = new Date().getFullYear();
   const hex = crypto.randomBytes(4).toString("hex").toUpperCase();
   return `BOOTCAMP-${year}-${hex}`;
 }
 
-/**
- * Issue a certificate for a student who has completed a track.
- * Idempotent — returns existing certificate if already issued.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| issueCertificate
+|----------------------------------------------------------------------------------------------------
+| Issue a certificate for a student who has completed a track. Idempotent — returns existing certificate if already issued.
+*/
 export async function issueCertificate(
   userId: string,
   trackId: string
@@ -58,6 +74,12 @@ export async function issueCertificate(
   return { ...cert, isNew: true };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getCertificate
+|----------------------------------------------------------------------------------------------------
+| Retrieves Certificate data from the database.
+*/
 export async function getCertificate(userId: string, trackId: string) {
   return db.certificate.findUnique({
     where: { userId_trackId: { userId, trackId } },
@@ -69,6 +91,12 @@ export async function getCertificate(userId: string, trackId: string) {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getCertificateByCode
+|----------------------------------------------------------------------------------------------------
+| Retrieves Certificate By Code data from the database.
+*/
 export async function getCertificateByCode(code: string) {
   return db.certificate.findUnique({
     where: { certificateCode: code },

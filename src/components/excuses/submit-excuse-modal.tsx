@@ -1,8 +1,24 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { submitExcuseAction } from "@/lib/excuses/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SubmitExcuseModalProps {
   sessionId: string;
   sessionTitle: string;
@@ -14,6 +30,12 @@ interface SubmitExcuseModalProps {
   } | null;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SubmitExcuseModal
+|----------------------------------------------------------------------------------------------------
+| Modal overlay dialog component for Submit Excuse Modal.
+*/
 export function SubmitExcuseModal({
   sessionId,
   sessionTitle,

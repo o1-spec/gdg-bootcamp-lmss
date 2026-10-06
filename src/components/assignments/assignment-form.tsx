@@ -1,10 +1,26 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { createAssignmentAction, updateAssignmentAction } from "@/lib/assignments/actions";
 import { AssignmentWithDetails } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AssignmentFormProps {
   initialAssignment?: AssignmentWithDetails;
   cohorts: { id: string; name: string }[];
@@ -12,6 +28,12 @@ interface AssignmentFormProps {
   cancelHref: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AssignmentForm
+|----------------------------------------------------------------------------------------------------
+| Form component managing Assignment inputs and submissions.
+*/
 export function AssignmentForm({
   initialAssignment,
   cohorts,

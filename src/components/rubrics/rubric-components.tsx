@@ -1,8 +1,24 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useState, useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { createRubricAction, deleteRubricAction } from "@/lib/rubrics/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Criterion {
   title: string;
   description: string;
@@ -15,6 +31,12 @@ interface RubricBuilderProps {
   onSuccess?: () => void;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| RubricBuilder
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Rubric Builder.
+*/
 export function RubricBuilder({
   assignmentId,
   assignmentMaxScore,
@@ -179,6 +201,12 @@ interface RubricViewerProps {
   released: boolean;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| RubricViewer
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Rubric Viewer.
+*/
 export function RubricViewer({ title, scores, released }: RubricViewerProps) {
   if (!scores.length) return null;
 
@@ -228,6 +256,12 @@ export function RubricViewer({ title, scores, released }: RubricViewerProps) {
 
 // ── RubricDeleteButton ────────────────────────────────────────────────────────
 
+/*
+|----------------------------------------------------------------------------------------------------
+| RubricDeleteButton
+|----------------------------------------------------------------------------------------------------
+| Button trigger for Rubric Delete.
+*/
 export function RubricDeleteButton({ assignmentId }: { assignmentId: string }) {
   const [isPending, startTransition] = useTransition();
 

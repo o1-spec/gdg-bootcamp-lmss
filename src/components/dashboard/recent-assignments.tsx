@@ -1,12 +1,39 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Assignment } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface RecentAssignmentsProps {
   assignments: Assignment[];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| RecentAssignments
+|----------------------------------------------------------------------------------------------------
+| Displays recent homework tasks, grading statuses, and upcoming deadlines.
+*/
 export function RecentAssignments({ assignments }: RecentAssignmentsProps) {
+  /*
+  |--------------------------------------------------
+  | render helpers — status badge
+  |--------------------------------------------------
+  */
   const renderStatus = (assignment: Assignment) => {
     switch (assignment.status) {
       case "graded":
@@ -40,6 +67,11 @@ export function RecentAssignments({ assignments }: RecentAssignmentsProps) {
     }
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
       <div className="flex items-center justify-between pb-4 border-b border-[#E7E3DA]">

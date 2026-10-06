@@ -1,8 +1,24 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { generateCheckinCodeAction, setCheckinCodeAction } from "@/lib/attendance/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface CheckinCodeManagerProps {
   sessionId: string;
   initialCode: string | null;
@@ -11,6 +27,12 @@ interface CheckinCodeManagerProps {
   endsAt: string | Date;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorCheckinCodeManager
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Instructor Checkin Code Manager.
+*/
 export function InstructorCheckinCodeManager({
   sessionId,
   initialCode,

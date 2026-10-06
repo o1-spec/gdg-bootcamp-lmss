@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { DeleteAssignmentButton } from "@/components/assignments/delete-assignment-button";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AdminAssignmentDetailsProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: AdminAssignmentDetailsProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: AdminAssignmentDetailsProps) 
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminAssignmentDetailsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Assignment Details page view.
+*/
 export default async function AdminAssignmentDetailsPage({
   params,
 }: AdminAssignmentDetailsProps) {

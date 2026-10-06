@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AppShell } from "@/components/layout/app-shell";
 import { requireInstructor } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Instructor Portal | Bootcamp LMS",
   description: "Manage classes, track attendance, and grade student assignments",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorLayout
+|----------------------------------------------------------------------------------------------------
+| Layout wrapper component for Instructor.
+*/
 export default async function InstructorLayout({
   children,
 }: {

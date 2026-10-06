@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { WelcomeSection } from "@/components/dashboard/welcome-section";
 import { NextClassCard } from "@/components/dashboard/next-class-card";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
@@ -9,10 +20,21 @@ import { LatestAnnouncement } from "@/components/dashboard/latest-announcement";
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentDashboardData } from "@/lib/progress/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Student Dashboard | Bootcamp LMS",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentDashboardPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Dashboard page view.
+*/
 export default async function StudentDashboardPage() {
   const student = await requireStudent();
   const data = await getStudentDashboardData(student.id);

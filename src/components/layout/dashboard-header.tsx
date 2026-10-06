@@ -1,10 +1,26 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { UserRole } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface DashboardHeaderProps {
   title: string;
   subtitle?: string;
@@ -19,6 +35,12 @@ interface DashboardHeaderProps {
   onOpenMobileNav: () => void;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| DashboardHeader
+|----------------------------------------------------------------------------------------------------
+| Top navigation header with role badges, unread notifications indicator, and user initials avatar.
+*/
 export function DashboardHeader({
   title,
   subtitle,
@@ -27,15 +49,29 @@ export function DashboardHeader({
   unreadNotifications = 0,
   onOpenMobileNav,
 }: DashboardHeaderProps) {
+  /*
+  |--------------------------------------------------
+  | constants
+  |--------------------------------------------------
+  */
   const roleLabels: Record<UserRole, string> = {
     student: "Student",
     instructor: "Instructor",
     admin: "Admin",
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <header className="animate-fade-down sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#E7E3DA] bg-[#F7F4ED]/90 px-4 backdrop-blur-xs sm:px-6 lg:px-10">
-      {/* Left: Mobile Toggle & Page Title */}
+      {/*
+      |--------------------------------------------------
+      | left: mobile toggle & page title
+      |--------------------------------------------------
+      */}
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -80,9 +116,17 @@ export function DashboardHeader({
         </div>
       </div>
 
-      {/* Right: Authenticated User Info & Actions */}
+      {/*
+      |--------------------------------------------------
+      | right: authenticated user info & notifications
+      |--------------------------------------------------
+      */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Notifications Icon Link */}
+        {/*
+        |--------------------------------------------------
+        | notifications link
+        |--------------------------------------------------
+        */}
         <Link
           href="/notifications"
           aria-label="View notifications"
@@ -109,12 +153,20 @@ export function DashboardHeader({
           )}
         </Link>
 
-        {/* Role Pill */}
+        {/*
+        |--------------------------------------------------
+        | role badge
+        |--------------------------------------------------
+        */}
         <span className="hidden rounded-full border border-[#E7E3DA] bg-white px-2.5 py-0.5 text-[11px] font-medium text-[#737373] sm:inline-block">
           {roleLabels[role]}
         </span>
 
-        {/* User initials & profile metadata */}
+        {/*
+        |--------------------------------------------------
+        | user profile metadata & initials
+        |--------------------------------------------------
+        */}
         <div className="flex items-center gap-2.5 pl-2 border-l border-[#E7E3DA]">
           <div className="hidden text-right sm:block">
             <p className="text-xs font-semibold text-[#171717]">

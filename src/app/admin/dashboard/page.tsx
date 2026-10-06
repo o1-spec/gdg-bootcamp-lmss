@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +22,21 @@ import { getAllExcuses } from "@/lib/excuses/queries";
 import { getAuditLogs } from "@/lib/audit/queries";
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Admin Dashboard | Bootcamp LMS",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminDashboardPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Dashboard page view.
+*/
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin();
 

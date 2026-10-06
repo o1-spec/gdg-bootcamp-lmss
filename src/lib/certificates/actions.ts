@@ -1,11 +1,22 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import { issueCertificate } from "./queries";
 import { getStudentCompletion } from "@/lib/completion/queries";
 import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| claimCertificateAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling claim Certificate workflows and cache revalidations.
+*/
 export async function claimCertificateAction(
   trackId: string
 ): Promise<{ success: boolean; certificateCode?: string; error?: string }> {

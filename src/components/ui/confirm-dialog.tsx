@@ -1,7 +1,17 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useEffect, useRef } from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface ConfirmDialogProps {
   /** Whether the dialog is currently visible */
   open: boolean;
@@ -27,6 +37,11 @@ export interface ConfirmDialogProps {
   icon?: React.ReactNode;
 }
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 const variantStyles: Record<string, string> = {
   danger:
     "bg-[#EA4335] text-white hover:bg-red-700 disabled:opacity-50 focus:ring-[#EA4335]/30",
@@ -36,6 +51,12 @@ const variantStyles: Record<string, string> = {
     "bg-[#FBBC04] text-[#171717] hover:bg-yellow-400 disabled:opacity-50 focus:ring-[#FBBC04]/30",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| ConfirmDialog
+|----------------------------------------------------------------------------------------------------
+| Modal dialog for destructive or critical user confirmation workflows.
+*/
 export function ConfirmDialog({
   open,
   onClose,
@@ -49,9 +70,18 @@ export function ConfirmDialog({
   error = null,
   icon,
 }: ConfirmDialogProps) {
+  /*
+  |--------------------------------------------------
+  | refs
+  |--------------------------------------------------
+  */
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Focus trap & Escape key
+  /*
+  |--------------------------------------------------
+  | useEffect — focus trap & escape key handler
+  |--------------------------------------------------
+  */
   useEffect(() => {
     if (!open) return;
 
@@ -68,6 +98,11 @@ export function ConfirmDialog({
     };
   }, [open, onClose]);
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   if (!open) return null;
 
   return (
@@ -77,28 +112,34 @@ export function ConfirmDialog({
       role="dialog"
       aria-labelledby="confirm-dialog-title"
     >
-      {/* Backdrop */}
+      {/*
+      |--------------------------------------------------
+      | backdrop
+      |--------------------------------------------------
+      */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-[2px] animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Panel */}
+      {/*
+      |--------------------------------------------------
+      | modal panel
+      |--------------------------------------------------
+      */}
       <div
         ref={dialogRef}
         tabIndex={-1}
         className="relative w-full max-w-md rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xl focus:outline-none animate-scale-in"
         style={{ boxShadow: "0 20px 60px -10px rgba(0,0,0,0.18)" }}
       >
-        {/* Optional icon */}
         {icon && (
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7F4ED] border border-[#E7E3DA]">
             {icon}
           </div>
         )}
 
-        {/* Title */}
         <h2
           id="confirm-dialog-title"
           className="text-base font-semibold text-[#171717] leading-snug"
@@ -106,19 +147,16 @@ export function ConfirmDialog({
           {title}
         </h2>
 
-        {/* Description */}
         <div className="mt-2 text-xs text-[#737373] leading-relaxed">
           {description}
         </div>
 
-        {/* Error */}
         {error && (
           <div className="mt-4 rounded-xl border border-[#EA4335]/20 bg-red-50 p-3 text-xs text-[#EA4335] font-medium">
             {error}
           </div>
         )}
 
-        {/* Actions */}
         <div className="mt-6 flex justify-end gap-2.5 border-t border-[#E7E3DA] pt-4">
           <button
             type="button"

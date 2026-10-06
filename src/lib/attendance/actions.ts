@@ -1,7 +1,18 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
 import { AttendanceStatus } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import {
   checkInToSession,
@@ -9,6 +20,12 @@ import {
   setSessionCheckinCode,
 } from "./queries";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| checkInAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling check In workflows and cache revalidations.
+*/
 export async function checkInAction(
   sessionId: string,
   formData: FormData
@@ -35,6 +52,12 @@ export async function checkInAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| markAttendanceAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling mark Attendance workflows and cache revalidations.
+*/
 export async function markAttendanceAction(
   sessionId: string,
   targetUserId: string,
@@ -66,6 +89,12 @@ export async function markAttendanceAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateCheckinCodeAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling generate Checkin Code workflows and cache revalidations.
+*/
 export async function generateCheckinCodeAction(
   sessionId: string
 ): Promise<{ success: boolean; code?: string; message?: string }> {
@@ -88,6 +117,12 @@ export async function generateCheckinCodeAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| setCheckinCodeAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling set Checkin Code workflows and cache revalidations.
+*/
 export async function setCheckinCodeAction(
   sessionId: string,
   formData: FormData

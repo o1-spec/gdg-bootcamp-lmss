@@ -1,12 +1,39 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Announcement } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface LatestAnnouncementProps {
   announcement: Announcement;
 }
 
+/*
+|--------------------------------------------------
+| LatestAnnouncement
+|--------------------------------------------------
+| Displays the most recent pinned or standard cohort broadcast on the dashboard.
+*/
 export function LatestAnnouncement({ announcement }: LatestAnnouncementProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-2xs">
       <div className="flex items-center justify-between pb-4 border-b border-[#E7E3DA]">

@@ -1,14 +1,36 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { deleteAssignmentAction } from "@/lib/assignments/actions";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface DeleteAssignmentButtonProps {
   assignmentId: string;
   assignmentTitle: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| DeleteAssignmentButton
+|----------------------------------------------------------------------------------------------------
+| Button trigger for Delete Assignment.
+*/
 export function DeleteAssignmentButton({
   assignmentId,
   assignmentTitle,

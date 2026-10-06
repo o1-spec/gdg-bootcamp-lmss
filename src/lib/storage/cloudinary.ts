@@ -1,9 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import crypto from "crypto";
 
-/**
- * Uploads a file buffer directly to Cloudinary using standard HTTPS REST API.
- * Uses native Node.js crypto and fetch with ZERO external npm dependencies.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| uploadToCloudinary
+|----------------------------------------------------------------------------------------------------
+| Uploads a file buffer directly to Cloudinary using standard HTTPS REST API. Uses native Node.js crypto and fetch with ZERO external npm dependencies.
+*/
 export async function uploadToCloudinary(
   fileBuffer: Buffer,
   fileName: string,

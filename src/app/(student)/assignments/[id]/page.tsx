@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireStudent } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { StudentSubmissionForm } from "@/components/assignments/student-submission-form";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface StudentAssignmentPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: StudentAssignmentPageProps) {
   const { id } = await params;
   return {
@@ -16,6 +38,12 @@ export async function generateMetadata({ params }: StudentAssignmentPageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentAssignmentDetailPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Assignment Detail page view.
+*/
 export default async function StudentAssignmentDetailPage({
   params,
 }: StudentAssignmentPageProps) {

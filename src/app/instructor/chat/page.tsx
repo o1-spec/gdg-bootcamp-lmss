@@ -1,8 +1,25 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorChannels } from "@/lib/chat/queries";
-import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorChatPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Chat page view.
+*/
 export default async function InstructorChatPage() {
   const user = await requireInstructor();
   const channels = await getInstructorChannels(user.id);

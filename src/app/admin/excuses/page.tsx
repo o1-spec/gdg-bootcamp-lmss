@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAllExcuses } from "@/lib/excuses/queries";
 import { ExcuseReviewTable } from "@/components/excuses/excuse-review-table";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "All Attendance Excuses | Admin Portal",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminExcusesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Excuses page view.
+*/
 export default async function AdminExcusesPage() {
   await requireAdmin();
   const rawExcuses = await getAllExcuses();

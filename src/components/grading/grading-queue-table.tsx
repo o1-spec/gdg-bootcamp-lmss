@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Badge } from "@/components/ui/badge";
 import { GradingQueueItem } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface GradingQueueTableProps {
   submissions: GradingQueueItem[];
   basePath: string; // "/instructor/grading" or "/admin/grading"
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| GradingQueueTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Grading Queue entries.
+*/
 export function GradingQueueTable({
   submissions,
   basePath,

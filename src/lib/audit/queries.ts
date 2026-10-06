@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getAuditLogs
+|----------------------------------------------------------------------------------------------------
+| Retrieves paginated audit log events with optional actor, date range, and action filters.
+*/
 export async function getAuditLogs(filter?: {
   action?: string;
   actorId?: string;
@@ -7,6 +18,11 @@ export async function getAuditLogs(filter?: {
   from?: string;
   to?: string;
 }, limit = 200) {
+  /*
+  |--------------------------------------------------
+  | database query
+  |--------------------------------------------------
+  */
   return db.auditLog.findMany({
     where: {
       ...(filter?.action ? { action: filter.action } : {}),
@@ -29,7 +45,18 @@ export async function getAuditLogs(filter?: {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getAuditLogActions
+|----------------------------------------------------------------------------------------------------
+| Aggregates total occurrences grouped by distinct audit event actions.
+*/
 export async function getAuditLogActions() {
+  /*
+  |--------------------------------------------------
+  | database query
+  |--------------------------------------------------
+  */
   const rows = await db.auditLog.groupBy({
     by: ["action"],
     _count: { action: true },

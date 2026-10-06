@@ -1,10 +1,26 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { getManagementAssignments } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Assignments | Admin Console",
   description: "Global assignment oversight across all cohorts, tracks, and student submissions",
@@ -14,6 +30,12 @@ interface AdminAssignmentsPageProps {
   searchParams: Promise<{ track?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminAssignmentsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Assignments page view.
+*/
 export default async function AdminAssignmentsPage({
   searchParams,
 }: AdminAssignmentsPageProps) {

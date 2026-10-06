@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAdminAttendanceSessions } from "@/lib/attendance/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Platform Attendance | Admin Console",
   description: "Global attendance oversight and compliance across all cohorts, tracks, and sessions",
@@ -15,6 +31,12 @@ interface AdminAttendancePageProps {
   searchParams: Promise<{ track?: string; cohort?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminAttendancePage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Attendance page view.
+*/
 export default async function AdminAttendancePage({
   searchParams,
 }: AdminAttendancePageProps) {

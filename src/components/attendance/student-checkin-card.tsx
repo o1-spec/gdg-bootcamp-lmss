@@ -1,10 +1,26 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import type { AttendanceStatus } from "@/types";
 import { checkInAction } from "@/lib/attendance/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface StudentCheckinCardProps {
   sessionId: string;
   sessionTitle: string;
@@ -16,6 +32,12 @@ interface StudentCheckinCardProps {
   } | null;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentCheckinCard
+|----------------------------------------------------------------------------------------------------
+| Card component rendering Student Checkin summary details.
+*/
 export function StudentCheckinCard({
   sessionId,
   startsAt: rawStartsAt,

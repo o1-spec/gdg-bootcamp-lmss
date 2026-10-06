@@ -1,8 +1,24 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useState, useRef, useEffect, useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { sendMessageAction } from "@/lib/chat/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Message {
   id: string;
   body: string;
@@ -36,6 +52,12 @@ function formatDate(date: Date | string) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| ChatWindow
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Chat Window.
+*/
 export function ChatWindow({
   channelId,
   channelName,

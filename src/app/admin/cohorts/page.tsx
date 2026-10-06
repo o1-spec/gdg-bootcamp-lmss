@@ -1,16 +1,38 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { Cohort } from "@/types";
 import { AdminCohortsTable } from "@/components/admin/directory-tables";
-import { Role } from "@prisma/client";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Cohorts | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminCohortsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Cohorts page view.
+*/
 export default async function AdminCohortsPage() {
   await requireAdmin();
 

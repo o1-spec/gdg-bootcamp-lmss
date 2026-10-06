@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireStudent } from "@/lib/auth/session";
@@ -6,11 +17,22 @@ import { getStudentAttendance } from "@/lib/attendance/queries";
 import { SubmitExcuseModal } from "@/components/excuses/submit-excuse-modal";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Attendance Records | Student Portal",
   description: "Verify class check-ins, punctuality records, excuses, and compliance",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentAttendancePage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Attendance page view.
+*/
 export default async function StudentAttendancePage() {
   const user = await requireStudent();
   const { records, summary } = await getStudentAttendance(user.id);

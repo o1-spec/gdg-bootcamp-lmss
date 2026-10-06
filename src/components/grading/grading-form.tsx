@@ -1,17 +1,39 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { SubmissionForGrading } from "@/lib/assignments/queries";
 import { gradeSubmissionAction, releaseGradeAction } from "@/lib/assignments/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface GradingFormProps {
   submissionData: SubmissionForGrading;
   backHref: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| GradingForm
+|----------------------------------------------------------------------------------------------------
+| Form component managing Grading inputs and submissions.
+*/
 export function GradingForm({ submissionData, backHref }: GradingFormProps) {
   const { submission, assignment } = submissionData;
 

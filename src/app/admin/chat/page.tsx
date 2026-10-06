@@ -1,9 +1,26 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { getAllChannels } from "@/lib/chat/queries";
-import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminChatPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Chat page view.
+*/
 export default async function AdminChatPage() {
   await requireAdmin();
   const channels = await getAllChannels();

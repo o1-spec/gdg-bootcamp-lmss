@@ -1,7 +1,23 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import "./globals.css";
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -12,6 +28,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata: Metadata = {
   title: "Bootcamp LMS",
   description: "Modern, minimal Bootcamp Learning Management System",
@@ -24,11 +45,30 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+/*
+|----------------------------------------------------------------------------------------------------
+| RootLayout
+|----------------------------------------------------------------------------------------------------
+| Root layout wrapping the entire application.
+| Configures typography, base CSS styling, and global HTML metadata.
+*/
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: RootLayoutProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <html
       lang="en"

@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionForm } from "@/components/sessions/session-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AdminEditClassPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: AdminEditClassPageProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: AdminEditClassPageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminEditClassPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Edit Class page view.
+*/
 export default async function AdminEditClassPage({
   params,
 }: AdminEditClassPageProps) {

@@ -1,6 +1,22 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface AnnouncementItem {
   id: string;
   cohortId: string;
@@ -17,17 +33,25 @@ export interface AnnouncementItem {
   canManage: boolean;
 }
 
-/**
- * Retrieves all announcements visible to the current authenticated user:
- * - ADMIN: can see all announcements across tracks & cohorts
- * - INSTRUCTOR: can see announcements for assigned tracks + cohort-wide shared
- * - STUDENT: can see announcements for enrolled track + cohort-wide shared
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAnnouncements
+|----------------------------------------------------------------------------------------------------
+| Retrieves all announcements visible to the current authenticated user:
+| - ADMIN: can see all announcements across tracks & cohorts
+| - INSTRUCTOR: can see announcements for assigned tracks + cohort-wide shared
+| - STUDENT: can see announcements for enrolled track + cohort-wide shared
+*/
 export async function getAnnouncements(
   userId: string,
   role: Role,
   filterTrackId?: string
 ): Promise<AnnouncementItem[]> {
+  /*
+  |--------------------------------------------------
+  | filter configuration
+  |--------------------------------------------------
+  */
   const where: Record<string, unknown> = {};
 
   if (role === Role.STUDENT) {
@@ -70,6 +94,11 @@ export async function getAnnouncements(
     }
   }
 
+  /*
+  |--------------------------------------------------
+  | database query
+  |--------------------------------------------------
+  */
   const announcements = await db.announcement.findMany({
     where,
     include: {
@@ -80,6 +109,11 @@ export async function getAnnouncements(
     orderBy: { createdAt: "desc" },
   });
 
+  /*
+  |--------------------------------------------------
+  | return — mapped models
+  |--------------------------------------------------
+  */
   return announcements.map((ann) => ({
     id: ann.id,
     cohortId: ann.cohortId,
@@ -99,14 +133,22 @@ export async function getAnnouncements(
   }));
 }
 
-/**
- * Retrieves a single announcement by ID with authorization check.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAnnouncementById
+|----------------------------------------------------------------------------------------------------
+| Retrieves a single announcement by ID with strict authorization validation.
+*/
 export async function getAnnouncementById(
   id: string,
   userId: string,
   role: Role
 ): Promise<AnnouncementItem | null> {
+  /*
+  |--------------------------------------------------
+  | database query
+  |--------------------------------------------------
+  */
   const ann = await db.announcement.findUnique({
     where: { id },
     include: {
@@ -118,6 +160,11 @@ export async function getAnnouncementById(
 
   if (!ann) return null;
 
+  /*
+  |--------------------------------------------------
+  | authorization verification
+  |--------------------------------------------------
+  */
   if (role === Role.STUDENT) {
     const enrollment = await db.enrollment.findFirst({
       where: { userId },
@@ -135,6 +182,11 @@ export async function getAnnouncementById(
     if (ann.trackId && !assignedTrackIds.includes(ann.trackId)) return null;
   }
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return {
     id: ann.id,
     cohortId: ann.cohortId,
@@ -154,9 +206,12 @@ export async function getAnnouncementById(
   };
 }
 
-/**
- * Creates an announcement directly in PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| createAnnouncement
+|----------------------------------------------------------------------------------------------------
+| Persists an announcement entity in the database after checking creator role permissions.
+*/
 export async function createAnnouncement(
   cohortIdOrData:
     | string
@@ -195,6 +250,11 @@ export async function createAnnouncement(
     role = roleArg!;
   }
 
+  /*
+  |--------------------------------------------------
+  | permission guard
+  |--------------------------------------------------
+  */
   if (role === Role.STUDENT) {
     throw new Error("Students are not permitted to publish announcements.");
   }
@@ -213,6 +273,11 @@ export async function createAnnouncement(
     }
   }
 
+  /*
+  |--------------------------------------------------
+  | database mutation
+  |--------------------------------------------------
+  */
   const created = await db.announcement.create({
     data: {
       cohortId,
@@ -228,6 +293,11 @@ export async function createAnnouncement(
     },
   });
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return {
     id: created.id,
     cohortId: created.cohortId,
@@ -245,9 +315,12 @@ export async function createAnnouncement(
   };
 }
 
-/**
- * Updates an announcement directly in PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| updateAnnouncement
+|----------------------------------------------------------------------------------------------------
+| Updates an announcement directly in PostgreSQL.
+*/
 export async function updateAnnouncement(
   id: string,
   input: {
@@ -274,6 +347,11 @@ export async function updateAnnouncement(
   if (!title) throw new Error("Title cannot be empty");
   if (!body) throw new Error("Body cannot be empty");
 
+  /*
+  |--------------------------------------------------
+  | database mutation
+  |--------------------------------------------------
+  */
   const updated = await db.announcement.update({
     where: { id },
     data: {
@@ -288,6 +366,11 @@ export async function updateAnnouncement(
     },
   });
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return {
     id: updated.id,
     cohortId: updated.cohortId,
@@ -305,9 +388,12 @@ export async function updateAnnouncement(
   };
 }
 
-/**
- * Deletes an announcement directly in PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteAnnouncement
+|----------------------------------------------------------------------------------------------------
+| Deletes an announcement directly in PostgreSQL.
+*/
 export async function deleteAnnouncement(
   id: string,
   userId: string,
@@ -322,6 +408,11 @@ export async function deleteAnnouncement(
     throw new Error("You are not authorized to delete this announcement");
   }
 
+  /*
+  |--------------------------------------------------
+  | database mutation
+  |--------------------------------------------------
+  */
   await db.announcement.delete({
     where: { id },
   });

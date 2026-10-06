@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| Button
+|----------------------------------------------------------------------------------------------------
+| Reusable styled button component with variants and sizing.
+*/
 export function Button({
   variant = "primary",
   size = "md",
@@ -13,6 +29,11 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
+  /*
+  |--------------------------------------------------
+  | styles
+  |--------------------------------------------------
+  */
   const baseStyles =
     "inline-flex items-center justify-center font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#171717] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96] select-none";
 
@@ -35,6 +56,11 @@ export function Button({
       "bg-[#EA4335] text-white hover:bg-[#D93025] shadow-2xs",
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <button
       className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}

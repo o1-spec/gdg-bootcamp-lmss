@@ -1,5 +1,12 @@
 // src/app/admin/loading.tsx
 // Loading state for all admin routes.
+
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminLoading
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Admin Loading.
+*/
 export default function AdminLoading() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center">

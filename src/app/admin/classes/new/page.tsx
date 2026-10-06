@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { SessionForm } from "@/components/sessions/session-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Schedule Session | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminNewClassPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin New Class page view.
+*/
 export default async function AdminNewClassPage() {
   await requireAdmin();
 

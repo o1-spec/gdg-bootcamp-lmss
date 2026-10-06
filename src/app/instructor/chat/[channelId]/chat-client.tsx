@@ -1,9 +1,25 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useState, useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { deleteMessageAction, muteUserAction, unmuteUserAction } from "@/lib/chat/actions";
 import { ChatWindow } from "@/components/chat/chat-window";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Mute {
   id: string;
   user: { id: string; name: string; email: string };
@@ -30,6 +46,12 @@ interface ModeratorChatWindowProps {
   backHref: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| ModeratorChatWindow
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Moderator Chat Window.
+*/
 export function ModeratorChatWindow({
   channelId,
   channelName,

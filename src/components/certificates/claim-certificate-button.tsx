@@ -1,15 +1,37 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { claimCertificateAction } from "@/lib/certificates/actions";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface ClaimCertificateButtonProps {
   trackId: string;
   existingCertificateCode?: string | null;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| ClaimCertificateButton
+|----------------------------------------------------------------------------------------------------
+| Button trigger for Claim Certificate.
+*/
 export function ClaimCertificateButton({
   trackId,
   existingCertificateCode,

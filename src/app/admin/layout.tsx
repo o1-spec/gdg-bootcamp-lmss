@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AppShell } from "@/components/layout/app-shell";
 import { requireAdmin } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Admin Console | Bootcamp LMS",
   description: "Platform management, cohort oversight, and bootcamp enrollment controls",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminLayout
+|----------------------------------------------------------------------------------------------------
+| Layout wrapper component for Admin.
+*/
 export default async function AdminLayout({
   children,
 }: {

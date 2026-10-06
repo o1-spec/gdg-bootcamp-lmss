@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
+import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
@@ -10,3 +21,4 @@ export default defineConfig({
     url: process.env.DIRECT_URL || process.env.DATABASE_URL,
   },
 });
+

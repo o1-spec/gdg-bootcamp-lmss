@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionForm } from "@/components/sessions/session-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface InstructorEditClassPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: InstructorEditClassPageProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: InstructorEditClassPageProps)
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorEditClassPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Edit Class page view.
+*/
 export default async function InstructorEditClassPage({
   params,
 }: InstructorEditClassPageProps) {

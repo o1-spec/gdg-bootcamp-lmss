@@ -1,11 +1,16 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
-// ── Notification creation ─────────────────────────────────────────────────────
-
-/**
- * Create notifications for all students enrolled in the given cohort/track
- * when a new assignment is published.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| notifyAssignmentCreated
+|----------------------------------------------------------------------------------------------------
+| Create notifications for all students enrolled in the given cohort/track when a new assignment is published.
+*/
 export async function notifyAssignmentCreated(
   assignmentId: string,
   cohortId: string,
@@ -30,9 +35,12 @@ export async function notifyAssignmentCreated(
   });
 }
 
-/**
- * Create a notification for the student whose grade was released.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| notifyGradeReleased
+|----------------------------------------------------------------------------------------------------
+| Create a notification for the student whose grade was released.
+*/
 export async function notifyGradeReleased(
   submissionId: string,
   studentId: string,
@@ -49,10 +57,12 @@ export async function notifyGradeReleased(
   });
 }
 
-/**
- * Create notifications for all students in the cohort/track when an
- * announcement is posted.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| notifyAnnouncement
+|----------------------------------------------------------------------------------------------------
+| Create notifications for all students in the cohort/track when an announcement is posted.
+*/
 export async function notifyAnnouncement(
   cohortId: string,
   trackId: string | null,
@@ -76,8 +86,12 @@ export async function notifyAnnouncement(
   });
 }
 
-// ── Notification reading ──────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| getUserNotifications
+|----------------------------------------------------------------------------------------------------
+| Retrieves User Notifications data from the database.
+*/
 export async function getUserNotifications(userId: string, limit = 50) {
   return db.notification.findMany({
     where: { userId },
@@ -86,10 +100,22 @@ export async function getUserNotifications(userId: string, limit = 50) {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getUnreadCount
+|----------------------------------------------------------------------------------------------------
+| Retrieves Unread Count data from the database.
+*/
 export async function getUnreadCount(userId: string): Promise<number> {
   return db.notification.count({ where: { userId, readAt: null } });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| markNotificationRead
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for mark Notification Read.
+*/
 export async function markNotificationRead(notificationId: string, userId: string) {
   return db.notification.updateMany({
     where: { id: notificationId, userId },
@@ -97,6 +123,12 @@ export async function markNotificationRead(notificationId: string, userId: strin
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| markAllRead
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for mark All Read.
+*/
 export async function markAllRead(userId: string) {
   return db.notification.updateMany({
     where: { userId, readAt: null },

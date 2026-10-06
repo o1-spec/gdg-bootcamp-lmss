@@ -1,16 +1,38 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import type { AttendanceStatus } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { SessionRosterStudent } from "@/lib/attendance/queries";
 import { markAttendanceAction } from "@/lib/attendance/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SessionRosterTableProps {
   sessionId: string;
   roster: SessionRosterStudent[];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SessionRosterTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Session Roster entries.
+*/
 export function SessionRosterTable({
   sessionId,
   roster: initialRoster,

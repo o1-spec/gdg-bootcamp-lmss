@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionDetails } from "@/components/sessions/session-details";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AdminSessionDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: AdminSessionDetailPageProps) {
   const { id } = await params;
   return {
@@ -15,6 +37,12 @@ export async function generateMetadata({ params }: AdminSessionDetailPageProps) 
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminSessionDetailPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Session Detail page view.
+*/
 export default async function AdminSessionDetailPage({
   params,
 }: AdminSessionDetailPageProps) {

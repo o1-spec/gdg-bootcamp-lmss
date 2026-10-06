@@ -1,6 +1,22 @@
-import { db } from "@/lib/db";
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import type { Prisma } from "@prisma/client";
 
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
+import { db } from "@/lib/db";
+
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export type AuditAction =
   | "ATTENDANCE_MARKED"
   | "ATTENDANCE_OVERRIDDEN"
@@ -18,6 +34,12 @@ export type AuditAction =
   | "MESSAGE_DELETED"
   | "ATTENDANCE_IMPORT_APPLIED";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| audit
+|----------------------------------------------------------------------------------------------------
+| Records an asynchronous audit trail entry without blocking the primary request flow.
+*/
 export async function audit(
   actorId: string,
   action: AuditAction,
@@ -25,7 +47,11 @@ export async function audit(
   targetId: string,
   metadata?: Prisma.InputJsonValue
 ) {
-  // Fire-and-forget — never block the main operation
+  /*
+  |--------------------------------------------------
+  | database mutation — fire and forget
+  |--------------------------------------------------
+  */
   db.auditLog
     .create({
       data: {

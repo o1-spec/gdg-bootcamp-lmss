@@ -1,14 +1,36 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { deleteSessionAction } from "@/lib/sessions/actions";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface DeleteSessionButtonProps {
   sessionId: string;
   sessionTitle: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| DeleteSessionButton
+|----------------------------------------------------------------------------------------------------
+| Button trigger for Delete Session.
+*/
 export function DeleteSessionButton({
   sessionId,
   sessionTitle,

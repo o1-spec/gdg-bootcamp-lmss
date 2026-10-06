@@ -1,6 +1,22 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface StudentProgressData {
   studentName: string;
   cohortName: string;
@@ -236,9 +252,12 @@ export interface AdminOverviewData {
   trackOverviews: AdminTrackOverview[];
 }
 
-/**
- * Retrieves student progress metrics, grades, and recent attendance strictly from PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentProgress
+|----------------------------------------------------------------------------------------------------
+| Retrieves student progress metrics, grades, and recent attendance strictly from PostgreSQL.
+*/
 export async function getStudentProgress(userId: string): Promise<StudentProgressData> {
   const now = new Date();
 
@@ -424,9 +443,12 @@ export async function getStudentProgress(userId: string): Promise<StudentProgres
   };
 }
 
-/**
- * Retrieves student home dashboard data directly from PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentDashboardData
+|----------------------------------------------------------------------------------------------------
+| Retrieves student home dashboard data directly from PostgreSQL.
+*/
 export async function getStudentDashboardData(userId: string): Promise<StudentDashboardData> {
   const now = new Date();
 
@@ -717,9 +739,12 @@ export async function getStudentDashboardData(userId: string): Promise<StudentDa
   };
 }
 
-/**
- * Retrieves track progress for an instructor directly from PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorProgress
+|----------------------------------------------------------------------------------------------------
+| Retrieves track progress for an instructor directly from PostgreSQL.
+*/
 export async function getInstructorProgress(
   userId: string,
   selectedTrackId?: string
@@ -947,9 +972,12 @@ export async function getInstructorProgress(
   };
 }
 
-/**
- * Retrieves instructor home dashboard data directly from PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorDashboardData
+|----------------------------------------------------------------------------------------------------
+| Retrieves instructor home dashboard data directly from PostgreSQL.
+*/
 export async function getInstructorDashboardData(
   userId: string,
   selectedTrackId?: string
@@ -1179,9 +1207,12 @@ export async function getInstructorDashboardData(
   };
 }
 
-/**
- * Retrieves platform-wide cross-track overview for administrators directly from PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAdminProgressOverview
+|----------------------------------------------------------------------------------------------------
+| Retrieves platform-wide cross-track overview for administrators directly from PostgreSQL.
+*/
 export async function getAdminProgressOverview(
   cohortFilter?: string
 ): Promise<AdminOverviewData> {
@@ -1351,7 +1382,10 @@ export async function getAdminProgressOverview(
   };
 }
 
-/**
- * Backwards-compatible alias for admin overview query.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAdminOverview
+|----------------------------------------------------------------------------------------------------
+| Backwards-compatible alias for admin overview query.
+*/
 export const getAdminOverview = getAdminProgressOverview;

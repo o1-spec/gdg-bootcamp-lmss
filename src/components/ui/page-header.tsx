@@ -1,12 +1,33 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface PageHeaderProps {
   title: string;
   description?: string;
   action?: React.ReactNode;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| PageHeader
+|----------------------------------------------------------------------------------------------------
+| Standardized top-level header banner across portal views.
+*/
 export function PageHeader({ title, description, action }: PageHeaderProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="animate-page flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -19,7 +40,14 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
           </p>
         )}
       </div>
-      {action && <div className="shrink-0 animate-reveal" style={{ "--stagger": "80ms" } as React.CSSProperties}>{action}</div>}
+      {action && (
+        <div
+          className="shrink-0 animate-reveal"
+          style={{ "--stagger": "80ms" } as React.CSSProperties}
+        >
+          {action}
+        </div>
+      )}
     </div>
   );
 }

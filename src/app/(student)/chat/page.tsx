@@ -1,9 +1,26 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireStudent } from "@/lib/auth/session";
 import { getStudentChannels } from "@/lib/chat/queries";
-import Link from "next/link";
 import { PageHeader } from "@/components/ui/page-header";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentChatPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Chat page view.
+*/
 export default async function StudentChatPage() {
   const user = await requireStudent();
   const channels = await getStudentChannels(user.id);

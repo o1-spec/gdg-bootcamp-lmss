@@ -1,3 +1,8 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "../src/lib/db";
 import { submitExcuse, reviewExcuse } from "../src/lib/excuses/queries";
 import { getStudentAttendance } from "../src/lib/attendance/queries";
@@ -6,9 +11,20 @@ import { getStudentCompletion, getTrackCompletion } from "../src/lib/completion/
 import { issueCertificate, getCertificateByCode } from "../src/lib/certificates/queries";
 import { getAuditLogs } from "../src/lib/audit/queries";
 
+/*
+|--------------------------------------------------
+| states
+|--------------------------------------------------
+*/
 let passed = 0;
 let failed = 0;
 
+/*
+|----------------------------------------------------------------------------------------------------
+| assert
+|----------------------------------------------------------------------------------------------------
+| Test assertion helper tracking passed and failed checks.
+*/
 function assert(condition: boolean, name: string) {
   if (condition) {
     console.log(`  ✓ PASS: ${name}`);
@@ -19,6 +35,12 @@ function assert(condition: boolean, name: string) {
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| run
+|----------------------------------------------------------------------------------------------------
+| Executes the end-to-end verification matrix covering excuses, attendance, completion, and audit logs.
+*/
 async function run() {
   console.log("==================================================");
   console.log("RUNNING FINAL POST-MVP SYSTEM VERIFICATION MATRIX");

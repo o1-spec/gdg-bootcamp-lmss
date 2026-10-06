@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -6,11 +17,22 @@ import { requireStudent } from "@/lib/auth/session";
 import { getStudentAssignments } from "@/lib/assignments/queries";
 import { AssignmentCard } from "@/components/assignments/assignment-card";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Assignments | Student Portal",
   description: "View problem prompts, submit work, and access instructor code feedback",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentAssignmentsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Assignments page view.
+*/
 export default async function StudentAssignmentsPage() {
   const user = await requireStudent();
   const { upcoming, submitted, pastDue } = await getStudentAssignments(user.id);

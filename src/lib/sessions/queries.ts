@@ -1,6 +1,22 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface SessionWithDetails {
   id: string;
   cohortId: string;
@@ -21,14 +37,12 @@ export interface SessionWithDetails {
   createdBy: { id: string; name: string; email: string };
 }
 
-/**
- * Retrieves sessions visible to a student:
- * - session.trackId matches active enrollment track
- * OR
- * - session.trackId is null (Shared session) AND session.cohortId matches student's cohort
- *
- * Checkin codes are strictly sanitized to null for students.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentSessions
+|----------------------------------------------------------------------------------------------------
+| Retrieves sessions visible to a student: - session.trackId matches active enrollment track OR - session.trackId is null (Shared session) AND session.cohortId matches student's cohort Checkin codes are strictly sanitized to null for students.
+*/
 export async function getStudentSessions(userId: string): Promise<{
   upcoming: SessionWithDetails[];
   past: SessionWithDetails[];
@@ -94,12 +108,12 @@ export async function getStudentSessions(userId: string): Promise<{
   };
 }
 
-/**
- * Retrieves sessions visible to an instructor:
- * - session.trackId belongs to instructor's assigned tracks
- * OR
- * - shared session belongs to a cohort containing an assigned track
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorSessions
+|----------------------------------------------------------------------------------------------------
+| Retrieves sessions visible to an instructor: - session.trackId belongs to instructor's assigned tracks OR - shared session belongs to a cohort containing an assigned track
+*/
 export async function getInstructorSessions(
   userId: string,
   filterTrackId?: string
@@ -169,9 +183,12 @@ export async function getInstructorSessions(
   };
 }
 
-/**
- * Retrieves all sessions across the platform for Admin management views.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAdminSessions
+|----------------------------------------------------------------------------------------------------
+| Retrieves all sessions across the platform for Admin management views.
+*/
 export async function getAdminSessions(
   filterTrackId?: string,
   filterCohortId?: string
@@ -229,9 +246,12 @@ export async function getAdminSessions(
   };
 }
 
-/**
- * Retrieves a single session by ID with authorization verification.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getSessionById
+|----------------------------------------------------------------------------------------------------
+| Retrieves a single session by ID with authorization verification.
+*/
 export async function getSessionById(
   sessionId: string,
   userId: string,
@@ -305,9 +325,12 @@ export async function getSessionById(
   return null;
 }
 
-/**
- * Creates a new session with server-side authorization check
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| createSession
+|----------------------------------------------------------------------------------------------------
+| Creates a new session with server-side authorization check
+*/
 export async function createSession(
   data: {
     cohortId: string;
@@ -387,9 +410,12 @@ export async function createSession(
   return session;
 }
 
-/**
- * Updates an existing session with server-side authorization check
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| updateSession
+|----------------------------------------------------------------------------------------------------
+| Updates an existing session with server-side authorization check
+*/
 export async function updateSession(
   sessionId: string,
   data: {
@@ -454,9 +480,12 @@ export async function updateSession(
   return updated;
 }
 
-/**
- * Deletes a session safely without destroying historical attendance records
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteSession
+|----------------------------------------------------------------------------------------------------
+| Deletes a session safely without destroying historical attendance records
+*/
 export async function deleteSession(
   sessionId: string,
   userId: string,

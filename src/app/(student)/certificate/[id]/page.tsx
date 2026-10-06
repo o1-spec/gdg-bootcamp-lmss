@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import { getCertificateByCode } from "@/lib/certificates/queries";
-import Link from "next/link";
 import { PrintButton } from "./print-button";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface CertificatePageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: CertificatePageProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: CertificatePageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| CertificateDetailPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Certificate Detail page view.
+*/
 export default async function CertificateDetailPage({ params }: CertificatePageProps) {
   const { id } = await params;
   const user = await requireUser();

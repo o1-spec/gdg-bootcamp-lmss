@@ -111,8 +111,42 @@ model Track {
   announcements Announcement[]
   channels      Channel[]
   certificates  Certificate[]
+  invitations   Invitation[]
+  registrations Registration[]
 
   @@index([cohortId])
+}
+
+model Invitation {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      Role
+  trackId   String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@index([trackId])
+  @@index([expiresAt])
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role
+  trackId   String
+  claimedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  track Track @relation(fields: [trackId], references: [id], onDelete: Restrict)
+
+  @@index([trackId])
+  @@index([claimedAt])
 }
 
 model Enrollment {

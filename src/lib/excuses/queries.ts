@@ -1,7 +1,16 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
-// ── Query helpers ─────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| getSessionExcuses
+|----------------------------------------------------------------------------------------------------
+| Retrieves Session Excuses data from the database.
+*/
 export async function getSessionExcuses(sessionId: string) {
   return db.attendanceExcuse.findMany({
     where: { sessionId },
@@ -14,6 +23,12 @@ export async function getSessionExcuses(sessionId: string) {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentExcuses
+|----------------------------------------------------------------------------------------------------
+| Retrieves Student Excuses data from the database.
+*/
 export async function getStudentExcuses(userId: string) {
   return db.attendanceExcuse.findMany({
     where: { userId },
@@ -25,6 +40,12 @@ export async function getStudentExcuses(userId: string) {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorExcuses
+|----------------------------------------------------------------------------------------------------
+| Retrieves Instructor Excuses data from the database.
+*/
 export async function getInstructorExcuses(instructorId: string) {
   // Get tracks assigned to this instructor
   const trackIds = (
@@ -62,6 +83,12 @@ async function getCohortIdsForTracks(trackIds: string[]) {
   return [...new Set(tracks.map((t) => t.cohortId))];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getAllExcuses
+|----------------------------------------------------------------------------------------------------
+| Retrieves All Excuses data from the database.
+*/
 export async function getAllExcuses(filter?: {
   status?: string;
   sessionId?: string;
@@ -81,6 +108,12 @@ export async function getAllExcuses(filter?: {
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getExcuseById
+|----------------------------------------------------------------------------------------------------
+| Retrieves Excuse By Id data from the database.
+*/
 export async function getExcuseById(id: string) {
   return db.attendanceExcuse.findUnique({
     where: { id },
@@ -92,8 +125,12 @@ export async function getExcuseById(id: string) {
   });
 }
 
-// ── Mutations ─────────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| submitExcuse
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for submit Excuse.
+*/
 export async function submitExcuse(
   userId: string,
   sessionId: string,
@@ -126,6 +163,12 @@ export async function submitExcuse(
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| reviewExcuse
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for review Excuse.
+*/
 export async function reviewExcuse(
   excuseId: string,
   reviewerId: string,

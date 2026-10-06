@@ -1,7 +1,17 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useEffect, useRef, RefObject } from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface ScrollRevealOptions {
   /** Fraction of the element that must be visible before triggering (default 0.12) */
   threshold?: number;
@@ -11,26 +21,40 @@ interface ScrollRevealOptions {
   rootMargin?: string;
 }
 
-/**
- * Attaches IntersectionObserver to a container ref.
- * Adds `.is-visible` to the element when it enters the viewport.
- * Works with the `.reveal` and `.reveal-stagger` CSS classes.
- *
- * Usage:
- *   const ref = useScrollReveal<HTMLDivElement>();
- *   <div ref={ref} className="reveal"> ... </div>
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| useScrollReveal
+|----------------------------------------------------------------------------------------------------
+| Attaches IntersectionObserver to a container ref.
+| Adds .is-visible to the element when it enters the viewport.
+| Works with the .reveal and .reveal-stagger CSS classes.
+*/
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
   options: ScrollRevealOptions = {}
 ): RefObject<T | null> {
+  /*
+  |--------------------------------------------------
+  | constants
+  |--------------------------------------------------
+  */
   const {
     threshold = 0.12,
     once = true,
     rootMargin = "0px 0px -40px 0px",
   } = options;
 
+  /*
+  |--------------------------------------------------
+  | refs
+  |--------------------------------------------------
+  */
   const ref = useRef<T | null>(null);
 
+  /*
+  |--------------------------------------------------
+  | useEffect — observe element visibility
+  |--------------------------------------------------
+  */
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -53,29 +77,48 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     return () => observer.disconnect();
   }, [threshold, once, rootMargin]);
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return ref;
 }
 
-/**
- * Observe multiple children at once — each child gets .is-visible independently.
- * Works with static NodeLists inside a container.
- *
- * Usage:
- *   const ref = useScrollRevealChildren<HTMLDivElement>(".reveal");
- *   <div ref={ref}> <div className="reveal">...</div> </div>
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| useScrollRevealChildren
+|----------------------------------------------------------------------------------------------------
+| Observe multiple children at once — each child gets .is-visible independently.
+| Works with static NodeLists inside a container.
+*/
 export function useScrollRevealChildren<T extends HTMLElement = HTMLDivElement>(
   selector: string = ".reveal",
   options: ScrollRevealOptions = {}
 ): RefObject<T | null> {
+  /*
+  |--------------------------------------------------
+  | constants
+  |--------------------------------------------------
+  */
   const {
     threshold = 0.1,
     once = true,
     rootMargin = "0px 0px -30px 0px",
   } = options;
 
+  /*
+  |--------------------------------------------------
+  | refs
+  |--------------------------------------------------
+  */
   const ref = useRef<T | null>(null);
 
+  /*
+  |--------------------------------------------------
+  | useEffect — observe children elements
+  |--------------------------------------------------
+  */
   useEffect(() => {
     const container = ref.current;
     if (!container) return;
@@ -101,5 +144,10 @@ export function useScrollRevealChildren<T extends HTMLElement = HTMLDivElement>(
     return () => observer.disconnect();
   }, [selector, threshold, once, rootMargin]);
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return ref;
 }

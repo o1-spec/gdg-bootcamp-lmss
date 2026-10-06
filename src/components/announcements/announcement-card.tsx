@@ -1,25 +1,57 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState, useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AnnouncementItem } from "@/lib/announcements/queries";
 import { deleteAnnouncementAction } from "@/lib/announcements/actions";
 import { AnnouncementFormModal } from "./announcement-form-modal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AnnouncementCardProps {
   announcement: AnnouncementItem;
   tracks?: Array<{ id: string; name: string }>;
   cohortId?: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AnnouncementCard
+|----------------------------------------------------------------------------------------------------
+| Renders an individual announcement card with role-gated edit and delete actions.
+*/
 export function AnnouncementCard({
   announcement,
   tracks = [],
   cohortId = announcement.cohortId,
 }: AnnouncementCardProps) {
+  /*
+  |--------------------------------------------------
+  | states & transitions
+  |--------------------------------------------------
+  */
   const [isEditing, setIsEditing] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  /*
+  |--------------------------------------------------
+  | computed
+  |--------------------------------------------------
+  */
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -28,6 +60,11 @@ export function AnnouncementCard({
     minute: "2-digit",
   }).format(new Date(announcement.createdAt));
 
+  /*
+  |--------------------------------------------------
+  | handlers — delete announcement
+  |--------------------------------------------------
+  */
   const handleDelete = () => {
     if (!confirm(`Are you sure you want to delete "${announcement.title}"?`)) {
       return;
@@ -42,6 +79,11 @@ export function AnnouncementCard({
     });
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <>
       <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] sm:p-6">

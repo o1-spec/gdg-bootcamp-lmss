@@ -1,12 +1,33 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { validateServerEnv } from "./env";
 
-// Validate critical env vars at module load time.
-// Throws in production if DATABASE_URL / JWT secrets are missing.
+/*
+|--------------------------------------------------
+| environment validation
+|--------------------------------------------------
+| Validate critical env vars at module load time.
+| Throws in production if DATABASE_URL / JWT secrets are missing.
+*/
 validateServerEnv();
 
+/*
+|--------------------------------------------------
+| connection pool setup
+|--------------------------------------------------
+*/
 const globalForPrisma = globalThis as unknown as {
   pool?: Pool;
   prisma?: PrismaClient;
@@ -17,10 +38,6 @@ const pool =
   new Pool({
     connectionString: process.env.DATABASE_URL,
     // Conservative pool sizing for Supabase PgBouncer + Vercel serverless.
-    // PgBouncer handles multiplexing on the database side; the app only needs
-    // a small local pool per serverless instance. Each Vercel function instance
-    // is short-lived, so we cap aggressively to avoid exhausting the 60-connection
-    // Supabase transaction-mode PgBouncer limit across concurrent invocations.
     max: 5,
     idleTimeoutMillis: 10_000,
     connectionTimeoutMillis: 5_000,
@@ -28,6 +45,11 @@ const pool =
 
 const adapter = new PrismaPg(pool);
 
+/*
+|--------------------------------------------------
+| database client instance
+|--------------------------------------------------
+*/
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({

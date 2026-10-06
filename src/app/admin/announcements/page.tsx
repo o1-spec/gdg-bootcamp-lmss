@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { getAnnouncements } from "@/lib/announcements/queries";
 import { AnnouncementFeed } from "@/components/announcements/announcement-feed";
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Announcements | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminAnnouncementsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Announcements page view.
+*/
 export default async function AdminAnnouncementsPage() {
   const admin = await requireAdmin();
   const [announcements, tracks, cohort] = await Promise.all([

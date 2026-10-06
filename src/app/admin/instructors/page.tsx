@@ -1,16 +1,38 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { Role } from "@prisma/client";
 import { Instructor } from "@/types";
 import { AdminInstructorsTable } from "@/components/admin/directory-tables";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Instructors | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminInstructorsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Instructors page view.
+*/
 export default async function AdminInstructorsPage() {
   await requireAdmin();
 

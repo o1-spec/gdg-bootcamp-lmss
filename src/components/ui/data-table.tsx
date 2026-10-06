@@ -1,5 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface Column<T> {
   header: string;
   accessorKey?: keyof T;
@@ -14,12 +24,23 @@ interface DataTableProps<T> {
   emptyText?: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| DataTable
+|----------------------------------------------------------------------------------------------------
+| Generic responsive table with custom column rendering and empty state fallback.
+*/
 export function DataTable<T>({
   columns,
   data,
   keyExtractor,
   emptyText = "No records found.",
 }: DataTableProps<T>) {
+  /*
+  |--------------------------------------------------
+  | return — empty state
+  |--------------------------------------------------
+  */
   if (data.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center text-xs text-[#737373]">
@@ -28,6 +49,11 @@ export function DataTable<T>({
     );
   }
 
+  /*
+  |--------------------------------------------------
+  | return — table layout
+  |--------------------------------------------------
+  */
   return (
     <div className="overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white shadow-xs">
       <div className="overflow-x-auto">

@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { AssignmentForm } from "@/components/assignments/assignment-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Create Assignment | Instructor Portal",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorNewAssignmentPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor New Assignment page view.
+*/
 export default async function InstructorNewAssignmentPage() {
   const user = await requireInstructor();
 

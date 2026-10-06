@@ -1,6 +1,17 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { getSessionAttendance } from "@/lib/attendance/queries";
 import { PageHeader } from "@/components/ui/page-header";
@@ -10,10 +21,21 @@ import { InstructorCheckinCodeManager } from "@/components/attendance/instructor
 import { SessionRosterTable } from "@/components/attendance/session-roster-table";
 import { AttendanceImportModal } from "@/components/attendance/attendance-import-modal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AdminSessionAttendancePageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: AdminSessionAttendancePageProps) {
   const { id } = await params;
   return {
@@ -21,6 +43,12 @@ export async function generateMetadata({ params }: AdminSessionAttendancePagePro
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminSessionAttendancePage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Session Attendance page view.
+*/
 export default async function AdminSessionAttendancePage({
   params,
 }: AdminSessionAttendancePageProps) {

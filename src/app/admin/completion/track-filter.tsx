@@ -1,14 +1,30 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { useRouter } from "next/navigation";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface TrackFilterSelectProps {
   currentStatus: string;
   currentTrackId: string;
   tracks: { id: string; name: string; cohort: { name: string } }[];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| TrackFilterSelect
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Track Filter Select.
+*/
 export function TrackFilterSelect({
   currentStatus,
   currentTrackId,

@@ -1,9 +1,25 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { deleteMessageAction } from "@/lib/chat/actions";
 import { ChatWindow } from "@/components/chat/chat-window";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Message {
   id: string;
   body: string;
@@ -18,6 +34,12 @@ interface StudentChatWindowProps {
   currentUserId: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentChatWindow
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Student Chat Window.
+*/
 export function StudentChatWindow({
   channelId,
   channelName,

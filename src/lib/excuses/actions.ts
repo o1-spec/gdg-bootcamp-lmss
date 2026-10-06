@@ -1,13 +1,28 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser, requireStudent } from "@/lib/auth/session";
 import { submitExcuse, reviewExcuse } from "./queries";
 import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
-// ── Student: submit excuse ────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| submitExcuseAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling submit Excuse workflows and cache revalidations.
+*/
 export async function submitExcuseAction(
   sessionId: string,
   reason: string
@@ -48,8 +63,12 @@ export async function submitExcuseAction(
   }
 }
 
-// ── Instructor/Admin: review excuse ──────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| reviewExcuseAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling review Excuse workflows and cache revalidations.
+*/
 export async function reviewExcuseAction(
   excuseId: string,
   decision: "APPROVED" | "REJECTED",

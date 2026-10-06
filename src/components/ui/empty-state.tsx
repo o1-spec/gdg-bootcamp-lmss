@@ -1,12 +1,33 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface EmptyStateProps {
   title: string;
   description: string;
   action?: React.ReactNode;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| EmptyState
+|----------------------------------------------------------------------------------------------------
+| Placeholder component displayed when lists or datasets contain no items.
+*/
 export function EmptyState({ title, description, action }: EmptyStateProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-8 text-center sm:p-12 shadow-2xs">
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#737373] border border-[#E7E3DA]">

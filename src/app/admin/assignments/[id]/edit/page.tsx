@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getAssignmentById } from "@/lib/assignments/queries";
 import { AssignmentForm } from "@/components/assignments/assignment-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AdminEditAssignmentProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: AdminEditAssignmentProps) {
   const { id } = await params;
   return {
@@ -17,6 +39,12 @@ export async function generateMetadata({ params }: AdminEditAssignmentProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminEditAssignmentPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Edit Assignment page view.
+*/
 export default async function AdminEditAssignmentPage({
   params,
 }: AdminEditAssignmentProps) {

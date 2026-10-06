@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import Link from "next/link";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Issued Certificates | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminCertificatesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Certificates page view.
+*/
 export default async function AdminCertificatesPage() {
   await requireAdmin();
 

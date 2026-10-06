@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorGradingQueue } from "@/lib/assignments/queries";
 import { GradingQueueTable } from "@/components/grading/grading-queue-table";
 import { BulkReleasePanel } from "@/components/grading/bulk-release-panel";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Grading Queue | Instructor Portal",
   description: "Evaluate student code submissions, record points, and release grade feedback",
@@ -19,6 +35,12 @@ interface InstructorGradingPageProps {
   }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorGradingPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Grading page view.
+*/
 export default async function InstructorGradingPage({
   searchParams,
 }: InstructorGradingPageProps) {

@@ -1,8 +1,24 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import crypto from "crypto";
 import { Role, AttendanceStatus, AttendanceMethod, ExcuseStatus } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 import { audit } from "@/lib/audit/logger";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface StudentAttendanceRecord {
   sessionId: string;
   sessionTitle: string;
@@ -88,10 +104,12 @@ export interface SessionAttendanceSummaryRow {
   attendanceRate: number;
 }
 
-/**
- * Generates a short, secure, easy-to-type check-in code.
- * Excludes ambiguous characters like 0, O, 1, I.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| generateRandomCode
+|----------------------------------------------------------------------------------------------------
+| Generates a short, secure, easy-to-type check-in code. Excludes ambiguous characters like 0, O, 1, I.
+*/
 export function generateRandomCode(length = 6): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.randomBytes(length);
@@ -102,9 +120,12 @@ export function generateRandomCode(length = 6): string {
   return result;
 }
 
-/**
- * Validates and records a student's self check-in using a session check-in code.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| checkInToSession
+|----------------------------------------------------------------------------------------------------
+| Validates and records a student's self check-in using a session check-in code.
+*/
 export async function checkInToSession(
   sessionId: string,
   rawCode: string,
@@ -217,9 +238,12 @@ export async function checkInToSession(
   };
 }
 
-/**
- * Retrieves attendance summary and full history for a student.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentAttendance
+|----------------------------------------------------------------------------------------------------
+| Retrieves attendance summary and full history for a student.
+*/
 export async function getStudentAttendance(userId: string): Promise<{
   records: StudentAttendanceRecord[];
   summary: AttendanceSummary;
@@ -340,12 +364,14 @@ export async function getStudentAttendance(userId: string): Promise<{
     };
   });
 
-  /**
-   * ATTENDANCE CALCULATION POLICY:
-   * eligible completed sessions = completed sessions minus approved excused absences
-   * attendance rate = (PRESENT + LATE) / eligible completed sessions * 100
-   * If there are zero eligible sessions, attendanceRate is null (no percentage shown).
-   */
+  /*
+  |--------------------------------------------------
+  | attendance calculation policy
+  |--------------------------------------------------
+  | eligible completed sessions = completed sessions minus approved excused absences
+  | attendance rate = (PRESENT + LATE) / eligible completed sessions * 100
+  | If there are zero eligible sessions, attendanceRate is null (no percentage shown).
+  */
   const totalCompletedEligible = Math.max(0, totalCompletedSessions - approvedExcusedCount);
   const attendanceRate =
     totalCompletedEligible > 0
@@ -368,9 +394,12 @@ export async function getStudentAttendance(userId: string): Promise<{
   };
 }
 
-/**
- * Retrieves attendance roster for a specific session with instructor/admin authorization.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getSessionAttendance
+|----------------------------------------------------------------------------------------------------
+| Retrieves attendance roster for a specific session with instructor/admin authorization.
+*/
 export async function getSessionAttendance(
   sessionId: string,
   userId: string,
@@ -499,9 +528,12 @@ export async function getSessionAttendance(
   };
 }
 
-/**
- * Manually marks or updates attendance for a student (Instructor or Admin).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| markAttendance
+|----------------------------------------------------------------------------------------------------
+| Manually marks or updates attendance for a student (Instructor or Admin).
+*/
 export async function markAttendance(
   sessionId: string,
   targetUserId: string,
@@ -591,9 +623,12 @@ export async function markAttendance(
   });
 }
 
-/**
- * Generates or updates the check-in code for a session (Instructor or Admin).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| setSessionCheckinCode
+|----------------------------------------------------------------------------------------------------
+| Generates or updates the check-in code for a session (Instructor or Admin).
+*/
 export async function setSessionCheckinCode(
   sessionId: string,
   userId: string,
@@ -636,9 +671,12 @@ export async function setSessionCheckinCode(
   return code;
 }
 
-/**
- * Retrieves all sessions with attendance summaries for instructors.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorAttendanceSessions
+|----------------------------------------------------------------------------------------------------
+| Retrieves all sessions with attendance summaries for instructors.
+*/
 export async function getInstructorAttendanceSessions(
   userId: string,
   filterTrackId?: string
@@ -741,9 +779,12 @@ export async function getInstructorAttendanceSessions(
   return { sessions: rows, assignedTracks };
 }
 
-/**
- * Retrieves all sessions with attendance summaries for administrators.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAdminAttendanceSessions
+|----------------------------------------------------------------------------------------------------
+| Retrieves all sessions with attendance summaries for administrators.
+*/
 export async function getAdminAttendanceSessions(
   trackFilter?: string,
   cohortFilter?: string

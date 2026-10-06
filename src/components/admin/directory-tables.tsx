@@ -1,10 +1,27 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Student, Cohort, Instructor, Track, Enrollment } from "@/types";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminStudentsTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Admin Students entries.
+*/
 export function AdminStudentsTable({ students }: { students: Student[] }) {
   const columns: Column<Student>[] = [
     {
@@ -156,6 +173,12 @@ export function AdminStudentsTable({ students }: { students: Student[] }) {
   );
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminCohortsTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Admin Cohorts entries.
+*/
 export function AdminCohortsTable({ cohorts }: { cohorts: Cohort[] }) {
   const columns: Column<Cohort>[] = [
     {
@@ -253,6 +276,12 @@ export function AdminCohortsTable({ cohorts }: { cohorts: Cohort[] }) {
   );
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminInstructorsTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Admin Instructors entries.
+*/
 export function AdminInstructorsTable({ instructors }: { instructors: Instructor[] }) {
   const columns: Column<Instructor>[] = [
     {
@@ -338,6 +367,12 @@ export function AdminInstructorsTable({ instructors }: { instructors: Instructor
   );
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminTracksTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Admin Tracks entries.
+*/
 export function AdminTracksTable({ tracks }: { tracks: Track[] }) {
   const columns: Column<Track>[] = [
     {
@@ -417,6 +452,12 @@ export function AdminTracksTable({ tracks }: { tracks: Track[] }) {
   );
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminEnrollmentsTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Admin Enrollments entries.
+*/
 export function AdminEnrollmentsTable({ enrollments }: { enrollments: Enrollment[] }) {
   const columns: Column<Enrollment>[] = [
     {

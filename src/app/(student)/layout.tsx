@@ -1,15 +1,37 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AppShell } from "@/components/layout/app-shell";
 import { requireStudent } from "@/lib/auth/session";
 import { getUnreadCount } from "@/lib/notifications/queries";
 
 export const dynamic = "force-dynamic";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Student Portal | Bootcamp LMS",
   description: "Track progress, join live classes, and submit assignments",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentLayout
+|----------------------------------------------------------------------------------------------------
+| Layout wrapper component for Student.
+*/
 export default async function StudentLayout({
   children,
 }: {

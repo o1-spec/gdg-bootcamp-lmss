@@ -1,14 +1,27 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
+import { revalidatePath } from "next/cache";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import { audit } from "@/lib/audit/logger";
 
-/**
- * Flexible CSV parser — no external library.
- * Handles quoted fields, comma-separated, first row as headers.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| parseCSV
+|----------------------------------------------------------------------------------------------------
+| Flexible CSV parser handling quoted fields, comma-separated tokens, and normalized header keys.
+*/
 function parseCSV(text: string): Record<string, string>[] {
   const lines = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
   if (lines.length < 2) return [];
@@ -41,9 +54,12 @@ function parseCSV(text: string): Record<string, string>[] {
   return rows;
 }
 
-/**
- * Map flexible header names to canonical fields.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| extractEmail
+|----------------------------------------------------------------------------------------------------
+| Maps flexible CSV header variations (e.g. email, email_address, participant_email) to canonical email.
+*/
 function extractEmail(row: Record<string, string>): string {
   return (
     row["email"] ??
@@ -64,8 +80,12 @@ function extractName(row: Record<string, string>): string {
   ).trim();
 }
 
-// ── Parse upload (Step 1) ──────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| parseAttendanceImport
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for parse Attendance Import.
+*/
 export async function parseAttendanceImport(
   sessionId: string,
   csvText: string,
@@ -162,6 +182,12 @@ export async function parseAttendanceImport(
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| parseAttendanceImportAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling parse Attendance Import workflows and cache revalidations.
+*/
 export async function parseAttendanceImportAction(
   sessionId: string,
   csvText: string
@@ -170,8 +196,12 @@ export async function parseAttendanceImportAction(
   return parseAttendanceImport(sessionId, csvText, user);
 }
 
-// ── Apply confirmed import (Step 2) ───────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| applyAttendanceImport
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for apply Attendance Import.
+*/
 export async function applyAttendanceImport(
   importId: string,
   confirmedUserIds: string[],
@@ -226,6 +256,12 @@ export async function applyAttendanceImport(
   return { success: true, updated };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| applyAttendanceImportAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling apply Attendance Import workflows and cache revalidations.
+*/
 export async function applyAttendanceImportAction(
   importId: string,
   confirmedUserIds: string[]
@@ -245,6 +281,12 @@ export async function applyAttendanceImportAction(
   return res;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| discardImportAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling discard Import workflows and cache revalidations.
+*/
 export async function discardImportAction(
   importId: string
 ): Promise<{ success: boolean }> {

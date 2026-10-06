@@ -1,5 +1,12 @@
 // src/app/instructor/loading.tsx
 // Loading state for all instructor portal routes.
+
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorLoading
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Instructor Loading.
+*/
 export default function InstructorLoading() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center">

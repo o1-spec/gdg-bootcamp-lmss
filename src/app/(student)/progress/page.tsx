@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -10,10 +21,21 @@ import { ClaimCertificateButton } from "@/components/certificates/claim-certific
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "My Progress | Bootcamp LMS",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentProgressPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Progress page view.
+*/
 export default async function StudentProgressPage() {
   const student = await requireStudent();
   const [progress, enrollment] = await Promise.all([

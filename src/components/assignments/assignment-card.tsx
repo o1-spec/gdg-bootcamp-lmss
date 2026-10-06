@@ -1,12 +1,34 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { StudentAssignmentItem } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AssignmentCardProps {
   assignment: StudentAssignmentItem;
   basePath?: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AssignmentCard
+|----------------------------------------------------------------------------------------------------
+| Card component rendering Assignment summary details.
+*/
 export function AssignmentCard({
   assignment,
   basePath = "/assignments",

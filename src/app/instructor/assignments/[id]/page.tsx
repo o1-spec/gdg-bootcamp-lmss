@@ -1,6 +1,17 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { Badge } from "@/components/ui/badge";
 import { requireInstructor } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/assignments/queries";
@@ -8,10 +19,21 @@ import { DeleteAssignmentButton } from "@/components/assignments/delete-assignme
 import { getRubricByAssignment } from "@/lib/rubrics/queries";
 import { RubricBuilder, RubricDeleteButton } from "@/components/rubrics/rubric-components";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface InstructorAssignmentDetailsProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: InstructorAssignmentDetailsProps) {
   const { id } = await params;
   return {
@@ -19,6 +41,12 @@ export async function generateMetadata({ params }: InstructorAssignmentDetailsPr
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorAssignmentDetailsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Assignment Details page view.
+*/
 export default async function InstructorAssignmentDetailsPage({
   params,
 }: InstructorAssignmentDetailsProps) {
@@ -177,4 +205,3 @@ export default async function InstructorAssignmentDetailsPage({
     </div>
   );
 }
-

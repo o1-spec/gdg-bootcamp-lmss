@@ -1,7 +1,15 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
-// ── Rubric CRUD ───────────────────────────────────────────────────────────────
-
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface RubricWithCriteria {
   id: string;
   assignmentId: string;
@@ -15,6 +23,12 @@ export interface RubricWithCriteria {
   }[];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getRubricByAssignment
+|----------------------------------------------------------------------------------------------------
+| Retrieves Rubric By Assignment data from the database.
+*/
 export async function getRubricByAssignment(
   assignmentId: string
 ): Promise<RubricWithCriteria | null> {
@@ -24,6 +38,12 @@ export async function getRubricByAssignment(
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| createRubric
+|----------------------------------------------------------------------------------------------------
+| Creates and persists a new Rubric record.
+*/
 export async function createRubric(
   assignmentId: string,
   title: string,
@@ -57,6 +77,12 @@ export async function createRubric(
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteRubric
+|----------------------------------------------------------------------------------------------------
+| Deletes or archives a Rubric record from the database.
+*/
 export async function deleteRubric(assignmentId: string) {
   // Only allowed if no scores have been recorded yet
   const rubric = await db.rubric.findUnique({
@@ -69,18 +95,18 @@ export async function deleteRubric(assignmentId: string) {
   await db.rubric.delete({ where: { id: rubric.id } });
 }
 
-// ── Rubric scoring ────────────────────────────────────────────────────────────
-
 export interface RubricScoreInput {
   criterionId: string;
   score: number;
   feedback?: string;
 }
 
-/**
- * Saves rubric scores for a submission and returns the computed total.
- * Also validates each criterion score is within bounds.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| saveRubricScores
+|----------------------------------------------------------------------------------------------------
+| Saves rubric scores for a submission and returns the computed total. Also validates each criterion score is within bounds.
+*/
 export async function saveRubricScores(
   submissionId: string,
   scores: RubricScoreInput[]
@@ -116,9 +142,12 @@ export async function saveRubricScores(
   return scores.reduce((sum, s) => sum + s.score, 0);
 }
 
-/**
- * Fetch rubric scores for a submission (used on grading + student result pages).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getSubmissionRubricScores
+|----------------------------------------------------------------------------------------------------
+| Fetch rubric scores for a submission (used on grading + student result pages).
+*/
 export async function getSubmissionRubricScores(submissionId: string) {
   return db.rubricScore.findMany({
     where: { submissionId },

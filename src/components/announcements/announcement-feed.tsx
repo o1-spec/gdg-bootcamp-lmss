@@ -1,11 +1,27 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AnnouncementItem } from "@/lib/announcements/queries";
 import { AnnouncementCard } from "./announcement-card";
 import { AnnouncementFormModal } from "./announcement-form-modal";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AnnouncementFeedProps {
   announcements: AnnouncementItem[];
   canCreate?: boolean;
@@ -14,6 +30,12 @@ interface AnnouncementFeedProps {
   cohortId?: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AnnouncementFeed
+|----------------------------------------------------------------------------------------------------
+| Feed layout for viewing, filtering by track, and publishing cohort-wide announcements.
+*/
 export function AnnouncementFeed({
   announcements,
   canCreate = false,
@@ -21,9 +43,19 @@ export function AnnouncementFeed({
   tracks = [],
   cohortId = "coh-2026-1",
 }: AnnouncementFeedProps) {
+  /*
+  |--------------------------------------------------
+  | states
+  |--------------------------------------------------
+  */
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterTrack, setFilterTrack] = useState<string>("all");
 
+  /*
+  |--------------------------------------------------
+  | computed
+  |--------------------------------------------------
+  */
   const filtered =
     filterTrack === "all"
       ? announcements
@@ -33,9 +65,18 @@ export function AnnouncementFeed({
             a.trackId === filterTrack
         );
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="space-y-6">
-      {/* Top action bar */}
+      {/*
+      |--------------------------------------------------
+      | top action & track filter bar
+      |--------------------------------------------------
+      */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {tracks.length > 0 && (
           <div className="flex items-center gap-2">
@@ -69,7 +110,11 @@ export function AnnouncementFeed({
         )}
       </div>
 
-      {/* Announcement List */}
+      {/*
+      |--------------------------------------------------
+      | announcement feed list
+      |--------------------------------------------------
+      */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#E7E3DA] bg-white p-10 text-center">
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7F4ED] text-[#737373]">
@@ -97,7 +142,11 @@ export function AnnouncementFeed({
         </ScrollReveal>
       )}
 
-      {/* Create Modal */}
+      {/*
+      |--------------------------------------------------
+      | creation modal
+      |--------------------------------------------------
+      */}
       {canCreate && (
         <AnnouncementFormModal
           isOpen={isModalOpen}

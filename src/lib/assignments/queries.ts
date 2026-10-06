@@ -1,6 +1,22 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface StudentAssignmentItem {
   id: string;
   title: string;
@@ -87,12 +103,12 @@ export interface SubmissionForGrading {
   };
 }
 
-/**
- * Retrieves assignments visible to a student:
- * - track-specific assignments for student's active track
- * - cohort-wide shared assignments
- * Strips unreleased scores and feedback to ensure privacy!
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentAssignments
+|----------------------------------------------------------------------------------------------------
+| Retrieves assignments visible to a student: - track-specific assignments for student's active track - cohort-wide shared assignments Strips unreleased scores and feedback to ensure privacy!
+*/
 export async function getStudentAssignments(
   userId: string
 ): Promise<{
@@ -197,9 +213,12 @@ export async function getStudentAssignments(
   return { upcoming, submitted, pastDue };
 }
 
-/**
- * Retrieves a single assignment by ID with authorization and role-based data projection.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAssignmentById
+|----------------------------------------------------------------------------------------------------
+| Retrieves a single assignment by ID with authorization and role-based data projection.
+*/
 export async function getAssignmentById(
   assignmentId: string,
   userId: string,
@@ -334,9 +353,12 @@ export async function getAssignmentById(
   };
 }
 
-/**
- * Creates an assignment directly in PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| createAssignment
+|----------------------------------------------------------------------------------------------------
+| Creates an assignment directly in PostgreSQL.
+*/
 export async function createAssignment(
   data: {
     cohortId: string;
@@ -402,9 +424,12 @@ export async function createAssignment(
   return created;
 }
 
-/**
- * Updates an assignment directly in PostgreSQL.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| updateAssignment
+|----------------------------------------------------------------------------------------------------
+| Updates an assignment directly in PostgreSQL.
+*/
 export async function updateAssignment(
   assignmentId: string,
   data: {
@@ -463,9 +488,12 @@ export async function updateAssignment(
   return updated;
 }
 
-/**
- * Deletes an assignment with historical student submission protection.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteAssignment
+|----------------------------------------------------------------------------------------------------
+| Deletes an assignment with historical student submission protection.
+*/
 export async function deleteAssignment(
   assignmentId: string,
   userId: string,
@@ -495,9 +523,12 @@ export async function deleteAssignment(
   });
 }
 
-/**
- * Submits or resubmits student work via web link, file upload URL, or both.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| submitAssignment
+|----------------------------------------------------------------------------------------------------
+| Submits or resubmits student work via web link, file upload URL, or both.
+*/
 export async function submitAssignment(
   assignmentId: string,
   payload: string | { submissionUrl?: string | null; fileUrl?: string | null },
@@ -605,9 +636,12 @@ export async function submitAssignment(
   };
 }
 
-/**
- * Retrieves instructor grading queue scoped to assigned tracks.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorGradingQueue
+|----------------------------------------------------------------------------------------------------
+| Retrieves instructor grading queue scoped to assigned tracks.
+*/
 export async function getInstructorGradingQueue(
   userId: string,
   role: Role,
@@ -745,9 +779,12 @@ export async function getInstructorGradingQueue(
   };
 }
 
-/**
- * Retrieves a submission for grading by ID, verifying instructor/admin authorization.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getSubmissionForGrading
+|----------------------------------------------------------------------------------------------------
+| Retrieves a submission for grading by ID, verifying instructor/admin authorization.
+*/
 export async function getSubmissionForGrading(
   submissionId: string,
   userId: string,
@@ -826,9 +863,12 @@ export async function getSubmissionForGrading(
   };
 }
 
-/**
- * Saves a score and feedback for a submission, optionally releasing it immediately.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| gradeSubmission
+|----------------------------------------------------------------------------------------------------
+| Saves a score and feedback for a submission, optionally releasing it immediately.
+*/
 export async function gradeSubmission(
   submissionId: string,
   score: number,
@@ -863,9 +903,12 @@ export async function gradeSubmission(
   });
 }
 
-/**
- * Explicitly releases a grade to make it visible to the student.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| releaseGrade
+|----------------------------------------------------------------------------------------------------
+| Explicitly releases a grade to make it visible to the student.
+*/
 export async function releaseGrade(
   submissionId: string,
   graderId: string,
@@ -889,9 +932,12 @@ export async function releaseGrade(
   return { userId: updated.userId, assignment: { title: updated.assignment.title } };
 }
 
-/**
- * Retrieves all assignments for instructor or admin management views.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getManagementAssignments
+|----------------------------------------------------------------------------------------------------
+| Retrieves all assignments for instructor or admin management views.
+*/
 export async function getManagementAssignments(
   userId: string,
   role: Role,

@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { getSubmissionForGrading } from "@/lib/assignments/queries";
 import { GradingForm } from "@/components/grading/grading-form";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface InstructorGradeSubmissionPageProps {
   params: Promise<{ submissionId: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({
   params,
 }: InstructorGradeSubmissionPageProps) {
@@ -17,6 +39,12 @@ export async function generateMetadata({
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorGradeSubmissionPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Grade Submission page view.
+*/
 export default async function InstructorGradeSubmissionPage({
   params,
 }: InstructorGradeSubmissionPageProps) {

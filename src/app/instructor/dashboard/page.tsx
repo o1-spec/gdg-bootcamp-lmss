@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { NextClassCard } from "@/components/dashboard/next-class-card";
@@ -9,10 +20,21 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorDashboardData } from "@/lib/progress/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Instructor Dashboard | Bootcamp LMS",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorDashboardPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Dashboard page view.
+*/
 export default async function InstructorDashboardPage() {
   const instructor = await requireInstructor();
   const data = await getInstructorDashboardData(instructor.id);

@@ -1,17 +1,39 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import {
   parseAttendanceImportAction,
   applyAttendanceImportAction,
   discardImportAction,
 } from "@/lib/attendance/import-actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AttendanceImportModalProps {
   sessionId: string;
   sessionTitle: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AttendanceImportModal
+|----------------------------------------------------------------------------------------------------
+| Modal overlay dialog component for Attendance Import Modal.
+*/
 export function AttendanceImportModal({
   sessionId,
   sessionTitle,

@@ -1,10 +1,25 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
 import { Role } from "@prisma/client";
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 const ACCESS_TOKEN_EXPIRATION = "15m";
 const REFRESH_TOKEN_EXPIRATION = "7d";
 
-// Access & Refresh secret encoders
+/*
+|--------------------------------------------------
+| helpers — secret key getters
+|--------------------------------------------------
+| Access and refresh secret encoders for jose HMAC operations.
+*/
 function getSecretKey(secret: string | undefined, name: string): Uint8Array {
   if (!secret) {
     if (process.env.NODE_ENV === "production") {
@@ -34,6 +49,11 @@ const refreshSecret = () =>
     "JWT_REFRESH_SECRET"
   );
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface AccessTokenPayload extends JWTPayload {
   sub: string;
   email: string;
@@ -44,9 +64,12 @@ export interface RefreshTokenPayload extends JWTPayload {
   sub: string;
 }
 
-/**
- * Signs a short-lived (15 min) JWT Access Token.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| signAccessToken
+|----------------------------------------------------------------------------------------------------
+| Signs a short-lived (15 min) JWT Access Token containing user ID, email, and role.
+*/
 export async function signAccessToken(payload: {
   sub: string;
   email: string;
@@ -63,9 +86,12 @@ export async function signAccessToken(payload: {
     .sign(accessSecret());
 }
 
-/**
- * Verifies a JWT Access Token. Returns the decoded payload or null if invalid/expired.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| verifyAccessToken
+|----------------------------------------------------------------------------------------------------
+| Verifies a JWT Access Token. Returns decoded payload or null if expired or invalid.
+*/
 export async function verifyAccessToken(
   token: string
 ): Promise<AccessTokenPayload | null> {
@@ -89,9 +115,12 @@ export async function verifyAccessToken(
   }
 }
 
-/**
- * Signs a long-lived (7 day) JWT Refresh Token.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| signRefreshToken
+|----------------------------------------------------------------------------------------------------
+| Signs a long-lived (7 day) JWT Refresh Token containing the subject identifier.
+*/
 export async function signRefreshToken(payload: {
   sub: string;
 }): Promise<string> {
@@ -104,9 +133,12 @@ export async function signRefreshToken(payload: {
     .sign(refreshSecret());
 }
 
-/**
- * Verifies a JWT Refresh Token. Returns the decoded payload or null if invalid/expired.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| verifyRefreshToken
+|----------------------------------------------------------------------------------------------------
+| Verifies a JWT Refresh Token. Returns decoded payload or null if expired or invalid.
+*/
 export async function verifyRefreshToken(
   token: string
 ): Promise<RefreshTokenPayload | null> {

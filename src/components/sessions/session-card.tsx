@@ -1,12 +1,34 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { SessionWithDetails } from "@/lib/sessions/queries";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SessionCardProps {
   session: SessionWithDetails;
   basePath?: string; // "/classes", "/instructor/classes", or "/admin/classes"
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SessionCard
+|----------------------------------------------------------------------------------------------------
+| Card component rendering Session summary details.
+*/
 export function SessionCard({ session, basePath = "/classes" }: SessionCardProps) {
   const now = new Date();
   const startsAt = new Date(session.startsAt);

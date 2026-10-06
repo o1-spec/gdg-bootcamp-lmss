@@ -1,6 +1,17 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { getSessionAttendance } from "@/lib/attendance/queries";
 import { PageHeader } from "@/components/ui/page-header";
@@ -8,13 +19,23 @@ import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/ui/stat-card";
 import { InstructorCheckinCodeManager } from "@/components/attendance/instructor-checkin-code-manager";
 import { SessionRosterTable } from "@/components/attendance/session-roster-table";
-
 import { AttendanceImportModal } from "@/components/attendance/attendance-import-modal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SessionAttendancePageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: SessionAttendancePageProps) {
   const { id } = await params;
   return {
@@ -22,6 +43,12 @@ export async function generateMetadata({ params }: SessionAttendancePageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorSessionAttendancePage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Session Attendance page view.
+*/
 export default async function InstructorSessionAttendancePage({
   params,
 }: SessionAttendancePageProps) {

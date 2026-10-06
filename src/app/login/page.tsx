@@ -1,9 +1,20 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 const CAROUSEL_SLIDES = [
   {
     src: "/IMG_2242.jpg",
@@ -25,9 +36,26 @@ const CAROUSEL_SLIDES = [
   },
 ];
 
+/*
+|----------------------------------------------------------------------------------------------------
+| LoginPage
+|----------------------------------------------------------------------------------------------------
+| Renders the unified login view with GDGOC branding, interactive photo carousel,
+| and secure authentication submission.
+*/
 export default function LoginPage() {
+  /*
+  |--------------------------------------------------
+  | hooks
+  |--------------------------------------------------
+  */
   const router = useRouter();
 
+  /*
+  |--------------------------------------------------
+  | states
+  |--------------------------------------------------
+  */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -37,6 +65,11 @@ export default function LoginPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  /*
+  |--------------------------------------------------
+  | useEffect — carousel autoplay
+  |--------------------------------------------------
+  */
   React.useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -45,6 +78,11 @@ export default function LoginPage() {
     return () => clearInterval(timer);
   }, [isPaused]);
 
+  /*
+  |--------------------------------------------------
+  | handlers
+  |--------------------------------------------------
+  */
   const handlePrevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
   };
@@ -95,6 +133,11 @@ export default function LoginPage() {
     }
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F7F4ED]">
       {/* Mobile Header (< lg screens) */}
@@ -384,9 +427,9 @@ export default function LoginPage() {
           </div>
 
           {/* Footer note outside card */}
-          <p className="text-center text-xs text-[#737373] leading-relaxed px-4">
-            Accounts are managed by bootcamp administrators. Contact your instructor if you need credentials.
-          </p>
+           <p className="text-center text-xs text-[#737373] leading-relaxed px-4">
+             Registered for the bootcamp? <Link href="/signup" className="font-semibold text-[#171717] underline underline-offset-2">Create your account</Link>
+           </p>
         </div>
       </main>
     </div>

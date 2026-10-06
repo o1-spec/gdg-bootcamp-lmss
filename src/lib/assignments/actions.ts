@@ -1,7 +1,18 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import {
   createAssignment,
@@ -18,6 +29,12 @@ import {
 import { audit } from "@/lib/audit/logger";
 import { db } from "@/lib/db";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| createAssignmentAction
+|----------------------------------------------------------------------------------------------------
+| Creates and persists a new Assignment Action record.
+*/
 export async function createAssignmentAction(formData: FormData) {
   const user = await requireUser();
 
@@ -82,6 +99,12 @@ export async function createAssignmentAction(formData: FormData) {
   redirect(target);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| updateAssignmentAction
+|----------------------------------------------------------------------------------------------------
+| Updates an existing Assignment Action record in the database.
+*/
 export async function updateAssignmentAction(
   assignmentId: string,
   formData: FormData
@@ -153,6 +176,12 @@ export async function updateAssignmentAction(
   redirect(target);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteAssignmentAction
+|----------------------------------------------------------------------------------------------------
+| Deletes or archives a Assignment Action record from the database.
+*/
 export async function deleteAssignmentAction(assignmentId: string) {
   const user = await requireUser();
 
@@ -168,6 +197,12 @@ export async function deleteAssignmentAction(assignmentId: string) {
 
 import { uploadToCloudinary } from "@/lib/storage/cloudinary";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| submitAssignmentAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling submit Assignment workflows and cache revalidations.
+*/
 export async function submitAssignmentAction(
   assignmentId: string,
   formData: FormData
@@ -224,6 +259,12 @@ export async function submitAssignmentAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| gradeSubmissionAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling grade Submission workflows and cache revalidations.
+*/
 export async function gradeSubmissionAction(
   submissionId: string,
   formData: FormData
@@ -273,6 +314,12 @@ export async function gradeSubmissionAction(
   }
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| releaseGradeAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling release Grade workflows and cache revalidations.
+*/
 export async function releaseGradeAction(
   submissionId: string
 ): Promise<{ success: boolean; message?: string }> {
@@ -308,8 +355,12 @@ export async function releaseGradeAction(
   }
 }
 
-// ── Bulk grade release ────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| bulkReleaseGradesAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling bulk Release Grades workflows and cache revalidations.
+*/
 export async function bulkReleaseGradesAction(
   submissionIds: string[]
 ): Promise<{ success: boolean; released: number; skipped: number; error?: string }> {

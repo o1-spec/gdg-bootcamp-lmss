@@ -1,12 +1,28 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getStudentCompletion } from "@/lib/completion/queries";
-import Link from "next/link";
 import { TrackFilterSelect } from "./track-filter";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Completion Overview | Admin Console",
 };
@@ -15,6 +31,12 @@ interface AdminCompletionPageProps {
   searchParams: Promise<{ status?: string; trackId?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminCompletionPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Completion page view.
+*/
 export default async function AdminCompletionPage({
   searchParams,
 }: AdminCompletionPageProps) {

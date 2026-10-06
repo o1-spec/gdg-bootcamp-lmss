@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireInstructor } from "@/lib/auth/session";
 import { getSessionById } from "@/lib/sessions/queries";
 import { SessionDetails } from "@/components/sessions/session-details";
 import { InstructorCheckinCodeManager } from "@/components/attendance/instructor-checkin-code-manager";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface InstructorSessionPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: InstructorSessionPageProps) {
   const { id } = await params;
   return {
@@ -16,6 +38,12 @@ export async function generateMetadata({ params }: InstructorSessionPageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorSessionDetailPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Session Detail page view.
+*/
 export default async function InstructorSessionDetailPage({
   params,
 }: InstructorSessionPageProps) {

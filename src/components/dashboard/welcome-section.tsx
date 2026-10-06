@@ -1,13 +1,40 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { StudentProfile } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface WelcomeSectionProps {
   student: StudentProfile;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| WelcomeSection
+|----------------------------------------------------------------------------------------------------
+| Time-aware greeting header presenting the student's cohort progression ring and current week.
+*/
 export function WelcomeSection({ student }: WelcomeSectionProps) {
+  /*
+  |--------------------------------------------------
+  | helpers — time-of-day greeting & progress
+  |--------------------------------------------------
+  */
   const firstName = student.name.split(" ")[0];
 
   const getGreeting = () => {
@@ -22,6 +49,11 @@ export function WelcomeSection({ student }: WelcomeSectionProps) {
       ? Math.round((student.currentWeek / student.totalWeeks) * 100)
       : 0;
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>

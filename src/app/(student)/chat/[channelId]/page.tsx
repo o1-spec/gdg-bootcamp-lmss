@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { notFound } from "next/navigation";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireStudent } from "@/lib/auth/session";
 import { getChannelIfAuthorized, getChannelMessages } from "@/lib/chat/queries";
 import { StudentChatWindow } from "./chat-client";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Props {
   params: Promise<{ channelId: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentChannelPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Channel page view.
+*/
 export default async function StudentChannelPage({ params }: Props) {
   const { channelId } = await params;
   const user = await requireStudent();

@@ -1,9 +1,25 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useState, useTransition } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { bulkReleaseGradesAction } from "@/lib/assignments/actions";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Submission {
   id: string;
   userId: string;
@@ -17,6 +33,12 @@ interface BulkReleaseProps {
   submissions: Submission[];
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| BulkReleasePanel
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Bulk Release Panel.
+*/
 export function BulkReleasePanel({ submissions }: BulkReleaseProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<{ released: number; skipped: number } | null>(null);

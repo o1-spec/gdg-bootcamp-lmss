@@ -1,6 +1,17 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
+import { getCurrentUser } from "@/lib/auth/session";
 import { getSessionAttendance } from "@/lib/attendance/queries";
 
 function escapeCsvField(field: string | null | undefined): string {
@@ -17,6 +28,12 @@ function slugify(text: string): string {
     .slice(0, 50);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| GET
+|----------------------------------------------------------------------------------------------------
+| Handles incoming HTTP GET requests for this endpoint.
+*/
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
 

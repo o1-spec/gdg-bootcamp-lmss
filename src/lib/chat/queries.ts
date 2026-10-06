@@ -1,7 +1,15 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 export interface ChannelWithMeta {
   id: string;
   name: string;
@@ -18,11 +26,12 @@ export interface MessageWithSender {
   sender: { id: string; name: string; role: string };
 }
 
-// ── Channel helpers ───────────────────────────────────────────────────────────
-
-/**
- * Get or create a channel. Used to lazily provision channels on first access.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getOrCreateChannel
+|----------------------------------------------------------------------------------------------------
+| Get or create a channel. Used to lazily provision channels on first access.
+*/
 export async function getOrCreateChannel(
   cohortId: string,
   trackId: string | null,
@@ -36,11 +45,12 @@ export async function getOrCreateChannel(
   return db.channel.create({ data: { cohortId, trackId, name } });
 }
 
-/**
- * Returns the channels a student can access:
- *   1. general cohort channel  (trackId = null)
- *   2. their track channel
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getStudentChannels
+|----------------------------------------------------------------------------------------------------
+| Returns the channels a student can access: 1. general cohort channel  (trackId = null) 2. their track channel
+*/
 export async function getStudentChannels(userId: string): Promise<ChannelWithMeta[]> {
   const enrollment = await db.enrollment.findFirst({
     where: { userId },
@@ -64,9 +74,12 @@ export async function getStudentChannels(userId: string): Promise<ChannelWithMet
   });
 }
 
-/**
- * Returns channels an instructor can access (general + assigned tracks).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getInstructorChannels
+|----------------------------------------------------------------------------------------------------
+| Returns channels an instructor can access (general + assigned tracks).
+*/
 export async function getInstructorChannels(userId: string): Promise<ChannelWithMeta[]> {
   const assignments = await db.trackInstructor.findMany({
     where: { userId },
@@ -92,9 +105,12 @@ export async function getInstructorChannels(userId: string): Promise<ChannelWith
   });
 }
 
-/**
- * Returns ALL channels (admin use).
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getAllChannels
+|----------------------------------------------------------------------------------------------------
+| Returns ALL channels (admin use).
+*/
 export async function getAllChannels(): Promise<ChannelWithMeta[]> {
   return db.channel.findMany({
     include: { _count: { select: { messages: true } } },
@@ -102,8 +118,12 @@ export async function getAllChannels(): Promise<ChannelWithMeta[]> {
   });
 }
 
-// ── Message helpers ───────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| getChannelMessages
+|----------------------------------------------------------------------------------------------------
+| Retrieves Channel Messages data from the database.
+*/
 export async function getChannelMessages(
   channelId: string,
   limit = 100
@@ -123,6 +143,12 @@ export async function getChannelMessages(
   }));
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| createMessage
+|----------------------------------------------------------------------------------------------------
+| Creates and persists a new Message record.
+*/
 export async function createMessage(
   channelId: string,
   senderId: string,
@@ -131,10 +157,22 @@ export async function createMessage(
   return db.message.create({ data: { channelId, senderId, body } });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| softDeleteMessage
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for soft Delete Message.
+*/
 export async function softDeleteMessage(messageId: string) {
   return db.message.update({ where: { id: messageId }, data: { deleted: true } });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getMessageById
+|----------------------------------------------------------------------------------------------------
+| Retrieves Message By Id data from the database.
+*/
 export async function getMessageById(messageId: string) {
   return db.message.findUnique({
     where: { id: messageId },
@@ -142,11 +180,12 @@ export async function getMessageById(messageId: string) {
   });
 }
 
-// ── Mute helpers ──────────────────────────────────────────────────────────────
-
-/**
- * Returns true if userId is currently muted in the given channel's scope.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| isUserMuted
+|----------------------------------------------------------------------------------------------------
+| Returns true if userId is currently muted in the given channel's scope.
+*/
 export async function isUserMuted(
   userId: string,
   cohortId: string,
@@ -166,6 +205,12 @@ export async function isUserMuted(
   return !!mute;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| muteUser
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for mute User.
+*/
 export async function muteUser(
   userId: string,
   cohortId: string,
@@ -179,6 +224,12 @@ export async function muteUser(
   });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| unmuteUser
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for unmute User.
+*/
 export async function unmuteUser(
   userId: string,
   cohortId: string
@@ -186,6 +237,12 @@ export async function unmuteUser(
   return db.chatMute.deleteMany({ where: { userId, cohortId } });
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| getMutesForCohort
+|----------------------------------------------------------------------------------------------------
+| Retrieves Mutes For Cohort data from the database.
+*/
 export async function getMutesForCohort(cohortId: string) {
   const now = new Date();
   return db.chatMute.findMany({
@@ -201,12 +258,12 @@ export async function getMutesForCohort(cohortId: string) {
   });
 }
 
-// ── Access guards ─────────────────────────────────────────────────────────────
-
-/**
- * Verify that a channel is accessible to the given user.
- * Returns the channel or null if access is denied.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getChannelIfAuthorized
+|----------------------------------------------------------------------------------------------------
+| Verify that a channel is accessible to the given user. Returns the channel or null if access is denied.
+*/
 export async function getChannelIfAuthorized(
   channelId: string,
   userId: string,

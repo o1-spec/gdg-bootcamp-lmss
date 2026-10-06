@@ -1,16 +1,47 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { ClassSession } from "@/types";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface NextClassCardProps {
   session: ClassSession;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| NextClassCard
+|----------------------------------------------------------------------------------------------------
+| Highlighted card showcasing the student's next upcoming live lecture and direct join link.
+*/
 export function NextClassCard({ session }: NextClassCardProps) {
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="relative overflow-hidden rounded-2xl border border-[#262626] bg-[#171717] p-6 text-white shadow-2xs sm:p-7">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-3">
-          {/* Header pill & status */}
+          {/*
+          |--------------------------------------------------
+          | header pill & track tags
+          |--------------------------------------------------
+          */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1.5 rounded-full bg-[#34A853]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#34A853] border border-[#34A853]/30">
               <span className="h-1.5 w-1.5 rounded-full bg-[#34A853] animate-pulse" />
@@ -28,16 +59,23 @@ export function NextClassCard({ session }: NextClassCardProps) {
             )}
           </div>
 
-          {/* Title */}
+          {/*
+          |--------------------------------------------------
+          | session title
+          |--------------------------------------------------
+          */}
           <div>
             <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
               {session.title}
             </h3>
           </div>
 
-          {/* Metadata: Date, Time & Instructor */}
+          {/*
+          |--------------------------------------------------
+          | session schedule & instructor metadata
+          |--------------------------------------------------
+          */}
           <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-[#A3A3A3]">
-            {/* Date and Time */}
             <div className="flex items-center gap-1.5">
               <svg
                 className="h-4 w-4 text-[#737373]"
@@ -57,7 +95,6 @@ export function NextClassCard({ session }: NextClassCardProps) {
               </span>
             </div>
 
-            {/* Instructor */}
             {session.instructor?.name && (
               <div className="flex items-center gap-1.5">
                 <svg
@@ -82,7 +119,11 @@ export function NextClassCard({ session }: NextClassCardProps) {
           </div>
         </div>
 
-        {/* Join Class Action */}
+        {/*
+        |--------------------------------------------------
+        | join meeting action
+        |--------------------------------------------------
+        */}
         <div className="shrink-0 pt-2 sm:pt-0">
           {session.meetingUrl ? (
             <a

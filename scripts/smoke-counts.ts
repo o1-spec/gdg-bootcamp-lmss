@@ -1,6 +1,16 @@
-// scripts/smoke-counts.ts – read-only row count report
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "../src/lib/db";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| main
+|----------------------------------------------------------------------------------------------------
+| Diagnostic CLI script producing a read-only row count report across all LMS tables.
+*/
 async function main() {
   const [users, cohorts, tracks, enrollments, trackInstructors, sessions, attendance, assignments, submissions, announcements] =
     await Promise.all([

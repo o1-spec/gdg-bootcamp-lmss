@@ -1,5 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 type BadgeVariant = "default" | "success" | "warning" | "info" | "neutral" | "danger";
 
 interface BadgeProps {
@@ -8,11 +18,22 @@ interface BadgeProps {
   className?: string;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| Badge
+|----------------------------------------------------------------------------------------------------
+| Status indicator badge with theme-aware color variants.
+*/
 export function Badge({
   children,
   variant = "neutral",
   className = "",
 }: BadgeProps) {
+  /*
+  |--------------------------------------------------
+  | styles
+  |--------------------------------------------------
+  */
   const variantStyles: Record<BadgeVariant, string> = {
     neutral:
       "bg-[#F7F4ED] text-[#737373] border-[#E7E3DA]",
@@ -28,6 +49,11 @@ export function Badge({
       "bg-[#EA4335]/10 text-[#C5221F] border-[#EA4335]/25",
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-medium tracking-tight ${variantStyles[variant]} ${className}`}

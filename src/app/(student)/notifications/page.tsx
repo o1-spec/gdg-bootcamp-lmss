@@ -1,8 +1,19 @@
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireStudent } from "@/lib/auth/session";
 import { getUserNotifications } from "@/lib/notifications/queries";
 import { PageHeader } from "@/components/ui/page-header";
 import { NotificationsClient } from "./notifications-client";
 
+/*
+|----------------------------------------------------------------------------------------------------
+| NotificationsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Notifications page view.
+*/
 export default async function NotificationsPage() {
   const user = await requireStudent();
   const notifications = await getUserNotifications(user.id);

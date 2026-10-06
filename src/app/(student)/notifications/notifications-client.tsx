@@ -1,10 +1,26 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { useState, useTransition } from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { markReadAction, markAllReadAction } from "@/lib/notifications/actions";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface Notification {
   id: string;
   type: string;
@@ -72,6 +88,12 @@ function formatRelative(date: Date | string) {
   return `${days}d ago`;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| NotificationsClient
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Notifications Client.
+*/
 export function NotificationsClient({
   initialNotifications,
 }: {

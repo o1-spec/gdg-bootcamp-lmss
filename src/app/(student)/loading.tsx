@@ -1,5 +1,12 @@
 // src/app/(student)/loading.tsx
 // Loading state for all student portal routes.
+
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentLoading
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Student Loading.
+*/
 export default function StudentLoading() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center">

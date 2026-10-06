@@ -1,16 +1,38 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireStudent } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getSessionById } from "@/lib/sessions/queries";
 import { StudentCheckinCard } from "@/components/attendance/student-checkin-card";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface CheckInPageProps {
   params: Promise<{ id: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| generateMetadata
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for generate Metadata.
+*/
 export async function generateMetadata({ params }: CheckInPageProps) {
   const { id } = await params;
   return {
@@ -18,6 +40,12 @@ export async function generateMetadata({ params }: CheckInPageProps) {
   };
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StudentClassCheckInPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Student Class Check In page view.
+*/
 export default async function StudentClassCheckInPage({ params }: CheckInPageProps) {
   const { id } = await params;
   const user = await requireStudent();

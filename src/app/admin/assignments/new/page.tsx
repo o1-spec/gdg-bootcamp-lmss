@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { AssignmentForm } from "@/components/assignments/assignment-form";
 import { PageHeader } from "@/components/ui/page-header";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Create Assignment | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminNewAssignmentPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin New Assignment page view.
+*/
 export default async function AdminNewAssignmentPage() {
   await requireAdmin();
 

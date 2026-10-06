@@ -1,16 +1,48 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { DashboardSummary } from "@/types";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SummaryCardsProps {
   summary: DashboardSummary;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SummaryCards
+|----------------------------------------------------------------------------------------------------
+| Displays high-level student performance KPI metrics: attendance, assignments, and average score.
+*/
 export function SummaryCards({ summary }: SummaryCardsProps) {
+  /*
+  |--------------------------------------------------
+  | hooks & refs
+  |--------------------------------------------------
+  */
   const gridRef = useScrollReveal<HTMLDivElement>({ threshold: 0.08 });
 
+  /*
+  |--------------------------------------------------
+  | computed
+  |--------------------------------------------------
+  */
   const cards = [
     {
       title: "Attendance",
@@ -93,6 +125,11 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
     },
   ];
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div
       ref={gridRef}

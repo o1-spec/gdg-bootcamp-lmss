@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -7,10 +18,21 @@ import { requireAdmin } from "@/lib/auth/session";
 import { getAdminOverview } from "@/lib/progress/queries";
 import { db } from "@/lib/db";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Cross-Track Progress | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminProgressPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Progress page view.
+*/
 export default async function AdminProgressPage() {
   await requireAdmin();
   const [overview, enrollments, certificates, submissions] = await Promise.all([

@@ -1,22 +1,30 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { db } from "@/lib/db";
 import { verifyAccessToken } from "./jwt";
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 export const ACCESS_COOKIE_NAME = "bootcamp_access";
 export const REFRESH_COOKIE_NAME = "bootcamp_refresh";
 
 export const ACCESS_COOKIE_MAX_AGE = 15 * 60; // 15 minutes in seconds
 export const REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
-
-export interface SafeUser {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-  createdAt: Date;
-}
 
 export const authCookieOptions = {
   httpOnly: true,
@@ -25,10 +33,26 @@ export const authCookieOptions = {
   path: "/",
 };
 
-/**
- * Retrieves the currently authenticated user from the database using the access token cookie.
- * The database remains the authoritative source of truth.
- */
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
+export interface SafeUser {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  createdAt: Date;
+}
+
+/*
+|----------------------------------------------------------------------------------------------------
+| getCurrentUser
+|----------------------------------------------------------------------------------------------------
+| Retrieves the currently authenticated user from the database using the access token cookie.
+| The database remains the authoritative source of truth.
+*/
 export async function getCurrentUser(): Promise<SafeUser | null> {
   try {
     const cookieStore = await cookies();
@@ -63,9 +87,12 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
   }
 }
 
-/**
- * Requires an authenticated user session. Redirects to /login if unauthenticated.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| requireUser
+|----------------------------------------------------------------------------------------------------
+| Requires an authenticated user session. Redirects to /login if unauthenticated.
+*/
 export async function requireUser(): Promise<SafeUser> {
   const user = await getCurrentUser();
   if (!user) {
@@ -74,9 +101,12 @@ export async function requireUser(): Promise<SafeUser> {
   return user;
 }
 
-/**
- * Redirects user to their role-appropriate home dashboard.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| getRoleDashboardPath
+|----------------------------------------------------------------------------------------------------
+| Redirects user to their role-appropriate home dashboard.
+*/
 export function getRoleDashboardPath(role: Role): string {
   switch (role) {
     case Role.ADMIN:
@@ -89,10 +119,13 @@ export function getRoleDashboardPath(role: Role): string {
   }
 }
 
-/**
- * Requires the current user to have one of the permitted roles.
- * If unauthorized, safely redirects to the user's correct role dashboard to avoid loops.
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| requireRole
+|----------------------------------------------------------------------------------------------------
+| Requires the current user to have one of the permitted roles.
+| If unauthorized, safely redirects to the user's correct role dashboard to avoid loops.
+*/
 export async function requireRole(allowedRoles: Role[]): Promise<SafeUser> {
   const user = await requireUser();
 
@@ -103,24 +136,45 @@ export async function requireRole(allowedRoles: Role[]): Promise<SafeUser> {
   return user;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| requireStudent
+|----------------------------------------------------------------------------------------------------
+| Guard asserting that current user possesses student role.
+*/
 export async function requireStudent(): Promise<SafeUser> {
   return requireRole([Role.STUDENT]);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| requireInstructor
+|----------------------------------------------------------------------------------------------------
+| Guard asserting that current user possesses instructor role.
+*/
 export async function requireInstructor(): Promise<SafeUser> {
   return requireRole([Role.INSTRUCTOR]);
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| requireAdmin
+|----------------------------------------------------------------------------------------------------
+| Guard asserting that current user possesses admin role.
+*/
 export async function requireAdmin(): Promise<SafeUser> {
   return requireRole([Role.ADMIN]);
 }
 
-/**
- * Verifies track access rules against the database:
- * - ADMIN: can access every track
- * - INSTRUCTOR: may access only tracks present in TrackInstructor
- * - STUDENT: may access only their active enrolled track (startDate <= now and endDate is null or > now)
- */
+/*
+|----------------------------------------------------------------------------------------------------
+| requireTrackAccess
+|----------------------------------------------------------------------------------------------------
+| Verifies track access rules against the database:
+| - ADMIN: can access every track
+| - INSTRUCTOR: may access only tracks present in TrackInstructor
+| - STUDENT: may access only their active enrolled track
+*/
 export async function requireTrackAccess(
   userId: string,
   trackId: string

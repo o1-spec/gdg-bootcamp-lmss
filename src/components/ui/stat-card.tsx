@@ -1,5 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface StatCardProps {
   title: string;
   value: string | number;
@@ -11,6 +21,12 @@ interface StatCardProps {
   icon?: React.ReactNode;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| StatCard
+|----------------------------------------------------------------------------------------------------
+| KPI summary card presenting numeric metrics, badges, and contextual subtitles.
+*/
 export function StatCard({
   title,
   value,
@@ -18,6 +34,11 @@ export function StatCard({
   badge,
   icon,
 }: StatCardProps) {
+  /*
+  |--------------------------------------------------
+  | styles
+  |--------------------------------------------------
+  */
   const badgeStyles = {
     neutral: "bg-[#F7F4ED] text-[#737373] border border-[#E7E3DA]",
     success: "bg-[#34A853]/10 text-[#34A853] border border-[#34A853]/25",
@@ -26,6 +47,11 @@ export function StatCard({
     danger: "bg-[#EA4335]/10 text-[#EA4335] border border-[#EA4335]/25",
   };
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <div className="rounded-2xl border border-[#E7E3DA] bg-white p-5 shadow-2xs transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#D4D0C8] active:scale-[0.99] active:translate-y-0">
       <div className="flex items-center justify-between">

@@ -1,8 +1,24 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { reviewExcuseAction } from "@/lib/excuses/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface ExcuseItem {
   id: string;
   reason: string;
@@ -21,6 +37,12 @@ interface ExcuseReviewTableProps {
   isAdmin?: boolean;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| ExcuseReviewTable
+|----------------------------------------------------------------------------------------------------
+| Table component displaying Excuse Review entries.
+*/
 export function ExcuseReviewTable({ excuses, isAdmin = false }: ExcuseReviewTableProps) {
   const [selectedExcuse, setSelectedExcuse] = useState<ExcuseItem | null>(null);
   const [reviewNote, setReviewNote] = useState("");

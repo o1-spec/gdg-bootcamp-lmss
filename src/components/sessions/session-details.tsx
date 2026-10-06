@@ -1,14 +1,36 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { SessionWithDetails } from "@/lib/sessions/queries";
 import { DeleteSessionButton } from "./delete-session-button";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SessionDetailsProps {
   session: SessionWithDetails;
   basePath: string; // "/classes", "/instructor/classes", or "/admin/classes"
   canEdit?: boolean;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| SessionDetails
+|----------------------------------------------------------------------------------------------------
+| Handler implementation for Session Details.
+*/
 export function SessionDetails({
   session,
   basePath,

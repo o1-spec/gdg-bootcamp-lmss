@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireAdmin } from "@/lib/auth/session";
@@ -6,10 +17,21 @@ import { db } from "@/lib/db";
 import { Track } from "@/types";
 import { AdminTracksTable } from "@/components/admin/directory-tables";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Tracks | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminTracksPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Tracks page view.
+*/
 export default async function AdminTracksPage() {
   await requireAdmin();
 

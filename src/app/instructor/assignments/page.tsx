@@ -1,11 +1,27 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getManagementAssignments } from "@/lib/assignments/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Assignments | Instructor Portal",
   description: "Create and manage track assignments, due dates, and problem prompts",
@@ -15,6 +31,12 @@ interface InstructorAssignmentsPageProps {
   searchParams: Promise<{ track?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorAssignmentsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Assignments page view.
+*/
 export default async function InstructorAssignmentsPage({
   searchParams,
 }: InstructorAssignmentsPageProps) {

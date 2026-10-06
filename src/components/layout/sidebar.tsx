@@ -1,12 +1,28 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { UserRole } from "@/types";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface SidebarProps {
   role: UserRole;
   isOpen: boolean;
@@ -20,7 +36,12 @@ interface NavItem {
   icon: (props: { className?: string }) => React.JSX.Element;
 }
 
-// Icons (Zero packages, accessible inline SVG)
+/*
+|--------------------------------------------------
+| navigation icons
+|--------------------------------------------------
+| Accessible inline SVG icons with zero package overhead.
+*/
 const HomeIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -117,7 +138,12 @@ const AcademicCapIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Navigation Configs per Role
+/*
+|--------------------------------------------------
+| navigation configurations
+|--------------------------------------------------
+| Role-specific sidebar routes for students, instructors, and admins.
+*/
 const studentNavItems: NavItem[] = [
   { name: "Overview", href: "/dashboard", icon: HomeIcon },
   { name: "Classes", href: "/classes", icon: VideoIcon },
@@ -149,6 +175,7 @@ const adminNavItems: NavItem[] = [
   { name: "Students", href: "/admin/students", icon: UsersIcon },
   { name: "Instructors", href: "/admin/instructors", icon: IdentificationIcon },
   { name: "Enrollments", href: "/admin/enrollments", icon: UserPlusIcon },
+  { name: "Registration Roster", href: "/admin/registrations", icon: UserPlusIcon },
   { name: "Classes", href: "/admin/classes", icon: VideoIcon },
   { name: "Attendance", href: "/admin/attendance", icon: CalendarCheckIcon },
   { name: "Excuses", href: "/admin/excuses", icon: ClipboardCheckIcon },
@@ -162,12 +189,34 @@ const adminNavItems: NavItem[] = [
   { name: "Audit Log", href: "/admin/audit-log", icon: ShieldCheckIcon },
 ];
 
+/*
+|----------------------------------------------------------------------------------------------------
+| Sidebar
+|----------------------------------------------------------------------------------------------------
+| Persistent desktop sidebar and slide-out mobile drawer with active route highlighting.
+*/
 export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: SidebarProps) {
+  /*
+  |--------------------------------------------------
+  | hooks
+  |--------------------------------------------------
+  */
   const pathname = usePathname();
   const router = useRouter();
+
+  /*
+  |--------------------------------------------------
+  | states
+  |--------------------------------------------------
+  */
   const [signOutOpen, setSignOutOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
+  /*
+  |--------------------------------------------------
+  | handlers — sign out
+  |--------------------------------------------------
+  */
   const handleSignOut = async () => {
     setSigningOut(true);
     try {
@@ -178,6 +227,11 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
     }
   };
 
+  /*
+  |--------------------------------------------------
+  | computed
+  |--------------------------------------------------
+  */
   const navItems =
     role === "admin"
       ? adminNavItems
@@ -192,9 +246,18 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
       ? "Instructor"
       : "Student";
 
+  /*
+  |--------------------------------------------------
+  | render helpers — navigation links
+  |--------------------------------------------------
+  */
   const renderNavLinks = () => (
     <div className="flex flex-1 flex-col justify-between">
-      {/* Primary Navigation Section */}
+      {/*
+      |--------------------------------------------------
+      | primary navigation links
+      |--------------------------------------------------
+      */}
       <div className="space-y-1">
         <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
           Navigation
@@ -244,7 +307,11 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
         })}
       </div>
 
-      {/* Bottom Account & System Section */}
+      {/*
+      |--------------------------------------------------
+      | bottom account & system section
+      |--------------------------------------------------
+      */}
       <div className="mt-8 space-y-3 pt-4 border-t border-[#262626]">
         <button
           type="button"
@@ -278,11 +345,19 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
     </div>
   );
 
+  /*
+  |--------------------------------------------------
+  | return
+  |--------------------------------------------------
+  */
   return (
     <>
-      {/* Desktop Sidebar (Charcoal #171717) */}
+      {/*
+      |--------------------------------------------------
+      | desktop sidebar
+      |--------------------------------------------------
+      */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-[#262626] bg-[#171717] text-white lg:flex sticky top-0 h-screen">
-        {/* Brand Header */}
         <div className="flex h-16 items-center justify-between border-b border-[#262626] px-5">
           <div className="flex items-center gap-2.5">
             <div className="relative h-7 w-7 overflow-hidden rounded-lg border border-[#333333] bg-[#F7F4ED] shrink-0">
@@ -310,11 +385,14 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
           </span>
         </div>
 
-        {/* Navigation List */}
         <nav className="flex flex-1 flex-col p-4 overflow-y-auto">{renderNavLinks()}</nav>
       </aside>
 
-      {/* Mobile Drawer Backdrop */}
+      {/*
+      |--------------------------------------------------
+      | mobile drawer backdrop
+      |--------------------------------------------------
+      */}
       {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity lg:hidden"
@@ -323,7 +401,11 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
         />
       )}
 
-      {/* Mobile Drawer Content */}
+      {/*
+      |--------------------------------------------------
+      | mobile drawer panel
+      |--------------------------------------------------
+      */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#262626] bg-[#171717] text-white transition-transform duration-200 ease-in-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -372,7 +454,11 @@ export function Sidebar({ role, isOpen, onClose, unreadNotifications = 0 }: Side
         <nav className="flex flex-1 flex-col p-4 overflow-y-auto">{renderNavLinks()}</nav>
       </aside>
 
-      {/* ===== Sign-Out Confirmation Dialog ===== */}
+      {/*
+      |--------------------------------------------------
+      | sign-out confirmation dialog
+      |--------------------------------------------------
+      */}
       <ConfirmDialog
         open={signOutOpen}
         onClose={() => setSignOutOpen(false)}

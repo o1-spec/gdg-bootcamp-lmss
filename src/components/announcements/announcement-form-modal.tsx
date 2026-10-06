@@ -1,6 +1,17 @@
 "use client";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React, { useActionState, useEffect } from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { AnnouncementItem } from "@/lib/announcements/queries";
 import {
   createAnnouncementAction,
@@ -8,6 +19,11 @@ import {
   AnnouncementActionState,
 } from "@/lib/announcements/actions";
 
+/*
+|--------------------------------------------------
+| types
+|--------------------------------------------------
+*/
 interface AnnouncementFormModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,10 +32,21 @@ interface AnnouncementFormModalProps {
   cohortId: string;
 }
 
+/*
+|--------------------------------------------------
+| constants
+|--------------------------------------------------
+*/
 const initialState: AnnouncementActionState = {
   success: false,
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AnnouncementFormModal
+|----------------------------------------------------------------------------------------------------
+| Dialog modal for instructors and admins to compose or edit cohort announcements.
+*/
 export function AnnouncementFormModal({
   isOpen,
   onClose,
@@ -27,32 +54,65 @@ export function AnnouncementFormModal({
   tracks = [],
   cohortId,
 }: AnnouncementFormModalProps) {
+  /*
+  |--------------------------------------------------
+  | helpers & action binding
+  |--------------------------------------------------
+  */
   const isEditing = Boolean(announcement);
 
   const actionFn = isEditing
     ? updateAnnouncementAction.bind(null, announcement!.id)
     : createAnnouncementAction;
 
+  /*
+  |--------------------------------------------------
+  | states & action hooks
+  |--------------------------------------------------
+  */
   const [state, formAction, isPending] = useActionState(actionFn, initialState);
 
+  /*
+  |--------------------------------------------------
+  | useEffect — close modal on success
+  |--------------------------------------------------
+  */
   useEffect(() => {
     if (state.success) {
       onClose();
     }
   }, [state.success, onClose]);
 
+  /*
+  |--------------------------------------------------
+  | return — early return if closed
+  |--------------------------------------------------
+  */
   if (!isOpen) return null;
 
+  /*
+  |--------------------------------------------------
+  | return — modal markup
+  |--------------------------------------------------
+  */
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/*
+      |--------------------------------------------------
+      | backdrop
+      |--------------------------------------------------
+      */}
       <div
         className="fixed inset-0 bg-black/40 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Dialog */}
+      {/*
+      |--------------------------------------------------
+      | modal panel
+      |--------------------------------------------------
+      */}
       <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-[#E7E3DA] bg-white p-6 shadow-xl sm:p-7 z-10">
         <div className="flex items-center justify-between pb-4 border-b border-[#E7E3DA]">
           <h3 className="text-base font-semibold text-[#171717]">

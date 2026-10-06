@@ -1,4 +1,15 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireAdmin } from "@/lib/auth/session";
@@ -6,10 +17,21 @@ import { db } from "@/lib/db";
 import { Enrollment } from "@/types";
 import { AdminEnrollmentsTable } from "@/components/admin/directory-tables";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Enrollments | Admin Console",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminEnrollmentsPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Enrollments page view.
+*/
 export default async function AdminEnrollmentsPage() {
   await requireAdmin();
 

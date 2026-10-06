@@ -1,9 +1,25 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { getAdminSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "All Classes & Sessions | Admin Console",
   description: "Global schedule oversight across all tracks, cohorts, and instructors",
@@ -13,6 +29,12 @@ interface AdminClassesPageProps {
   searchParams: Promise<{ track?: string; cohort?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| AdminClassesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Admin Classes page view.
+*/
 export default async function AdminClassesPage({
   searchParams,
 }: AdminClassesPageProps) {

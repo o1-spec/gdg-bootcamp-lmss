@@ -1,13 +1,35 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorExcuses } from "@/lib/excuses/queries";
 import { ExcuseReviewTable } from "@/components/excuses/excuse-review-table";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Review Attendance Excuses | Instructor Portal",
 };
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorExcusesPage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Excuses page view.
+*/
 export default async function InstructorExcusesPage() {
   const user = await requireInstructor();
   const rawExcuses = await getInstructorExcuses(user.id);

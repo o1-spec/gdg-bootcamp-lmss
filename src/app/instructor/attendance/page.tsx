@@ -1,5 +1,16 @@
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import React from "react";
 import Link from "next/link";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +18,11 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { requireInstructor } from "@/lib/auth/session";
 import { getInstructorAttendanceSessions } from "@/lib/attendance/queries";
 
+/*
+|--------------------------------------------------
+| metadata
+|--------------------------------------------------
+*/
 export const metadata = {
   title: "Track Attendance | Instructor Portal",
   description: "Monitor class attendance rates, manage live check-in codes, and override student records",
@@ -16,6 +32,12 @@ interface InstructorAttendancePageProps {
   searchParams: Promise<{ track?: string }>;
 }
 
+/*
+|----------------------------------------------------------------------------------------------------
+| InstructorAttendancePage
+|----------------------------------------------------------------------------------------------------
+| Renders the Instructor Attendance page view.
+*/
 export default async function InstructorAttendancePage({
   searchParams,
 }: InstructorAttendancePageProps) {

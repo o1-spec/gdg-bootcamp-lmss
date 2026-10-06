@@ -1,12 +1,27 @@
 "use server";
 
+/*
+|--------------------------------------------------
+| npm imports
+|--------------------------------------------------
+*/
 import { revalidatePath } from "next/cache";
+
+/*
+|--------------------------------------------------
+| custom imports
+|--------------------------------------------------
+*/
 import { requireUser } from "@/lib/auth/session";
 import { createRubric, deleteRubric, saveRubricScores } from "./queries";
 import { db } from "@/lib/db";
 
-// ── Create rubric ─────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| createRubricAction
+|----------------------------------------------------------------------------------------------------
+| Creates and persists a new Rubric Action record.
+*/
 export async function createRubricAction(
   assignmentId: string,
   title: string,
@@ -25,8 +40,12 @@ export async function createRubricAction(
   }
 }
 
-// ── Delete rubric ─────────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| deleteRubricAction
+|----------------------------------------------------------------------------------------------------
+| Deletes or archives a Rubric Action record from the database.
+*/
 export async function deleteRubricAction(
   assignmentId: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -43,8 +62,12 @@ export async function deleteRubricAction(
   }
 }
 
-// ── Grade with rubric ─────────────────────────────────────────────────────────
-
+/*
+|----------------------------------------------------------------------------------------------------
+| gradeWithRubricAction
+|----------------------------------------------------------------------------------------------------
+| Server action handling grade With Rubric workflows and cache revalidations.
+*/
 export async function gradeWithRubricAction(
   submissionId: string,
   scores: { criterionId: string; score: number; feedback?: string }[],
