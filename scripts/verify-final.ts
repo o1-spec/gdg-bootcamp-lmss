@@ -6,7 +6,7 @@
 import { db } from "../src/lib/db";
 import { submitExcuse, reviewExcuse } from "../src/lib/excuses/queries";
 import { getStudentAttendance } from "../src/lib/attendance/queries";
-import { parseAttendanceImport, applyAttendanceImport } from "../src/lib/attendance/import-actions";
+import { parseAttendanceImport, applyAttendanceImport } from "../src/lib/attendance/import-queries";
 import { getStudentCompletion, getTrackCompletion } from "../src/lib/completion/queries";
 import { issueCertificate, getCertificateByCode } from "../src/lib/certificates/queries";
 import { getAuditLogs } from "../src/lib/audit/queries";

@@ -85,7 +85,7 @@ export async function deleteMessageAction(
   await softDeleteMessage(messageId);
 
   if (user.role !== "STUDENT" || msg.senderId !== user.id) {
-    audit(user.id, "MESSAGE_DELETED", "Message", messageId, {
+    await audit(user.id, "MESSAGE_DELETED", "Message", messageId, {
       senderId: msg.senderId,
       channelId: msg.channelId,
     });
@@ -95,6 +95,46 @@ export async function deleteMessageAction(
   revalidatePath(`/instructor/chat/${msg.channelId}`);
   revalidatePath(`/admin/chat/${msg.channelId}`);
   return { success: true };
+}
+
+/*
+|----------------------------------------------------------------------------------------------------
+| canModerateUser
+|----------------------------------------------------------------------------------------------------
+| Admins may moderate any student. Instructors only students enrolled in a track they teach
+| within the given cohort (and, if given, that specific track).
+*/
+async function canModerateUser(
+  moderator: { id: string; role: string },
+  targetUserId: string,
+  cohortId: string,
+  trackId: string | null
+): Promise<boolean> {
+  const target = await db.user.findUnique({
+    where: { id: targetUserId },
+    select: { role: true },
+  });
+  if (!target || target.role !== "STUDENT") return false;
+
+  if (moderator.role === "ADMIN") return true;
+  if (moderator.role !== "INSTRUCTOR") return false;
+
+  const taught = await db.trackInstructor.findMany({
+    where: { userId: moderator.id, track: { cohortId } },
+    select: { trackId: true },
+  });
+  const taughtIds = taught.map((t) => t.trackId);
+  if (trackId && !taughtIds.includes(trackId)) return false;
+
+  const enrolled = await db.enrollment.findFirst({
+    where: {
+      userId: targetUserId,
+      trackId: trackId ?? { in: taughtIds },
+      track: { cohortId },
+    },
+    select: { id: true },
+  });
+  return !!enrolled;
 }
 
 /*
@@ -112,6 +152,12 @@ export async function muteUserAction(
 ): Promise<{ success: boolean; error?: string }> {
   const moderator = await requireUser();
   if (moderator.role === "STUDENT") return { success: false, error: "Access denied." };
+  if (!(await canModerateUser(moderator, userId, cohortId, trackId))) {
+    return { success: false, error: "You cannot moderate this user." };
+  }
+  if (expiresAt && Number.isNaN(new Date(expiresAt).getTime())) {
+    return { success: false, error: "Invalid expiry date." };
+  }
 
   await muteUser(
     userId,
@@ -122,7 +168,7 @@ export async function muteUserAction(
     expiresAt ? new Date(expiresAt) : undefined
   );
 
-  audit(moderator.id, "MUTE_ISSUED", "User", userId, {
+  await audit(moderator.id, "MUTE_ISSUED", "User", userId, {
     cohortId,
     trackId,
     reason,
@@ -145,10 +191,13 @@ export async function unmuteUserAction(
 ): Promise<{ success: boolean; error?: string }> {
   const moderator = await requireUser();
   if (moderator.role === "STUDENT") return { success: false, error: "Access denied." };
+  if (!(await canModerateUser(moderator, userId, cohortId, null))) {
+    return { success: false, error: "You cannot moderate this user." };
+  }
 
   await unmuteUser(userId, cohortId);
 
-  audit(moderator.id, "MUTE_REMOVED", "User", userId, { cohortId });
+  await audit(moderator.id, "MUTE_REMOVED", "User", userId, { cohortId });
 
   revalidatePath("/admin/chat");
   revalidatePath("/instructor/chat");

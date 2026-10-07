@@ -13,6 +13,7 @@ import { Role } from "@prisma/client";
 */
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth/password";
+import { rateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { signAccessToken, signRefreshToken } from "@/lib/auth/jwt";
 import {
   ACCESS_COOKIE_NAME,
@@ -33,6 +34,12 @@ function isValidPassword(password: string) {
   return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 }
 
+// One message for every "cannot sign up" reason so the form does not reveal which emails are approved
+const SIGNUP_DENIED_MESSAGE =
+  "We could not create an account for this email. Make sure you use the email the program approved, and that you have not already signed up.";
+
+class SignupError extends Error {}
+
 /*
 |----------------------------------------------------------------------------------------------------
 | POST
@@ -41,6 +48,14 @@ function isValidPassword(password: string) {
 */
 export async function POST(request: NextRequest) {
   try {
+    const limited = rateLimit(`signup:${getClientIp(request)}`, 10, 60 * 60 * 1000);
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many signup attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(limited.retryAfterSec) } }
+      );
+    }
+
     const body = await request.json().catch(() => null);
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
@@ -61,12 +76,12 @@ export async function POST(request: NextRequest) {
     const user = await db.$transaction(async (tx) => {
       const registration = await tx.registration.findUnique({ where: { email } });
       if (!registration || registration.claimedAt) {
-        throw new Error("This email is not approved for signup, or its account has already been created.");
+        throw new SignupError(SIGNUP_DENIED_MESSAGE);
       }
 
       const existingUser = await tx.user.findUnique({ where: { email }, select: { id: true } });
       if (existingUser) {
-        throw new Error("An account already exists for this email address.");
+        throw new SignupError(SIGNUP_DENIED_MESSAGE);
       }
 
       const claimed = await tx.registration.updateMany({
@@ -74,7 +89,7 @@ export async function POST(request: NextRequest) {
         data: { claimedAt: now },
       });
       if (claimed.count !== 1) {
-        throw new Error("This registration has already been claimed.");
+        throw new SignupError(SIGNUP_DENIED_MESSAGE);
       }
 
       const createdUser = await tx.user.create({
@@ -99,7 +114,10 @@ export async function POST(request: NextRequest) {
     response.cookies.set({ name: REFRESH_COOKIE_NAME, value: refreshToken, ...authCookieOptions, maxAge: REFRESH_COOKIE_MAX_AGE });
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unable to create account.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (error instanceof SignupError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    console.error("Signup endpoint error:", error);
+    return NextResponse.json({ error: "Unable to create account." }, { status: 500 });
   }
 }

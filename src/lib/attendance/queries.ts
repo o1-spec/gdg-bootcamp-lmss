@@ -556,6 +556,24 @@ export async function markAttendance(
     throw new Error("Unauthorized: Students cannot manually mark attendance.");
   }
 
+  // Target must be a student enrolled in the session's track (or cohort, if shared)
+  const target = await db.user.findUnique({
+    where: { id: targetUserId },
+    select: { role: true },
+  });
+  if (!target || target.role !== Role.STUDENT) {
+    throw new Error("Attendance can only be recorded for students.");
+  }
+  const targetEnrolled = await db.enrollment.findFirst({
+    where: session.trackId
+      ? { userId: targetUserId, trackId: session.trackId }
+      : { userId: targetUserId, track: { cohortId: session.cohortId } },
+    select: { id: true },
+  });
+  if (!targetEnrolled) {
+    throw new Error("Student is not enrolled in this session's track.");
+  }
+
   if (markerRole === Role.INSTRUCTOR) {
     if (session.trackId) {
       const assignment = await db.trackInstructor.findUnique({
@@ -593,6 +611,11 @@ export async function markAttendance(
     }
   }
 
+  const previous = await db.attendance.findUnique({
+    where: { sessionId_userId: { sessionId, userId: targetUserId } },
+    select: { status: true, method: true, markedById: true, markedAt: true },
+  });
+
   await db.attendance.upsert({
     where: {
       sessionId_userId: {
@@ -616,11 +639,21 @@ export async function markAttendance(
     },
   });
 
-  audit(markerId, "ATTENDANCE_MARKED", "Session", sessionId, {
-    targetUserId,
-    status,
-    method: "MANUAL",
-  });
+  await audit(
+    markerId,
+    previous ? "ATTENDANCE_OVERRIDDEN" : "ATTENDANCE_MARKED",
+    "Session",
+    sessionId,
+    {
+      targetUserId,
+      status,
+      method: "MANUAL",
+      previousStatus: previous?.status ?? null,
+      previousMethod: previous?.method ?? null,
+      previousMarkedById: previous?.markedById ?? null,
+      previousMarkedAt: previous?.markedAt ? previous.markedAt.toISOString() : null,
+    }
+  );
 }
 
 /*
@@ -661,11 +694,28 @@ export async function setSessionCheckinCode(
     }
   }
 
+  if (role === Role.INSTRUCTOR && !session.trackId) {
+    const teachesInCohort = await db.trackInstructor.findFirst({
+      where: { userId, track: { cohortId: session.cohortId } },
+      select: { trackId: true },
+    });
+    if (!teachesInCohort) {
+      throw new Error("Unauthorized: You do not teach in this cohort.");
+    }
+  }
+
   const code = customCode ? customCode.trim().toUpperCase() : generateRandomCode(6);
+  if (!/^[A-Z0-9]{6,12}$/.test(code)) {
+    throw new Error("Check-in code must be 6-12 letters or numbers.");
+  }
 
   await db.session.update({
     where: { id: sessionId },
     data: { checkinCode: code },
+  });
+
+  await audit(userId, "CHECKIN_CODE_CHANGED", "Session", sessionId, {
+    custom: !!customCode,
   });
 
   return code;
@@ -705,7 +755,10 @@ export async function getInstructorAttendanceSessions(
   const cohortIds = Array.from(new Set(assignments.map((a) => a.track.cohortId)));
 
   const where: Record<string, unknown> = {};
-  if (filterTrackId && filterTrackId !== "all") {
+  if (
+    filterTrackId &&
+    (filterTrackId === "shared" || assignedTrackIds.includes(filterTrackId))
+  ) {
     if (filterTrackId === "shared") {
       where.trackId = null;
       where.cohortId = { in: cohortIds };

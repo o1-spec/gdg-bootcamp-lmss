@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 */
 import { requireUser } from "@/lib/auth/session";
 import { createSession, updateSession, deleteSession } from "./queries";
+import { audit } from "@/lib/audit/logger";
 
 function isValidUrl(stringUrl: string): boolean {
   try {
@@ -179,6 +180,13 @@ export async function updateSessionAction(sessionId: string, formData: FormData)
     user.role
   );
 
+  await audit(user.id, "SESSION_UPDATED", "Session", sessionId, {
+    startsAt: startsAt.toISOString(),
+    endsAt: endsAt.toISOString(),
+    trackId,
+    cohortId,
+  });
+
   revalidatePath("/classes");
   revalidatePath(`/classes/${sessionId}`);
   revalidatePath("/instructor/classes");
@@ -203,6 +211,7 @@ export async function deleteSessionAction(sessionId: string) {
   const user = await requireUser();
 
   await deleteSession(sessionId, user.id, user.role);
+  await audit(user.id, "SESSION_DELETED", "Session", sessionId);
 
   revalidatePath("/classes");
   revalidatePath("/instructor/classes");

@@ -37,8 +37,11 @@ export async function getOrCreateChannel(
   trackId: string | null,
   name: string
 ) {
-  const existing = await db.channel.findUnique({
-    where: { cohortId_trackId: { cohortId, trackId: trackId ?? "" } },
+  // findFirst, not findUnique: a nullable trackId in a compound unique never matches in Postgres,
+  // which previously created a new "General" channel on every page load.
+  const existing = await db.channel.findFirst({
+    where: { cohortId, trackId },
+    orderBy: { createdAt: "asc" },
   });
   if (existing) return existing;
 
@@ -130,11 +133,12 @@ export async function getChannelMessages(
 ): Promise<MessageWithSender[]> {
   const rows = await db.message.findMany({
     where: { channelId, deleted: false },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: "desc" },
     take: limit,
     include: { sender: { select: { id: true, name: true, role: true } } },
   });
-  return rows.map((r) => ({
+  // newest N messages, shown oldest-first
+  return rows.reverse().map((r) => ({
     id: r.id,
     body: r.body,
     createdAt: r.createdAt,

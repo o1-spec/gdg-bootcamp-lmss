@@ -13,6 +13,7 @@ import { AttendanceStatus } from "@prisma/client";
 | custom imports
 |--------------------------------------------------
 */
+import { rateLimit } from "@/lib/auth/rate-limit";
 import { requireUser } from "@/lib/auth/session";
 import {
   checkInToSession,
@@ -32,6 +33,15 @@ export async function checkInAction(
 ): Promise<{ success: boolean; message: string; status?: AttendanceStatus }> {
   const user = await requireUser();
   const code = formData.get("code")?.toString().trim() || "";
+
+  // Stop code guessing: a handful of attempts per student per session
+  const limited = rateLimit(`checkin:${user.id}:${sessionId}`, 10, 5 * 60 * 1000);
+  if (!limited.ok) {
+    return {
+      success: false,
+      message: `Too many attempts. Try again in ${Math.ceil(limited.retryAfterSec / 60)} minute(s).`,
+    };
+  }
 
   try {
     const result = await checkInToSession(sessionId, code, user.id);

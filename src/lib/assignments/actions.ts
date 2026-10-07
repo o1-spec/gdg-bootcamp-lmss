@@ -13,12 +13,13 @@ import { redirect } from "next/navigation";
 | custom imports
 |--------------------------------------------------
 */
-import { requireUser } from "@/lib/auth/session";
+import { requireUser, requireRole } from "@/lib/auth/session";
 import {
   createAssignment,
   updateAssignment,
   deleteAssignment,
   submitAssignment,
+  assertCanSubmit,
   gradeSubmission,
   releaseGrade,
 } from "./queries";
@@ -215,6 +216,17 @@ export async function submitAssignmentAction(
 
   try {
     if (file && file.size > 0) {
+      // Reject before storing anything: eligibility first, then file type
+      await assertCanSubmit(assignmentId, user.id);
+
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+      if (!ALLOWED_UPLOAD_EXTENSIONS.has(ext)) {
+        return {
+          success: false,
+          message: "This file type is not allowed. Upload a document, image, archive, or source file.",
+        };
+      }
+
       const MAX_SIZE = 25 * 1024 * 1024; // 25 MB
       if (file.size > MAX_SIZE) {
         return {
@@ -259,6 +271,12 @@ export async function submitAssignmentAction(
   }
 }
 
+const ALLOWED_UPLOAD_EXTENSIONS = new Set([
+  "pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "txt", "md", "csv",
+  "zip", "png", "jpg", "jpeg", "gif", "webp", "ipynb", "py", "js", "ts",
+  "tsx", "jsx", "java", "c", "cpp", "cs", "go", "rs", "html", "css", "json",
+]);
+
 /*
 |----------------------------------------------------------------------------------------------------
 | gradeSubmissionAction
@@ -269,7 +287,7 @@ export async function gradeSubmissionAction(
   submissionId: string,
   formData: FormData
 ): Promise<{ success: boolean; message?: string }> {
-  const user = await requireUser();
+  const user = await requireRole(["INSTRUCTOR", "ADMIN"]);
 
   const scoreStr = formData.get("score")?.toString();
   const feedback = formData.get("feedback")?.toString() || "";
@@ -285,7 +303,7 @@ export async function gradeSubmissionAction(
   }
 
   try {
-    await gradeSubmission(
+    const previous = await gradeSubmission(
       submissionId,
       score,
       feedback,
@@ -294,9 +312,13 @@ export async function gradeSubmissionAction(
       user.role
     );
 
-    audit(user.id, "GRADE_SAVED", "Submission", submissionId, {
+    await audit(user.id, "GRADE_SAVED", "Submission", submissionId, {
       score,
+      feedback: feedback.substring(0, 500),
       shouldRelease,
+      previousScore: previous.score,
+      previousFeedback: previous.feedback?.substring(0, 500) ?? null,
+      previousReleased: previous.released,
     });
 
     revalidatePath(`/instructor/grading/${submissionId}`);
@@ -323,7 +345,7 @@ export async function gradeSubmissionAction(
 export async function releaseGradeAction(
   submissionId: string
 ): Promise<{ success: boolean; message?: string }> {
-  const user = await requireUser();
+  const user = await requireRole(["INSTRUCTOR", "ADMIN"]);
 
   try {
     const sub = await releaseGrade(submissionId, user.id, user.role);
@@ -335,7 +357,7 @@ export async function releaseGradeAction(
       sub.assignment?.title ?? "assignment"
     ).catch(() => {});
 
-    audit(user.id, "GRADE_RELEASED", "Submission", submissionId, {
+    await audit(user.id, "GRADE_RELEASED", "Submission", submissionId, {
       studentId: sub.userId,
       assignmentTitle: sub.assignment?.title,
     });
@@ -389,9 +411,16 @@ export async function bulkReleaseGradesAction(
       select: { trackId: true },
     });
     const allowedTrackIds = new Set(trackAssignments.map((t) => t.trackId));
-    allowed = submissions.filter(
-      (s) => s.assignment.trackId === null || allowedTrackIds.has(s.assignment.trackId ?? "")
+    // Scope by the student's enrolment, not the assignment's track, so shared
+    // assignments cannot be used to release grades for other tracks' students.
+    const enrolments = await db.enrollment.findMany({
+      where: { userId: { in: submissions.map((s) => s.userId) } },
+      select: { userId: true, trackId: true },
+    });
+    const taughtStudents = new Set(
+      enrolments.filter((e) => allowedTrackIds.has(e.trackId)).map((e) => e.userId)
     );
+    allowed = submissions.filter((s) => taughtStudents.has(s.userId));
   }
 
   const skipped = submissionIds.length - allowed.length;
@@ -414,7 +443,15 @@ export async function bulkReleaseGradesAction(
     notifyGradeReleased(s.id, s.userId, s.assignment.title).catch(() => {});
   }
 
-  audit(user.id, "BULK_GRADES_RELEASED", "Submission", allowed[0]?.id ?? "", {
+  for (const s of allowed) {
+    await audit(user.id, "GRADE_RELEASED", "Submission", s.id, {
+      studentId: s.userId,
+      assignmentTitle: s.assignment.title,
+      bulk: true,
+    });
+  }
+
+  await audit(user.id, "BULK_GRADES_RELEASED", "Submission", allowed[0]?.id ?? "", {
     count: allowed.length,
     submissionIds: allowed.map((s) => s.id),
   });

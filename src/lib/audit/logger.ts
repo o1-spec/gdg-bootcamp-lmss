@@ -32,13 +32,16 @@ export type AuditAction =
   | "MUTE_ISSUED"
   | "MUTE_REMOVED"
   | "MESSAGE_DELETED"
-  | "ATTENDANCE_IMPORT_APPLIED";
+  | "ATTENDANCE_IMPORT_APPLIED"
+  | "SESSION_UPDATED"
+  | "SESSION_DELETED"
+  | "CHECKIN_CODE_CHANGED";
 
 /*
 |----------------------------------------------------------------------------------------------------
 | audit
 |----------------------------------------------------------------------------------------------------
-| Records an asynchronous audit trail entry without blocking the primary request flow.
+| Records an audit trail entry. Callers must await it so the write is not dropped.
 */
 export async function audit(
   actorId: string,
@@ -49,11 +52,12 @@ export async function audit(
 ) {
   /*
   |--------------------------------------------------
-  | database mutation — fire and forget
+  | database mutation — awaited so it survives serverless teardown;
+  | a failure is logged but never breaks the user flow
   |--------------------------------------------------
   */
-  db.auditLog
-    .create({
+  try {
+    await db.auditLog.create({
       data: {
         actorId,
         action,
@@ -61,8 +65,8 @@ export async function audit(
         targetId,
         metadata: metadata ?? undefined,
       },
-    })
-    .catch(() => {
-      // Intentionally silent — audit failure must never break user flows
     });
+  } catch (err) {
+    console.error("[audit] failed to record", action, targetType, targetId, err);
+  }
 }

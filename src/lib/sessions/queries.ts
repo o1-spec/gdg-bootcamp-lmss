@@ -147,7 +147,10 @@ export async function getInstructorSessions(
   const cohortIds = Array.from(new Set(assignments.map((a) => a.track.cohortId)));
 
   const where: Record<string, unknown> = {};
-  if (filterTrackId && filterTrackId !== "all") {
+  if (
+    filterTrackId &&
+    (filterTrackId === "shared" || assignedTrackIds.includes(filterTrackId))
+  ) {
     if (filterTrackId === "shared") {
       where.trackId = null;
       where.cohortId = { in: cohortIds };
@@ -360,6 +363,16 @@ export async function createSession(
     throw new Error("Unauthorized: Students cannot create sessions.");
   }
 
+  if (data.trackId) {
+    const trackRow = await db.track.findUnique({
+      where: { id: data.trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== data.cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
+  }
+
   if (role === Role.INSTRUCTOR) {
     if (data.trackId) {
       const assignment = await db.trackInstructor.findUnique({
@@ -439,6 +452,26 @@ export async function updateSession(
 
   if (role === Role.STUDENT) {
     throw new Error("Unauthorized: Students cannot update sessions.");
+  }
+
+  const currentRow = await db.session.findUnique({
+    where: { id: sessionId },
+    select: { cohortId: true },
+  });
+  if (!currentRow) {
+    throw new Error("Session not found.");
+  }
+  if (role === Role.INSTRUCTOR && data.cohortId !== currentRow.cohortId) {
+    throw new Error("A session cannot be moved to a different cohort.");
+  }
+  if (data.trackId) {
+    const trackRow = await db.track.findUnique({
+      where: { id: data.trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== data.cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
   }
 
   if (role === Role.INSTRUCTOR) {

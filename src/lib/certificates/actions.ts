@@ -42,7 +42,7 @@ export async function claimCertificateAction(
   const cert = await issueCertificate(user.id, trackId);
 
   if (cert.isNew) {
-    audit(user.id, "CERTIFICATE_ISSUED", "Certificate", cert.id, {
+    await audit(user.id, "CERTIFICATE_ISSUED", "Certificate", cert.id, {
       trackId,
       certificateCode: cert.certificateCode,
     });

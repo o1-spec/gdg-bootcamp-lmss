@@ -54,7 +54,7 @@ export async function submitExcuseAction(
 
   try {
     await submitExcuse(user.id, sessionId, trimmed);
-    audit(user.id, "EXCUSE_SUBMITTED", "Session", sessionId, { reason: trimmed.substring(0, 100) });
+    await audit(user.id, "EXCUSE_SUBMITTED", "Session", sessionId, { reason: trimmed.substring(0, 100) });
     revalidatePath("/attendance");
     revalidatePath(`/classes/${sessionId}`);
     return { success: true };
@@ -85,18 +85,28 @@ export async function reviewExcuseAction(
     });
     if (!excuse) return { success: false, error: "Excuse not found." };
 
-    if (excuse.session.trackId) {
-      const assigned = await db.trackInstructor.findUnique({
-        where: { trackId_userId: { trackId: excuse.session.trackId, userId: user.id } },
-      });
-      if (!assigned) return { success: false, error: "You are not assigned to this track." };
-    }
+    // Track sessions: instructor must teach that track. Shared sessions:
+    // instructor must teach the track the excused student is enrolled in.
+    const scopeTrackIds = excuse.session.trackId
+      ? [excuse.session.trackId]
+      : (
+          await db.enrollment.findMany({
+            where: { userId: excuse.userId, track: { cohortId: excuse.session.cohortId } },
+            select: { trackId: true },
+          })
+        ).map((e) => e.trackId);
+    const assigned = scopeTrackIds.length
+      ? await db.trackInstructor.findFirst({
+          where: { userId: user.id, trackId: { in: scopeTrackIds } },
+        })
+      : null;
+    if (!assigned) return { success: false, error: "You are not assigned to this student's track." };
   }
 
   try {
     const allowOverride = user.role === "ADMIN";
     await reviewExcuse(excuseId, user.id, decision, reviewNote, allowOverride);
-    audit(user.id, decision === "APPROVED" ? "EXCUSE_APPROVED" : "EXCUSE_REJECTED", "AttendanceExcuse", excuseId, {
+    await audit(user.id, decision === "APPROVED" ? "EXCUSE_APPROVED" : "EXCUSE_REJECTED", "AttendanceExcuse", excuseId, {
       reviewNote: reviewNote?.substring(0, 200),
       isOverride: allowOverride,
     });

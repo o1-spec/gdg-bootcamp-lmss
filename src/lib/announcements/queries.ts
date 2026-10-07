@@ -80,7 +80,17 @@ export async function getAnnouncements(
       return [];
     }
 
-    if (filterTrackId && filterTrackId !== "all") {
+    // Shared announcements only from cohorts the instructor teaches in
+    const taughtTracks = await db.track.findMany({
+      where: { id: { in: assignedTrackIds } },
+      select: { cohortId: true },
+    });
+    where.cohortId = { in: Array.from(new Set(taughtTracks.map((t) => t.cohortId))) };
+
+    if (
+      filterTrackId &&
+      (filterTrackId === "shared" || assignedTrackIds.includes(filterTrackId))
+    ) {
       where.trackId = filterTrackId === "shared" ? null : filterTrackId;
     } else {
       where.OR = [
@@ -259,6 +269,16 @@ export async function createAnnouncement(
     throw new Error("Students are not permitted to publish announcements.");
   }
 
+  if (trackId !== null) {
+    const trackRow = await db.track.findUnique({
+      where: { id: trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
+  }
+
   if (role === Role.INSTRUCTOR && trackId !== null) {
     const assignment = await db.trackInstructor.findUnique({
       where: {
@@ -270,6 +290,16 @@ export async function createAnnouncement(
     });
     if (!assignment) {
       throw new Error("You are not authorized to post announcements for this track.");
+    }
+  }
+
+  if (role === Role.INSTRUCTOR && trackId === null) {
+    const teachesInCohort = await db.trackInstructor.findFirst({
+      where: { userId: authorId, track: { cohortId } },
+      select: { trackId: true },
+    });
+    if (!teachesInCohort) {
+      throw new Error("You are not authorized to post announcements for this cohort.");
     }
   }
 
@@ -346,6 +376,24 @@ export async function updateAnnouncement(
 
   if (!title) throw new Error("Title cannot be empty");
   if (!body) throw new Error("Body cannot be empty");
+
+  if (trackId && trackId !== existing.trackId) {
+    const trackRow = await db.track.findUnique({
+      where: { id: trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== existing.cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
+    if (role === Role.INSTRUCTOR) {
+      const teaches = await db.trackInstructor.findUnique({
+        where: { trackId_userId: { trackId, userId } },
+      });
+      if (!teaches) {
+        throw new Error("You are not authorized to post announcements for this track.");
+      }
+    }
+  }
 
   /*
   |--------------------------------------------------

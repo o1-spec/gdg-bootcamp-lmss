@@ -16,7 +16,9 @@ import { getSessionAttendance } from "@/lib/attendance/queries";
 
 function escapeCsvField(field: string | null | undefined): string {
   if (field === null || field === undefined) return '""';
-  const stringValue = String(field);
+  let stringValue = String(field);
+  // Neutralise spreadsheet formulas in user-controlled text (CSV injection)
+  if (/^[=+\-@\t\r]/.test(stringValue)) stringValue = `'${stringValue}`;
   return `"${stringValue.replace(/"/g, '""')}"`;
 }
 

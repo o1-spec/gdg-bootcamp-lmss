@@ -376,6 +376,16 @@ export async function createAssignment(
     throw new Error("Unauthorized: Students cannot create assignments.");
   }
 
+  if (data.trackId) {
+    const trackRow = await db.track.findUnique({
+      where: { id: data.trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== data.cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
+  }
+
   if (role === Role.INSTRUCTOR) {
     if (data.trackId) {
       const assignmentRecord = await db.trackInstructor.findUnique({
@@ -453,6 +463,27 @@ export async function updateAssignment(
     throw new Error("Unauthorized: Students cannot update assignments.");
   }
 
+  const currentRow = await db.assignment.findUnique({
+    where: { id: assignmentId },
+    select: { cohortId: true },
+  });
+  if (!currentRow) {
+    throw new Error("Assignment not found.");
+  }
+  if (role === Role.INSTRUCTOR && data.cohortId !== currentRow.cohortId) {
+    throw new Error("An assignment cannot be moved to a different cohort.");
+  }
+  if (data.trackId) {
+    const trackRow = await db.track.findUnique({
+      where: { id: data.trackId },
+      select: { cohortId: true },
+    });
+    if (!trackRow || trackRow.cohortId !== data.cohortId) {
+      throw new Error("The selected track does not belong to this cohort.");
+    }
+  }
+
+
   if (role === Role.INSTRUCTOR && data.trackId && data.trackId !== existing.assignment.trackId) {
     const assignmentRecord = await db.trackInstructor.findUnique({
       where: {
@@ -525,37 +556,14 @@ export async function deleteAssignment(
 
 /*
 |----------------------------------------------------------------------------------------------------
-| submitAssignment
+| assertCanSubmit
 |----------------------------------------------------------------------------------------------------
-| Submits or resubmits student work via web link, file upload URL, or both.
+| Throws unless the student may submit to this assignment right now (enrolment, track/cohort,
+| deadline, not already graded). Also run before any file is uploaded so rejected requests never
+| reach file storage.
 */
-export async function submitAssignment(
-  assignmentId: string,
-  payload: string | { submissionUrl?: string | null; fileUrl?: string | null },
-  userId: string
-): Promise<{ success: boolean; message: string }> {
+export async function assertCanSubmit(assignmentId: string, userId: string): Promise<void> {
   const now = new Date();
-  const submissionUrl = typeof payload === "string" ? payload : payload.submissionUrl;
-  const fileUrl = typeof payload === "string" ? null : payload.fileUrl;
-
-  const cleanUrl = submissionUrl?.trim() || null;
-  const cleanFileUrl = fileUrl?.trim() || null;
-
-  if (!cleanUrl && !cleanFileUrl) {
-    throw new Error("Please provide a submission link or upload a file.");
-  }
-
-  if (cleanUrl) {
-    try {
-      const parsed = new URL(cleanUrl);
-      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-        throw new Error("Please enter a valid HTTP or HTTPS submission URL.");
-      }
-    } catch {
-      throw new Error("Invalid URL format. Please provide a valid web link.");
-    }
-  }
-
   const assignment = await db.assignment.findUnique({
     where: { id: assignmentId },
     include: { track: true },
@@ -606,6 +614,47 @@ export async function submitAssignment(
       "This assignment has already been evaluated and graded. Resubmission is not permitted."
     );
   }
+}
+
+/*
+|----------------------------------------------------------------------------------------------------
+| submitAssignment
+|----------------------------------------------------------------------------------------------------
+| Submits or resubmits student work via web link, file upload URL, or both.
+*/
+export async function submitAssignment(
+  assignmentId: string,
+  payload: string | { submissionUrl?: string | null; fileUrl?: string | null },
+  userId: string
+): Promise<{ success: boolean; message: string }> {
+  const now = new Date();
+  const submissionUrl = typeof payload === "string" ? payload : payload.submissionUrl;
+  const fileUrl = typeof payload === "string" ? null : payload.fileUrl;
+
+  const cleanUrl = submissionUrl?.trim() || null;
+  const cleanFileUrl = fileUrl?.trim() || null;
+
+  if (!cleanUrl && !cleanFileUrl) {
+    throw new Error("Please provide a submission link or upload a file.");
+  }
+
+  await assertCanSubmit(assignmentId, userId);
+
+  if (cleanUrl) {
+    try {
+      const parsed = new URL(cleanUrl);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        throw new Error("Please enter a valid HTTP or HTTPS submission URL.");
+      }
+    } catch {
+      throw new Error("Invalid URL format. Please provide a valid web link.");
+    }
+  }
+
+  const assignment = await db.assignment.findUniqueOrThrow({
+    where: { id: assignmentId },
+    select: { dueAt: true },
+  });
 
   await db.submission.upsert({
     where: {
@@ -695,7 +744,10 @@ export async function getInstructorGradingQueue(
         role === Role.ADMIN
           ? {}
           : {
-              OR: [{ trackId: { in: allowedTrackIds } }, { trackId: null }],
+              OR: [
+                { trackId: { in: allowedTrackIds } },
+                { trackId: null, cohort: { tracks: { some: { id: { in: allowedTrackIds } } } } },
+              ],
             },
       select: { id: true, title: true },
     }),
@@ -717,7 +769,7 @@ export async function getInstructorGradingQueue(
     enrollments: {
       some: {
         trackId:
-          filterTrackId && filterTrackId !== "all"
+          filterTrackId && allowedTrackIds.includes(filterTrackId)
             ? filterTrackId
             : { in: allowedTrackIds },
       },
@@ -812,17 +864,16 @@ export async function getSubmissionForGrading(
 
   if (!sub) return null;
 
-  if (role === Role.INSTRUCTOR) {
-    const activeEnrollment = sub.user.enrollments[0];
-    if (!activeEnrollment) return null;
+  if (role !== Role.INSTRUCTOR && role !== Role.ADMIN) return null;
 
-    const assignmentRecord = await db.trackInstructor.findUnique({
-      where: {
-        trackId_userId: {
-          trackId: activeEnrollment.trackId,
-          userId,
-        },
-      },
+  if (role === Role.INSTRUCTOR) {
+    // Instructor must teach at least one track the student is enrolled in
+    const studentTrackIds = sub.user.enrollments.map((e) => e.trackId);
+    if (studentTrackIds.length === 0) return null;
+
+    const assignmentRecord = await db.trackInstructor.findFirst({
+      where: { userId, trackId: { in: studentTrackIds } },
+      select: { trackId: true },
     });
     if (!assignmentRecord) return null;
   }
@@ -876,7 +927,7 @@ export async function gradeSubmission(
   release: boolean,
   graderId: string,
   role: Role
-): Promise<void> {
+): Promise<{ score: number | null; feedback: string | null; released: boolean }> {
   const existing = await getSubmissionForGrading(submissionId, graderId, role);
   if (!existing) {
     throw new Error("Submission not found or unauthorized.");
@@ -901,6 +952,12 @@ export async function gradeSubmission(
       released: release ? true : existing.submission.released,
     },
   });
+
+  return {
+    score: existing.submission.score,
+    feedback: existing.submission.feedback,
+    released: existing.submission.released,
+  };
 }
 
 /*
@@ -969,7 +1026,21 @@ export async function getManagementAssignments(
   ]);
 
   const where: Record<string, unknown> = {};
-  if (trackFilter && trackFilter !== "all") {
+  if (role === Role.INSTRUCTOR) {
+    // Shared assignments only from cohorts the instructor teaches in
+    const taughtTracks = await db.track.findMany({
+      where: { id: { in: allowedTrackIds } },
+      select: { cohortId: true },
+    });
+    where.cohortId = { in: Array.from(new Set(taughtTracks.map((t) => t.cohortId))) };
+  }
+  const trackFilterAllowed =
+    !!trackFilter &&
+    trackFilter !== "all" &&
+    (role === Role.ADMIN ||
+      trackFilter === "shared" ||
+      allowedTrackIds.includes(trackFilter));
+  if (trackFilterAllowed) {
     where.trackId = trackFilter === "shared" ? null : trackFilter;
   } else if (role === Role.INSTRUCTOR) {
     where.OR = [

@@ -64,6 +64,11 @@ export async function getInstructorExcuses(instructorId: string) {
           { trackId: null, cohortId: { in: await getCohortIdsForTracks(trackIds) } },
         ],
       },
+      // Shared-session excuses: only students enrolled in the instructor's tracks
+      OR: [
+        { session: { trackId: { not: null } } },
+        { user: { enrollments: { some: { trackId: { in: trackIds } } } } },
+      ],
     },
     include: {
       user: { select: { id: true, name: true, email: true } },

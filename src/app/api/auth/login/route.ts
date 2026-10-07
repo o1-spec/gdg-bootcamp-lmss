@@ -11,7 +11,8 @@ import { NextRequest, NextResponse } from "next/server";
 |--------------------------------------------------
 */
 import { db } from "@/lib/db";
-import { verifyPassword } from "@/lib/auth/password";
+import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { rateLimit, getClientIp } from "@/lib/auth/rate-limit";
 import { signAccessToken, signRefreshToken } from "@/lib/auth/jwt";
 import {
   ACCESS_COOKIE_NAME,
@@ -21,6 +22,13 @@ import {
   authCookieOptions,
   getRoleDashboardPath,
 } from "@/lib/auth/session";
+
+// Compared against when the email is unknown so response time does not reveal which emails exist
+let dummyHash: Promise<string> | null = null;
+function getDummyHash() {
+  dummyHash ??= hashPassword("not-a-real-password-0");
+  return dummyHash;
+}
 
 /*
 |----------------------------------------------------------------------------------------------------
@@ -42,6 +50,14 @@ export async function POST(req: NextRequest) {
     const email = body.email.toLowerCase().trim();
     const password = body.password;
 
+    const limited = rateLimit(`login:${getClientIp(req)}:${email}`, 10, 15 * 60 * 1000);
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(limited.retryAfterSec) } }
+      );
+    }
+
     if (!email || !password) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -54,16 +70,12 @@ export async function POST(req: NextRequest) {
       where: { email },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
-
-    // Verify password against stored hash
-    const isValidPassword = await verifyPassword(password, user.passwordHash);
-    if (!isValidPassword) {
+    // Always run one bcrypt comparison so timing is the same for known and unknown emails
+    const isValidPassword = await verifyPassword(
+      password,
+      user ? user.passwordHash : await getDummyHash()
+    );
+    if (!user || !isValidPassword) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }

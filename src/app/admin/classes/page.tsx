@@ -11,6 +11,7 @@ import Link from "next/link";
 | custom imports
 |--------------------------------------------------
 */
+import { requireAdmin } from "@/lib/auth/session";
 import { PageHeader } from "@/components/ui/page-header";
 import { getAdminSessions } from "@/lib/sessions/queries";
 import { SessionCard } from "@/components/sessions/session-card";
@@ -38,6 +39,7 @@ interface AdminClassesPageProps {
 export default async function AdminClassesPage({
   searchParams,
 }: AdminClassesPageProps) {
+  await requireAdmin();
   const { track: trackFilter, cohort: cohortFilter } = await searchParams;
 
   const { upcoming, past, tracks, cohorts } = await getAdminSessions(
