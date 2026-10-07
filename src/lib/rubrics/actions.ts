@@ -15,6 +15,7 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/session";
 import { getSubmissionForGrading } from "@/lib/assignments/queries";
 import { audit } from "@/lib/audit/logger";
+import { notifyGradeReleased } from "@/lib/notifications/queries";
 import { createRubric, deleteRubric, saveRubricScores } from "./queries";
 import { db } from "@/lib/db";
 
@@ -123,6 +124,13 @@ export async function gradeWithRubricAction(
         released: release || existing.submission.released,
       },
     });
+    if (existing.submission.released && existing.submission.score !== total) {
+      await notifyGradeReleased(
+        submissionId,
+        existing.submission.studentId,
+        existing.assignment.title
+      ).catch(() => {});
+    }
     await audit(user.id, "GRADE_SAVED", "Submission", submissionId, {
       score: total,
       previousScore: existing.submission.score,

@@ -312,6 +312,21 @@ export async function gradeSubmissionAction(
       user.role
     );
 
+    if (
+      previous.released &&
+      (previous.score !== Math.round(score) || (previous.feedback ?? "") !== feedback.trim())
+    ) {
+      const graded = await db.submission.findUnique({
+        where: { id: submissionId },
+        select: { userId: true, assignment: { select: { title: true } } },
+      });
+      if (graded) {
+        await notifyGradeReleased(submissionId, graded.userId, graded.assignment.title).catch(
+          () => {}
+        );
+      }
+    }
+
     await audit(user.id, "GRADE_SAVED", "Submission", submissionId, {
       score,
       feedback: feedback.substring(0, 500),

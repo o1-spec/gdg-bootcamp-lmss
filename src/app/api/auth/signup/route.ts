@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 
     const [accessToken, refreshToken] = await Promise.all([
       signAccessToken({ sub: user.id, email: user.email, role: user.role }),
-      signRefreshToken({ sub: user.id }),
+      signRefreshToken({ sub: user.id, ver: user.tokenVersion }),
     ]);
     const response = NextResponse.json({ redirectTo: getRoleDashboardPath(user.role) }, { status: 201 });
     response.cookies.set({ name: ACCESS_COOKIE_NAME, value: accessToken, ...authCookieOptions, maxAge: ACCESS_COOKIE_MAX_AGE });

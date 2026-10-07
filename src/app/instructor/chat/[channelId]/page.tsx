@@ -12,6 +12,7 @@ import Link from "next/link";
 |--------------------------------------------------
 */
 import { requireInstructor } from "@/lib/auth/session";
+import { db } from "@/lib/db";
 import { getChannelIfAuthorized, getChannelMessages, getMutesForCohort } from "@/lib/chat/queries";
 import { ModeratorChatWindow } from "./chat-client";
 
@@ -37,9 +38,14 @@ export default async function InstructorChannelPage({ params }: Props) {
   const channel = await getChannelIfAuthorized(channelId, user.id, user.role);
   if (!channel) notFound();
 
+  const taught = await db.trackInstructor.findMany({
+    where: { userId: user.id },
+    select: { trackId: true },
+  });
+
   const [messages, mutes] = await Promise.all([
     getChannelMessages(channelId),
-    getMutesForCohort(channel.cohortId),
+    getMutesForCohort(channel.cohortId, taught.map((t) => t.trackId)),
   ]);
 
   return (

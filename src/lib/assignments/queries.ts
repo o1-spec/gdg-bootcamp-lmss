@@ -157,8 +157,9 @@ export async function getStudentAssignments(
 
     if (sub) {
       const isLate = new Date(sub.submittedAt) > new Date(a.dueAt);
-      const isGraded = sub.score !== null;
       const isReleased = sub.released;
+      // Unreleased grades are invisible to students, including the fact that one exists
+      const isGraded = sub.score !== null && isReleased;
 
       // PRIVACY RULE: Do not expose score or feedback unless released === true!
       submissionData = {

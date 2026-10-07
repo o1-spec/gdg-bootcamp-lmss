@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 |--------------------------------------------------
 */
 import { db } from "@/lib/db";
+import { isSameOrigin } from "@/lib/auth/origin";
 import { verifyRefreshToken, signAccessToken } from "@/lib/auth/jwt";
 import {
   ACCESS_COOKIE_NAME,
@@ -27,6 +28,10 @@ import {
 */
 export async function POST(req: NextRequest) {
   try {
+    if (!isSameOrigin(req)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const refreshToken = req.cookies.get(REFRESH_COOKIE_NAME)?.value;
 
     if (!refreshToken) {
@@ -52,12 +57,21 @@ export async function POST(req: NextRequest) {
         name: true,
         email: true,
         role: true,
+        tokenVersion: true,
       },
     });
 
     if (!user) {
       return NextResponse.json(
         { error: "User no longer exists" },
+        { status: 401 }
+      );
+    }
+
+    // Tokens issued before the last logout carry an older version and are revoked
+    if ((payload.ver ?? 0) !== user.tokenVersion) {
+      return NextResponse.json(
+        { error: "Session has been revoked" },
         { status: 401 }
       );
     }
@@ -69,10 +83,13 @@ export async function POST(req: NextRequest) {
       role: user.role,
     });
 
+    const { tokenVersion: _tokenVersion, ...safeUser } = user;
+    void _tokenVersion;
+
     const response = NextResponse.json(
       {
         success: true,
-        user,
+        user: safeUser,
       },
       { status: 200 }
     );

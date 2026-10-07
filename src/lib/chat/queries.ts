@@ -247,12 +247,15 @@ export async function unmuteUser(
 |----------------------------------------------------------------------------------------------------
 | Retrieves Mutes For Cohort data from the database.
 */
-export async function getMutesForCohort(cohortId: string) {
+export async function getMutesForCohort(cohortId: string, onlyTrackIds?: string[]) {
   const now = new Date();
   return db.chatMute.findMany({
     where: {
       cohortId,
       OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+      ...(onlyTrackIds
+        ? { user: { enrollments: { some: { trackId: { in: onlyTrackIds } } } } }
+        : {}),
     },
     include: {
       user: { select: { id: true, name: true, email: true } },

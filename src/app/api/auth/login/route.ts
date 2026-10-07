@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
 
     const refreshToken = await signRefreshToken({
       sub: user.id,
+      ver: user.tokenVersion,
     });
 
     const safeUser = {

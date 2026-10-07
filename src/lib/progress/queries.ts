@@ -388,7 +388,7 @@ export async function getStudentProgress(userId: string): Promise<StudentProgres
 
     if (sub) {
       submittedAssignments++;
-      if (sub.score !== null) {
+      if (sub.released && sub.score !== null) {
         gradedAssignments++;
       }
       if (sub.released && sub.score !== null) {
@@ -636,7 +636,7 @@ export async function getStudentDashboardData(userId: string): Promise<StudentDa
 
     if (sub) {
       submittedCount++;
-      if (sub.score !== null) {
+      if (sub.released && sub.score !== null) {
         gradedCount++;
       }
       if (sub.released && sub.score !== null) {

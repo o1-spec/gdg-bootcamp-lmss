@@ -62,6 +62,7 @@ export interface AccessTokenPayload extends JWTPayload {
 
 export interface RefreshTokenPayload extends JWTPayload {
   sub: string;
+  ver?: number;
 }
 
 /*
@@ -123,9 +124,11 @@ export async function verifyAccessToken(
 */
 export async function signRefreshToken(payload: {
   sub: string;
+  ver: number;
 }): Promise<string> {
   return new SignJWT({
     sub: payload.sub,
+    ver: payload.ver,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
