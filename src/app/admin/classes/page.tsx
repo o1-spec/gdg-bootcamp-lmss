@@ -79,7 +79,7 @@ export default async function AdminClassesPage({
             href="/admin/classes"
             className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               !trackFilter || trackFilter === "all"
-                ? "bg-[#171717] text-white"
+                ? "bg-[#171717] text-white "
                 : "border border-[#E7E3DA] bg-white text-[#737373] hover:bg-[#F7F4ED] hover:text-[#171717]"
             }`}
           >
